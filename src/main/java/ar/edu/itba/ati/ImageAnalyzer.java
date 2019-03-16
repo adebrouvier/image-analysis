@@ -3,16 +3,20 @@ package ar.edu.itba.ati;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 public class ImageAnalyzer {
 
     private static JFrame frame;
     private JPanel contentPane;
     private BufferedImage renderedImage;
+    private AreaSelector areaSelector;
 
     private JMenuBar createMenuBar() {
         JMenuBar menuBar;
@@ -21,7 +25,6 @@ public class ImageAnalyzer {
 
         menuBar = new JMenuBar();
 
-        //Build the first menu.
         menu = new JMenu("Archivo");
         menu.setMnemonic(KeyEvent.VK_A);
         menuBar.add(menu);
@@ -34,7 +37,39 @@ public class ImageAnalyzer {
         menuItem.addActionListener(new SaveListener(contentPane));
         menu.add(menuItem);
 
+        menuItem = new JMenuItem("Degradee colores", KeyEvent.VK_C);
+        menuItem.addActionListener(new GradientListener(new Color[] {Color.RED, Color.WHITE, Color.BLUE}));
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("Degradee grises", KeyEvent.VK_G);
+        menuItem.addActionListener(new GradientListener(new Color[] {Color.BLACK, Color.GRAY, Color.WHITE}));
+        menu.add(menuItem);
+
         return menuBar;
+    }
+
+    class GradientListener implements ActionListener {
+
+        private Color[] colors;
+
+        public GradientListener(Color[] colors) {
+            this.colors = colors;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (renderedImage != null) {
+                Graphics2D g2d = renderedImage.createGraphics();
+                Point2D start = new Point2D.Float(0, 0);
+                Point2D end = new Point2D.Float(renderedImage.getWidth(), renderedImage.getWidth());
+                float[] dist = {0.0f, 0.33f, 0.66f};
+                LinearGradientPaint p = new LinearGradientPaint(start, end, dist, colors);
+                g2d.setPaint(p);
+                g2d.fillRect(0, 0, renderedImage.getWidth(), renderedImage.getHeight());
+                g2d.dispose();
+                contentPane.repaint();
+            }
+        }
     }
 
     class OpenListener implements ActionListener {
@@ -52,20 +87,31 @@ public class ImageAnalyzer {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-                String filename = file.getName().toLowerCase();
+                String filename = file.getName();
                 int extensionIndex = filename.lastIndexOf(".");
-                String extension = filename.substring(extensionIndex + 1);
+                String extension = filename.toLowerCase().substring(extensionIndex + 1);
                 Reader reader = null;
 
                 switch (extension) {
                     case "raw": {
-                        int width = 256;
-                        int height = 256;
-                        reader = new RAWReader(width, height);
-                        break;
+                        String dataFile = filename.substring(0, extensionIndex) + ".txt";
+                        try {
+                            Scanner sc = new Scanner(new File(dataFile));
+                            int width = sc.nextInt();
+                            int height = sc.nextInt();
+                            reader = new RAWReader(width, height);
+                            break;
+                        } catch (FileNotFoundException e) {
+                            System.err.println("Could not read RAW data");
+                            System.exit(1);
+                        }
                     }
                     case "pgm": {
                         reader = new PGMReader();
+                        break;
+                    }
+                    case "ppm": {
+                        reader = new PPMReader();
                         break;
                     }
                     default: {
@@ -92,10 +138,27 @@ public class ImageAnalyzer {
         JLabel pixelColor = new JLabel();
         pixelColor.setLocation(0,0);
         contentPane.add(pixelColor);
+        areaSelector = new AreaSelector();
+        contentPane.addMouseListener(new MouseAdapter() {
 
-        contentPane.addMouseMotionListener(new MouseMotionListener() {
             @Override
-            public void mouseDragged(MouseEvent mouseEvent) {}
+            public void mouseClicked(MouseEvent mouseEvent) {
+                super.mouseClicked(mouseEvent);
+                System.out.println("Pixel x: " + mouseEvent.getX() + " Pixel y: " + mouseEvent.getY());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                super.mousePressed(mouseEvent);
+                areaSelector.setStart(mouseEvent.getX(), mouseEvent.getY());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+                super.mouseReleased(mouseEvent);
+                areaSelector.setEnd(mouseEvent.getX(), mouseEvent.getY());
+                contentPane.repaint();
+            }
 
             @Override
             public void mouseMoved(MouseEvent mouseEvent) {
