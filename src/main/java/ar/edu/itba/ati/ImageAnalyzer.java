@@ -106,6 +106,10 @@ public class ImageAnalyzer {
                             System.exit(1);
                         }
                     }
+                    case "pbm": {
+                        reader = new PBMReader();
+                        break;
+                    }
                     case "pgm": {
                         reader = new PGMReader();
                         break;
