@@ -1,5 +1,9 @@
 package ar.edu.itba.ati;
 
+import ar.edu.itba.ati.image.GrayScalePixel;
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.image.Pixel;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,8 +18,8 @@ public class PGMReader extends PNMReader implements Reader{
         List<Pixel> pixels = new ArrayList<>();
 
         for (int i = 0; i < info.getWidth()*info.getHeight(); i++){
-            int color = info.getDis().readUnsignedByte();
-            pixels.add(new Pixel(color, color, color));
+            int grayScale = info.getDis().readUnsignedByte();
+            pixels.add(new GrayScalePixel(grayScale));
         }
 
         return new Image(info.getWidth(), info.getHeight(), pixels);

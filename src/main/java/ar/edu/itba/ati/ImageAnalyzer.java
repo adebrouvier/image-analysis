@@ -1,5 +1,8 @@
 package ar.edu.itba.ati;
 
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.image.Pixel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +19,7 @@ public class ImageAnalyzer {
     private static JFrame frame;
     private JPanel contentPane;
     private BufferedImage renderedImage;
+    private Image image;
     private AreaSelector areaSelector;
 
     private JMenuBar createMenuBar() {
@@ -38,7 +42,7 @@ public class ImageAnalyzer {
         menu.add(menuItem);
 
         menuItem = new JMenuItem("Degradee colores", KeyEvent.VK_C);
-        menuItem.addActionListener(new GradientListener(new Color[] {Color.RED, Color.WHITE, Color.BLUE}));
+        menuItem.addActionListener(new GradientListener(new Color[] {Color.RED, Color.GREEN, Color.BLUE}));
         menu.add(menuItem);
 
         menuItem = new JMenuItem("Degradee grises", KeyEvent.VK_G);
@@ -125,7 +129,7 @@ public class ImageAnalyzer {
                 }
 
                 try {
-                    Image image = reader.read(file);
+                    image = reader.read(file);
                     renderAsBufferedImage(image);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -148,7 +152,18 @@ public class ImageAnalyzer {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 super.mouseClicked(mouseEvent);
-                System.out.println("Pixel x: " + mouseEvent.getX() + " Pixel y: " + mouseEvent.getY());
+                int x = mouseEvent.getX();
+                int y = mouseEvent.getY();
+                Pixel p = image.getPixel(x, y);
+                System.out.println(
+                        new StringBuilder()
+                                .append(p)
+                                .append("; X: ")
+                                .append(x)
+                                .append("; Y: ")
+                                .append(y)
+                                .append(".").toString()
+                );
             }
 
             @Override
@@ -188,6 +203,9 @@ public class ImageAnalyzer {
 
     private static void createAndShowGUI() {
         frame = new JFrame("ImageAnalyzer");
+        frame.setLayout(new BorderLayout());
+        frame.setSize(450, 450);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
@@ -195,7 +213,6 @@ public class ImageAnalyzer {
         frame.setJMenuBar(imageAnalyzer.createMenuBar());
         frame.setContentPane(imageAnalyzer.createContentPane());
 
-        frame.setSize(450, 450);
         frame.setLocationRelativeTo(null); // Center
         frame.setVisible(true);
     }

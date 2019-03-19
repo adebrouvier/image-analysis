@@ -1,5 +1,9 @@
 package ar.edu.itba.ati;
 
+import ar.edu.itba.ati.image.GrayScalePixel;
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.image.Pixel;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +27,7 @@ public class PBMReader extends PPMReader implements Reader {
                     if (rowPixels < info.getWidth()) {
                         int bit = getBit(imageByte, 7 - j);
                         int color = bit > 0 ? PPMReader.BLACK : PPMReader.WHITE;
-                        pixels.add(new Pixel(color, color, color));
+                        pixels.add(new GrayScalePixel(color));
                         rowPixels++;
                     }else{
                         break;

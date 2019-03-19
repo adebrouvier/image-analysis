@@ -1,5 +1,9 @@
 package ar.edu.itba.ati;
 
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.image.Pixel;
+import ar.edu.itba.ati.image.RGBPixel;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +23,7 @@ public class PPMReader extends PNMReader implements Reader {
             int r = dis.readUnsignedByte();
             int g = dis.readUnsignedByte();
             int b = dis.readUnsignedByte();
-            pixels.add(new Pixel(r, g, b));
+            pixels.add(new RGBPixel(r, g, b));
         }
 
         return new Image(info.getWidth(), info.getHeight(), pixels);

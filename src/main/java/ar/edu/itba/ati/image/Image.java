@@ -1,4 +1,4 @@
-package ar.edu.itba.ati;
+package ar.edu.itba.ati.image;
 
 import java.util.List;
 
@@ -24,5 +24,10 @@ public class Image {
 
     public List<Pixel> getPixels() {
         return pixels;
+    }
+
+    public Pixel getPixel(int x, int y) {
+        int index = x + y * height;
+        return this.pixels.get(index);
     }
 }

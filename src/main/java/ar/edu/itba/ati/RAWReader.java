@@ -1,5 +1,9 @@
 package ar.edu.itba.ati;
 
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.image.Pixel;
+import ar.edu.itba.ati.image.RGBPixel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +30,7 @@ public class RAWReader implements Reader{
         List<Pixel> pixels = new ArrayList<>();
 
         for (byte b : bytes){
-            pixels.add(new Pixel(b & 0xff, b & 0xff, b & 0xff)); // Unsigned
+            pixels.add(new RGBPixel(b & 0xff, b & 0xff, b & 0xff)); // Unsigned
         }
 
         return new Image(width, height, pixels);
