@@ -11,13 +11,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ImageAnalyzer {
 
     private static JFrame frame;
-    private JPanel contentPane;
+    private SingleImagePanel contentPane;
     private BufferedImage renderedImage;
     private Image image;
     private AreaSelector areaSelector;
@@ -47,6 +50,10 @@ public class ImageAnalyzer {
 
         menuItem = new JMenuItem("Degradee grises", KeyEvent.VK_G);
         menuItem.addActionListener(new GradientListener(new Color[] {Color.BLACK, Color.GRAY, Color.WHITE}));
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("RGB y HSV", KeyEvent.VK_R);
+        menuItem.addActionListener(new RGBHSVDecomposition());
         menu.add(menuItem);
 
         return menuBar;
@@ -139,6 +146,72 @@ public class ImageAnalyzer {
         }
     }
 
+    class RGBHSVDecomposition implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+
+            List<BufferedImage> rgbChannels = initImages();
+            List<BufferedImage> hsvChannels = initImages();
+
+            /* Split each pixel on RGB and HSV components */
+            for (int y = 0; y < renderedImage.getHeight(); y++) {
+                for (int x = 0; x < renderedImage.getWidth(); x++) {
+                    Color rgbColor = new Color(renderedImage.getRGB(x, y));
+                    splitRGB(rgbChannels, x, y, rgbColor);
+                    splitHSV(hsvChannels, x, y, rgbColor);
+                }
+            }
+            rgbChannels.addAll(hsvChannels);
+            List<java.awt.Image> scaled = rgbChannels.stream()
+                .map(i -> i.getScaledInstance(300,300, java.awt.Image.SCALE_SMOOTH))
+                .collect(Collectors.toList());
+            createFrame(scaled);
+        }
+
+        private List<BufferedImage> initImages() {
+            List<BufferedImage> channels = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                channels.add(new BufferedImage(renderedImage.getWidth(), renderedImage.getHeight(),
+                        BufferedImage.TYPE_INT_ARGB));
+            }
+            return channels;
+        }
+
+        private void splitRGB(List<BufferedImage> rgbChannels, int x, int y, Color rgbColor) {
+            List<Integer> colors = new ArrayList<>(Arrays.asList(rgbColor.getRed(),
+                    rgbColor.getBlue(), rgbColor.getGreen()));
+            setChannelPixel(colors, rgbChannels, x, y);
+        }
+
+        private void splitHSV(List<BufferedImage> rgbChannels, int x, int y, Color rgbColor) {
+            float[] hsv = Color.RGBtoHSB(rgbColor.getRed(), rgbColor.getGreen(), rgbColor.getBlue(), null);
+            /* RGBtoHSB returns values between 0 and 1 */
+            int hue = (int) (hsv[0] * 255);
+            int sat = (int) (hsv[1] * 255);
+            int brightness = (int) (hsv[2] * 255);
+            List<Integer> colors = new ArrayList<>(Arrays.asList(hue, sat, brightness));
+            setChannelPixel(colors, rgbChannels, x, y);
+        }
+
+        private void setChannelPixel(List<Integer> colors, List<BufferedImage> rgbChannels, int x, int y){
+            List<Integer> greyScale = colors.stream()
+                    .map(component -> new Color(component, component, component).getRGB())
+                    .collect(Collectors.toList());
+            for (int i = 0; i < rgbChannels.size(); i++) {
+                BufferedImage image = rgbChannels.get(i);
+                image.setRGB(x, y, greyScale.get(i));
+            }
+        }
+
+        private void createFrame(List<java.awt.Image> imageList){
+            JFrame rgbFrame = new JFrame("RGB");
+            rgbFrame.setLayout(new GridLayout(2, 3));
+            imageList.forEach(c -> rgbFrame.add(new SingleImagePanel(c)));
+            rgbFrame.setVisible(true);
+            rgbFrame.setSize(450, 450);
+        }
+    }
+
     private Container createContentPane() {
         contentPane = new SingleImagePanel();
         contentPane.setOpaque(false);
@@ -217,18 +290,9 @@ public class ImageAnalyzer {
         frame.setVisible(true);
     }
 
-    private class SingleImagePanel extends JPanel {
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(renderedImage, 0, 0, null);
-        }
-    }
-
     private void renderAsBufferedImage(Image image) {
 
-        BufferedImage img = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
         List<Pixel> pixels = image.getPixels();
 
         for ( int y = 0; y < image.getHeight(); y++ ) {
@@ -241,6 +305,7 @@ public class ImageAnalyzer {
         }
 
         renderedImage = img;
+        contentPane.setImage(img);
         contentPane.repaint();
     }
 
