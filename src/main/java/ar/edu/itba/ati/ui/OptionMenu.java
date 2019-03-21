@@ -3,6 +3,7 @@ package ar.edu.itba.ati.ui;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.listeners.*;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
+import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,8 +74,12 @@ public class OptionMenu extends JMenuBar {
         select.setMnemonic(KeyEvent.VK_S);
 
         JMenuItem item;
-        item = new JMenuItem("Select subimage", KeyEvent.VK_I);
+        item = new JMenuItem("Select sub image", KeyEvent.VK_S);
         item.addActionListener((ae) -> this.selectable = new SubImageSelectable(this.windowContext));
+        select.add(item);
+
+        item = new JMenuItem("Get sub image information", KeyEvent.VK_I);
+        item.addActionListener((ae) -> this.selectable = new InformationSelectable(this.windowContext));
         select.add(item);
 
         add(select);
