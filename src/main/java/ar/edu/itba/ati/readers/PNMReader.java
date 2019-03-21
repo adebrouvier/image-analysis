@@ -12,9 +12,6 @@ public abstract class PNMReader{
         P1, P2, P3, P4, P5, P6
     }
 
-    static final int BLACK = 0;
-    static final int WHITE = 255;
-
     public PPMReaderInfo readHeader(File file) throws IOException {
         Scanner sc = new Scanner(new FileInputStream(file));
         String type = sc.next();

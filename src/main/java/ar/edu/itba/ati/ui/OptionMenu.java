@@ -1,9 +1,7 @@
 package ar.edu.itba.ati.ui;
 
 import ar.edu.itba.ati.image.Image;
-import ar.edu.itba.ati.ui.listeners.GradientListener;
-import ar.edu.itba.ati.ui.listeners.OpenListener;
-import ar.edu.itba.ati.ui.listeners.RGBHSVDecomposition;
+import ar.edu.itba.ati.ui.listeners.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,14 +9,18 @@ import java.awt.event.KeyEvent;
 
 public class OptionMenu extends JMenuBar {
 
+    private static final int BINARY_IMAGE_SIZE = 200;
+    private static final int BINARY_SHAPE_SIZE = 50;
     private JMenu file;
     private JMenu gradient;
+    private JMenu shape;
 
     public OptionMenu(){
         super();
 
         createFileMenu();
         createGradientMenu();
+        createShapeMenu();
     }
 
     private void createFileMenu() {
@@ -61,5 +63,20 @@ public class OptionMenu extends JMenuBar {
         add(this.gradient);
     }
 
+    private void createShapeMenu(){
+        this.shape = new JMenu("Shape");
+        this.shape.setMnemonic(KeyEvent.VK_S);
+
+        JMenuItem item;
+        item = new JMenuItem("Binary circle", KeyEvent.VK_C);
+        item.addActionListener(new CircleListener(BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
+        this.shape.add(item);
+
+        item = new JMenuItem("Binary square", KeyEvent.VK_Q);
+        item.addActionListener(new SquareListener(BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
+        this.shape.add(item);
+
+        add(this.shape);
+    }
 
 }
