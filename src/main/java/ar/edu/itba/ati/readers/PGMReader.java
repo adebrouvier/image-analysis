@@ -1,4 +1,4 @@
-package ar.edu.itba.ati;
+package ar.edu.itba.ati.readers;
 
 import ar.edu.itba.ati.image.GrayScalePixel;
 import ar.edu.itba.ati.image.Image;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PGMReader extends PNMReader implements Reader{
+public class PGMReader extends PNMReader implements Reader {
 
     @Override
     public Image read(File file) throws IOException {

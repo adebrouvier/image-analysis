@@ -1,4 +1,4 @@
-package ar.edu.itba.ati;
+package ar.edu.itba.ati.ui.listeners;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

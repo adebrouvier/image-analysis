@@ -1,4 +1,4 @@
-package ar.edu.itba.ati;
+package ar.edu.itba.ati.readers;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RAWReader implements Reader{
+public class RAWReader implements Reader {
 
     private int width;
     private int height;

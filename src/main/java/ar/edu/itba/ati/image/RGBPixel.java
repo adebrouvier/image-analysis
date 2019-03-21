@@ -29,9 +29,9 @@ public class RGBPixel extends Pixel {
         StringBuilder sb = new StringBuilder();
         sb.append("Red: ")
             .append(this.red)
-            .append("Green: ")
+            .append("; Green: ")
             .append(this.green)
-            .append("Blue: ")
+            .append("; Blue: ")
             .append(this.blue);
         return sb.toString();
     }

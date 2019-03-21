@@ -1,4 +1,4 @@
-package ar.edu.itba.ati;
+package ar.edu.itba.ati.readers;
 
 import java.io.DataInputStream;
 
