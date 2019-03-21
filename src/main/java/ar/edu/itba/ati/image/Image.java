@@ -25,10 +25,10 @@ public class Image {
     public Image(BufferedImage bufferedImage, ImageType imageType) {
         this.width = bufferedImage.getWidth();
         this.height = bufferedImage.getHeight();
-        this.pixels = new ArrayList<Pixel>(this.width * this.height);
-        for (int i = 0; i < this.width; i++){
-            for (int j = 0; j < this.height; j++) {
-                Color color = new Color(bufferedImage.getRGB(i, j));
+        this.pixels = new ArrayList<>(this.width * this.height);
+        for (int i = 0; i < this.height; i++){
+            for (int j = 0; j < this.width; j++) {
+                Color color = new Color(bufferedImage.getRGB(j, i));
                 Pixel pixel;
                 if (imageType.equals(ImageType.GRAY_SCALE)) {
                     pixel = new GrayScalePixel(color.getBlue());
@@ -82,6 +82,7 @@ public class Image {
         } else {
             height = Math.abs(y1 - y2);
         }
+
         List<Pixel> pixels = new ArrayList<>(width * height);
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
