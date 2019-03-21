@@ -18,18 +18,7 @@ public class ImageMouseListener extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         super.mouseClicked(mouseEvent);
-        int x = mouseEvent.getX();
-        int y = mouseEvent.getY();
-        Pixel p = this.windowContext.getImageContainer().getImage().getPixel(x, y);
-        this.windowContext.getInformationLabel().setText(
-                new StringBuilder()
-                        .append(p)
-                        .append("; X: ")
-                        .append(x)
-                        .append("; Y: ")
-                        .append(y)
-                        .append(".").toString()
-        );
+        this.windowContext.getMouseOptions().getClickable().onMouseClicked(mouseEvent);
 
         if (this.windowContext.getOptionMenu().getSelectable() != null) {
             this.windowContext.getOptionMenu().setSelectable(null);

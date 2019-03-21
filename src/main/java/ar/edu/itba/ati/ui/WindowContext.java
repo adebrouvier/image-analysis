@@ -6,6 +6,7 @@ public class WindowContext {
     private ImageContainer imageContainer = new ImageContainer(this);
     private OptionMenu optionMenu = new OptionMenu(this);
     private JLabel informationLabel = new JLabel();
+    private MouseOptions mouseOptions = new MouseOptions(this);
 
     public WindowContext() {}
 
@@ -19,5 +20,9 @@ public class WindowContext {
 
     public JLabel getInformationLabel() {
         return informationLabel;
+    }
+
+    public MouseOptions getMouseOptions() {
+        return mouseOptions;
     }
 }
