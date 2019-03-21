@@ -1,8 +1,7 @@
 package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Image;
-import ar.edu.itba.ati.ui.ImageAnalyzer;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
+import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,15 +13,17 @@ public class GradientListener implements ActionListener {
 
     private Color[] colors;
     private Image.ImageType imageType;
+    private WindowContext windowContext;
 
-    public GradientListener(Color[] colors, Image.ImageType imageType) {
+    public GradientListener(WindowContext windowContext, Color[] colors, Image.ImageType imageType) {
         this.colors = colors;
         this.imageType = imageType;
+        this.windowContext = windowContext;
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        BufferedImage renderedImage = ImageAnalyzerFrame.imageContainer.getBufferedImage();
+        BufferedImage renderedImage = this.windowContext.getImageContainer().getBufferedImage();
         if (renderedImage != null) {
             Graphics2D g2d = renderedImage.createGraphics();
             Point2D start = new Point2D.Float(0, 0);
@@ -32,8 +33,8 @@ public class GradientListener implements ActionListener {
             g2d.setPaint(p);
             g2d.fillRect(0, 0, renderedImage.getWidth(), renderedImage.getHeight());
             g2d.dispose();
-            ImageAnalyzerFrame.imageContainer.setImage(new Image(renderedImage, imageType));
-            ImageAnalyzerFrame.imageContainer.renderImage();
+            this.windowContext.getImageContainer().setImage(new Image(renderedImage, imageType));
+            this.windowContext.getImageContainer().renderImage();
         }
     }
 }

@@ -1,8 +1,7 @@
 package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.readers.*;
-import ar.edu.itba.ati.ui.ImageAnalyzer;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
+import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,12 +13,16 @@ import java.util.Scanner;
 
 public class OpenListener implements ActionListener {
 
-    public OpenListener(){ }
+    private WindowContext windowContext;
+
+    public OpenListener(WindowContext windowContext){
+        this.windowContext = windowContext;
+    }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JFileChooser fc = new JFileChooser(".");
-        int returnVal = fc.showOpenDialog(ImageAnalyzerFrame.imageContainer);
+        int returnVal = fc.showOpenDialog(this.windowContext.getImageContainer());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
@@ -61,8 +64,8 @@ public class OpenListener implements ActionListener {
             }
 
             try {
-                ImageAnalyzerFrame.imageContainer.setImage(reader.read(file));
-                ImageAnalyzerFrame.imageContainer.renderImage();
+                this.windowContext.getImageContainer().setImage(reader.read(file));
+                this.windowContext.getImageContainer().renderImage();
             } catch (IOException e) {
                 e.printStackTrace();
             }

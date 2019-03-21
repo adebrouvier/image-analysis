@@ -16,11 +16,19 @@ public class ImageContainer extends SingleImagePanel {
 
     private BufferedImage bufferedImage;
     private Image image;
+    private WindowContext windowContext;
 
-    public ImageContainer() {
+    public ImageContainer(WindowContext windowContext) {
         super();
+        this.windowContext = windowContext;
         setOpaque(false);
-        addMouseListener(new ImageMouseListener());
+        addMouseListener(new ImageMouseListener(this.windowContext));
+    }
+
+    public ImageContainer(WindowContext windowContext, Image image) {
+        this(windowContext);
+        this.image = image;
+        this.renderImage();
     }
 
 
@@ -48,8 +56,6 @@ public class ImageContainer extends SingleImagePanel {
         this.bufferedImage = img;
         this.setImage(img);
         this.setSize(img.getWidth(), img.getHeight());
-        ImageAnalyzerFrame.scrollPane.setSize(img.getWidth(), img.getHeight());
-        ImageAnalyzerFrame.scrollPane.updateUI();
         this.repaint();
     }
 

@@ -1,8 +1,7 @@
 package ar.edu.itba.ati.ui.listeners;
 
-import ar.edu.itba.ati.ui.ImageAnalyzer;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
 import ar.edu.itba.ati.ui.SingleImagePanel;
+import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +15,15 @@ import java.util.stream.Collectors;
 
 public class RGBHSVDecomposition implements ActionListener {
 
+    private WindowContext windowContext;
+
+    public RGBHSVDecomposition(WindowContext windowContext){
+        this.windowContext = windowContext;
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        BufferedImage renderedImage = ImageAnalyzerFrame.imageContainer.getBufferedImage();
+        BufferedImage renderedImage = windowContext.getImageContainer().getBufferedImage();
 
         List<BufferedImage> rgbChannels = initImages(renderedImage);
         List<BufferedImage> hsvChannels = initImages(renderedImage);

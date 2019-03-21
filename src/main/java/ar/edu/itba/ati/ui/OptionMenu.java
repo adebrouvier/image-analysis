@@ -2,6 +2,7 @@ package ar.edu.itba.ati.ui;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.listeners.*;
+import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,53 +15,73 @@ public class OptionMenu extends JMenuBar {
     private JMenu file;
     private JMenu gradient;
     private JMenu shape;
+    private Selectable selectable = null;
+    private WindowContext windowContext;
 
-    public OptionMenu(){
+
+    public OptionMenu(WindowContext windowContext){
         super();
-
+        this.windowContext = windowContext;
         createFileMenu();
         createGradientMenu();
         createShapeMenu();
+        createSelectMenu();
     }
 
     private void createFileMenu() {
-        this.file = new JMenu("File");
-        this.file.setMnemonic(KeyEvent.VK_A);
+        JMenu file = new JMenu("File");
+        file.setMnemonic(KeyEvent.VK_A);
 
         JMenuItem item;
         item = new JMenuItem("Open...", KeyEvent.VK_O);
-        item.addActionListener(new OpenListener());
-        this.file.add(item);
+        item.addActionListener(new OpenListener(this.windowContext));
+        file.add(item);
 
         item = new JMenuItem("Save", KeyEvent.VK_S);
-//        item.addActionListener(new SaveListener(contentPane));
-        this.file.add(item);
+        item.addActionListener(new SaveListener(this.windowContext));
+        file.add(item);
 
         item = new JMenuItem("Close");
-        item.addActionListener((ae) -> { System.exit(0);});
-        this.file.add(item);
+        item.addActionListener((ae) -> System.exit(0));
+        file.add(item);
 
-        add(this.file);
+        add(file);
     }
 
     private void createGradientMenu() {
-        this.gradient = new JMenu("Gradient");
-        this.gradient.setMnemonic(KeyEvent.VK_G);
+        JMenu gradient = new JMenu("Gradient");
+        gradient.setMnemonic(KeyEvent.VK_G);
 
         JMenuItem item;
         item = new JMenuItem("Color gradient", KeyEvent.VK_C);
-        item.addActionListener(new GradientListener(new Color[] {Color.RED, Color.GREEN, Color.BLUE}, Image.ImageType.RGB));
-        this.gradient.add(item);
+        item.addActionListener(new GradientListener(this.windowContext, new Color[] {Color.RED, Color.GREEN, Color.BLUE}, Image.ImageType.RGB));
+        gradient.add(item);
 
         item = new JMenuItem("Grayscale gradient", KeyEvent.VK_G);
-        item.addActionListener(new GradientListener(new Color[] {Color.BLACK, Color.GRAY, Color.WHITE}, Image.ImageType.GRAYSCALE));
-        this.gradient.add(item);
+        item.addActionListener(new GradientListener(this.windowContext, new Color[] {Color.BLACK, Color.GRAY, Color.WHITE}, Image.ImageType.GRAY_SCALE));
+        gradient.add(item);
 
         item = new JMenuItem("RGB and HSV", KeyEvent.VK_R);
-        item.addActionListener(new RGBHSVDecomposition());
-        this.gradient.add(item);
+        item.addActionListener(new RGBHSVDecomposition(this.windowContext));
+        gradient.add(item);
 
-        add(this.gradient);
+        add(gradient);
+    }
+
+    private void createSelectMenu() {
+        JMenu select = new JMenu("Select");
+        select.setMnemonic(KeyEvent.VK_S);
+
+        JMenuItem item;
+        item = new JMenuItem("Select subimage", KeyEvent.VK_I);
+        item.addActionListener((ae) -> this.selectable = new SubImageSelectable(this.windowContext));
+        select.add(item);
+
+        add(select);
+    }
+
+    public Selectable getSelectable() {
+        return selectable;
     }
 
     private void createShapeMenu(){
@@ -79,4 +100,7 @@ public class OptionMenu extends JMenuBar {
         add(this.shape);
     }
 
+    public void setSelectable(Selectable selectable) {
+        this.selectable = selectable;
+    }
 }
