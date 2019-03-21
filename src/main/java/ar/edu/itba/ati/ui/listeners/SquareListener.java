@@ -2,6 +2,7 @@ package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Constants;
 import ar.edu.itba.ati.image.GrayScalePixel;
+import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +10,8 @@ import java.util.ArrayList;
 
 public class SquareListener extends ShapeListener implements ActionListener {
 
-    public SquareListener(int dim, int size) {
-        super(dim, dim, size);
+    public SquareListener(WindowContext windowContext, int dim, int size) {
+        super(windowContext, dim, dim, size);
     }
 
     @Override

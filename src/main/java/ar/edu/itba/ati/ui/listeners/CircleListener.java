@@ -4,6 +4,7 @@ import ar.edu.itba.ati.image.Constants;
 import ar.edu.itba.ati.image.GrayScalePixel;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
+import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,8 +12,8 @@ import java.util.ArrayList;
 
 public class CircleListener extends ShapeListener implements ActionListener {
 
-    public CircleListener(int dim, int diameter) {
-        super(dim, dim, diameter);
+    public CircleListener(WindowContext windowContext, int dim, int diameter) {
+        super(windowContext, dim, dim, diameter);
     }
 
     @Override

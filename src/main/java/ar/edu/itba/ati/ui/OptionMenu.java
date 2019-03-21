@@ -2,6 +2,7 @@ package ar.edu.itba.ati.ui;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.listeners.*;
+import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
 
@@ -95,11 +96,11 @@ public class OptionMenu extends JMenuBar {
 
         JMenuItem item;
         item = new JMenuItem("Binary circle", KeyEvent.VK_C);
-        item.addActionListener(new CircleListener(BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
+        item.addActionListener(new CircleListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
         this.shape.add(item);
 
         item = new JMenuItem("Binary square", KeyEvent.VK_Q);
-        item.addActionListener(new SquareListener(BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
+        item.addActionListener(new SquareListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
         this.shape.add(item);
 
         add(this.shape);
