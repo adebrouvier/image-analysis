@@ -67,12 +67,11 @@ public class Image {
 
     public void changePixel(int x, int y, Pixel pixel) {
         int index = this.getIndex(x, y);
-        this.pixels.remove(index);
-        this.pixels.add(index, pixel);
+        this.pixels.set(index, pixel);
     }
 
     private int getIndex(int x, int y) {
-        return x + y * height;
+        return x + (y * width);
     }
 
     public Image getSubimage(int x1, int y1, int x2, int y2) {
@@ -121,5 +120,9 @@ public class Image {
 
     public Format getFormat() {
         return format;
+    }
+
+    public ImageType getType() {
+        return pixels.get(0) instanceof GrayScalePixel ? ImageType.GRAY_SCALE : ImageType.RGB;
     }
 }

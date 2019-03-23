@@ -5,6 +5,7 @@ import ar.edu.itba.ati.ui.listeners.*;
 import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
+import ar.edu.itba.ati.ui.listeners.transformations.NegativeListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,7 @@ public class OptionMenu extends JMenuBar {
         createGradientMenu();
         createShapeMenu();
         createSelectMenu();
+        createTransformMenu();
     }
 
     private void createFileMenu() {
@@ -109,4 +111,17 @@ public class OptionMenu extends JMenuBar {
     public void setSelectable(Selectable selectable) {
         this.selectable = selectable;
     }
+
+    private void createTransformMenu() {
+        JMenu transform = new JMenu("Transform");
+        transform.setMnemonic(KeyEvent.VK_T);
+
+        JMenuItem item;
+        item = new JMenuItem("Negative", KeyEvent.VK_N);
+        item.addActionListener(new NegativeListener(windowContext));
+        transform.add(item);
+
+        add(transform);
+    }
+
 }

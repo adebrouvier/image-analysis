@@ -29,7 +29,7 @@ public class RAWImageIO implements ImageIO {
         List<Pixel> pixels = new ArrayList<>();
 
         for (byte b : bytes){
-            pixels.add(new RGBPixel(b & 0xff, b & 0xff, b & 0xff)); // Unsigned
+            pixels.add(new GrayScalePixel(b & 0xff)); // Unsigned
         }
 
         return new Image(width, height, pixels, Image.Format.RAW);
