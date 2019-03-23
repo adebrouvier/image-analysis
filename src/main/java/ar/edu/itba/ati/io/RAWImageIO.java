@@ -1,21 +1,20 @@
-package ar.edu.itba.ati.readers;
+package ar.edu.itba.ati.io;
 
+import ar.edu.itba.ati.image.GrayScalePixel;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
 import ar.edu.itba.ati.image.RGBPixel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RAWReader implements Reader {
+public class RAWImageIO implements ImageIO {
 
     private int width;
     private int height;
 
-    public RAWReader(int width, int height) {
+    public RAWImageIO(int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -33,6 +32,19 @@ public class RAWReader implements Reader {
             pixels.add(new RGBPixel(b & 0xff, b & 0xff, b & 0xff)); // Unsigned
         }
 
-        return new Image(width, height, pixels);
+        return new Image(width, height, pixels, Image.Format.RAW);
+    }
+
+    @Override
+    public void write(String filename, Image image) throws IOException {
+
+        DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
+
+        for (Pixel p : image.getPixels()) {
+            GrayScalePixel gp = (GrayScalePixel) p;
+            out.write(gp.getGrayScale());
+        }
+
+        out.close();
     }
 }

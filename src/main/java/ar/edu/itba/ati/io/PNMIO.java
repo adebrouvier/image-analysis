@@ -1,4 +1,4 @@
-package ar.edu.itba.ati.readers;
+package ar.edu.itba.ati.io;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -6,15 +6,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-public abstract class PNMReader{
+public abstract class PNMIO {
 
-    private enum MagicNumber {
+    public enum MagicNumber {
         P1, P2, P3, P4, P5, P6
     }
 
-    public PPMReaderInfo readHeader(File file) throws IOException {
+    public PPMInfo readHeader(File file) throws IOException {
         Scanner sc = new Scanner(new FileInputStream(file));
-        String type = sc.next();
+        MagicNumber magicNumber = MagicNumber.valueOf(sc.next());
         int width = 0;
         int height = 0;
         int maxColor = 0;
@@ -27,7 +27,7 @@ public abstract class PNMReader{
 
         width = sc.nextInt();
         height = sc.nextInt();
-        if (!type.equals(MagicNumber.P4.toString()))
+        if (!magicNumber.equals(MagicNumber.P4))
             maxColor = sc.nextInt();
 
         sc.close();
@@ -36,7 +36,7 @@ public abstract class PNMReader{
         DataInputStream dis = new DataInputStream(fileInputStream);
 
         //TODO: Obtain number of new lines in some other way
-        int newLines = type.equals(MagicNumber.P4.toString()) ? 3 : 4;
+        int newLines = magicNumber.equals(MagicNumber.P4) ? 3 : 4;
         while (newLines > 0) {
 
             String s;
@@ -47,7 +47,7 @@ public abstract class PNMReader{
             newLines--;
         }
 
-        return new PPMReaderInfo(dis, width, height);
+        return new PPMInfo(dis, width, height);
     }
 
 

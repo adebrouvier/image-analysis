@@ -1,14 +1,14 @@
-package ar.edu.itba.ati.readers;
+package ar.edu.itba.ati.io;
 
 import java.io.DataInputStream;
 
-public class PPMReaderInfo {
+public class PPMInfo {
 
     private DataInputStream dis;
     private int width;
     private int height;
 
-    public PPMReaderInfo(DataInputStream dis, int width, int height){
+    public PPMInfo(DataInputStream dis, int width, int height){
         this.dis = dis;
         this.width = width;
         this.height = height;

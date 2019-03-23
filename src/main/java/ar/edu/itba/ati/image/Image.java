@@ -12,14 +12,23 @@ public class Image {
         RGB,
     }
 
+    public enum Format {
+        RAW,
+        PBM,
+        PGM,
+        PPM
+    }
+
     private int width;
     private int height;
     private List<Pixel> pixels;
+    private Format format;
 
-    public Image(int width, int height, List<Pixel> pixels) {
+    public Image(int width, int height, List<Pixel> pixels, Format format) {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
+        this.format = format;
     }
 
     public Image(BufferedImage bufferedImage, ImageType imageType) {
@@ -90,7 +99,7 @@ public class Image {
                 pixels.add(this.pixels.get(currentIndex));
             }
         }
-        return new Image(width, height, pixels);
+        return new Image(width, height, pixels, format);
     }
 
     public void pasteImage(int x, int y, Image image) {
@@ -108,5 +117,9 @@ public class Image {
                 break;
             }
         }
+    }
+
+    public Format getFormat() {
+        return format;
     }
 }

@@ -1,12 +1,14 @@
 package ar.edu.itba.ati.ui.listeners;
 
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.io.*;
+import ar.edu.itba.ati.io.ImageIO;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 public class SaveListener implements ActionListener {
 
@@ -24,7 +26,37 @@ public class SaveListener implements ActionListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             String filename = file.getAbsolutePath();
-            //TODO: Save image
+            try {
+                writeData(filename);
+                JOptionPane.showMessageDialog(windowContext.getImageContainer(), "Save successful.");
+            } catch (IOException e) {
+                System.err.println("Could not save image.");
+            }
         }
+    }
+
+    private void writeData(String filename) throws IOException {
+        Image image = windowContext.getImageContainer().getImage();
+
+        ImageIO writer;
+
+        switch (image.getFormat()){
+            case PBM:
+                writer = new PBMImageIO();
+                break;
+            case PPM:
+                writer = new PPMImageIO();
+                break;
+            case PGM:
+                writer = new PGMImageIO();
+                break;
+            case RAW:
+                writer = new RAWImageIO(image.getWidth(), image.getHeight());
+                break;
+            default:
+                System.err.println("Format not supported");
+                return;
+        }
+        writer.write(filename, image);
     }
 }

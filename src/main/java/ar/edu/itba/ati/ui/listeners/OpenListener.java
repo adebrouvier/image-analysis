@@ -1,6 +1,6 @@
 package ar.edu.itba.ati.ui.listeners;
 
-import ar.edu.itba.ati.readers.*;
+import ar.edu.itba.ati.io.*;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class OpenListener implements ActionListener {
             String filename = file.getName();
             int extensionIndex = filename.lastIndexOf(".");
             String extension = filename.toLowerCase().substring(extensionIndex + 1);
-            Reader reader = null;
+            ImageIO imageIO = null;
 
             switch (extension) {
                 case "raw": {
@@ -38,7 +38,7 @@ public class OpenListener implements ActionListener {
                         Scanner sc = new Scanner(new File(dataFile));
                         int width = sc.nextInt();
                         int height = sc.nextInt();
-                        reader = new RAWReader(width, height);
+                        imageIO = new RAWImageIO(width, height);
                         break;
                     } catch (FileNotFoundException e) {
                         System.err.println("Could not read RAW data");
@@ -46,15 +46,15 @@ public class OpenListener implements ActionListener {
                     }
                 }
                 case "pbm": {
-                    reader = new PBMReader();
+                    imageIO = new PBMImageIO();
                     break;
                 }
                 case "pgm": {
-                    reader = new PGMReader();
+                    imageIO = new PGMImageIO();
                     break;
                 }
                 case "ppm": {
-                    reader = new PPMReader();
+                    imageIO = new PPMImageIO();
                     break;
                 }
                 default: {
@@ -64,7 +64,7 @@ public class OpenListener implements ActionListener {
             }
 
             try {
-                this.windowContext.getImageContainer().setImage(reader.read(file));
+                this.windowContext.getImageContainer().setImage(imageIO.read(file));
                 this.windowContext.getImageContainer().renderImage();
             } catch (IOException e) {
                 e.printStackTrace();

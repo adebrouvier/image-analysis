@@ -1,21 +1,20 @@
-package ar.edu.itba.ati.readers;
+package ar.edu.itba.ati.io;
 
 import ar.edu.itba.ati.image.Constants;
 import ar.edu.itba.ati.image.GrayScalePixel;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PBMReader extends PPMReader implements Reader {
+public class PBMImageIO extends PPMImageIO implements ImageIO {
 
     @Override
     public Image read(File file) throws IOException {
-        PPMReaderInfo info = readHeader(file);
+        PPMInfo info = readHeader(file);
 
         List<Pixel> pixels = new ArrayList<>();
         DataInputStream dis = info.getDis();
@@ -36,11 +35,30 @@ public class PBMReader extends PPMReader implements Reader {
                 }
             }
         }
-        return new Image(info.getWidth(), info.getHeight(), pixels);
+        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PBM);
     }
 
     private static int getBit(int n, int k) {
         return (n >> k) & 1;
+    }
+
+    @Override
+    public void write(String filename, Image image) throws IOException {
+
+        /*DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)));
+
+        out.write("P4\n".getBytes());
+        out.write(String.valueOf(image.getWidth() + "\n").getBytes());
+        out.write(String.valueOf(image.getHeight() + "\n").getBytes());
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                GrayScalePixel pixel = (GrayScalePixel) image.getPixel(x, y);
+                int value = pixel.getGrayScale();
+
+            }
+        }*/
+        throw new NotImplementedException();
     }
 
 }

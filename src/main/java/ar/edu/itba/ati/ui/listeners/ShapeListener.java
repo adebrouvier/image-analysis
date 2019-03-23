@@ -2,7 +2,6 @@ package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.event.ActionListener;
@@ -29,7 +28,7 @@ public abstract class ShapeListener implements ActionListener {
     }
 
     public void renderShape(){
-        Image image = new Image(width, height, pixels);
+        Image image = new Image(width, height, pixels, Image.Format.PBM);
         this.windowContext.getImageContainer().setImage(image);
         this.windowContext.getImageContainer().renderImage();
     }
