@@ -3,7 +3,6 @@ package ar.edu.itba.ati.io;
 import ar.edu.itba.ati.image.GrayScalePixel;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
-import ar.edu.itba.ati.image.RGBPixel;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class RAWImageIO implements ImageIO {
             pixels.add(new GrayScalePixel(b & 0xff)); // Unsigned
         }
 
+        stream.close();
         return new Image(width, height, pixels, Image.Format.RAW);
     }
 

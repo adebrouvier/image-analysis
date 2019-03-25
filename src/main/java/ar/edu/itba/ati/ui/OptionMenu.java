@@ -2,9 +2,12 @@ package ar.edu.itba.ati.ui;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.listeners.*;
+import ar.edu.itba.ati.ui.listeners.histogram.HistogramEqualizationListener;
+import ar.edu.itba.ati.ui.listeners.histogram.HistogramListener;
 import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
+import ar.edu.itba.ati.ui.listeners.transformations.ExponentialNoiseListener;
 import ar.edu.itba.ati.ui.listeners.transformations.NegativeListener;
 
 import javax.swing.*;
@@ -30,6 +33,7 @@ public class OptionMenu extends JMenuBar {
         createShapeMenu();
         createSelectMenu();
         createTransformMenu();
+        createHistogramMenu();
     }
 
     private void createFileMenu() {
@@ -121,7 +125,37 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new NegativeListener(windowContext));
         transform.add(item);
 
+        JMenu noise = createNoiseSubMenu();
+        transform.add(noise);
+
         add(transform);
+    }
+
+    private JMenu createNoiseSubMenu(){
+        JMenu noise = new JMenu("Noise");
+
+        JMenuItem item;
+        item = new JMenuItem("Exponential", KeyEvent.VK_E);
+        item.addActionListener(new ExponentialNoiseListener(windowContext));
+        noise.add(item);
+
+        return noise;
+    }
+
+    private void createHistogramMenu() {
+        JMenu histogram = new JMenu("Histogram");
+        histogram.setMnemonic(KeyEvent.VK_H);
+
+        JMenuItem item;
+        item = new JMenuItem("Show");
+        item.addActionListener(new HistogramListener(windowContext));
+        histogram.add(item);
+
+        item = new JMenuItem("Equalize");
+        item.addActionListener(new HistogramEqualizationListener(windowContext));
+        histogram.add(item);
+
+        add(histogram);
     }
 
 }

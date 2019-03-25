@@ -59,7 +59,7 @@ public class OpenListener implements ActionListener {
                 }
                 default: {
                     System.err.println("Wrong file format.");
-                    System.exit(1);
+                    return;
                 }
             }
 
