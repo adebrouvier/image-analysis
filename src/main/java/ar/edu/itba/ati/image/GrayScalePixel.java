@@ -28,20 +28,22 @@ public class GrayScalePixel extends Pixel {
     }
 
     @Override
-    public void add(Pixel p) {
-        GrayScalePixel gp = (GrayScalePixel) p;
-        this.grayScale = Math.min(255, this.grayScale + gp.getGrayScale());
+    public Pixel add(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
+        int diffGray = maxRed - minRed;
+        int grayScale = (255 * (this.grayScale + p.getRed() - minRed) / diffGray);
+        return new GrayScalePixel(grayScale);
     }
 
     @Override
-    public void subtract(Pixel p) {
-        GrayScalePixel gp = (GrayScalePixel) p;
-        this.grayScale = Math.max(0, this.grayScale - gp.getGrayScale());
+    public Pixel subtract(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
+        int diffGray = maxRed - minRed;
+        int grayScale = (255 * (this.grayScale - p.getRed() - minRed) / diffGray);
+        return new GrayScalePixel(grayScale);
     }
 
     @Override
-    public void multiply(Double d) {
-        this.grayScale = (int) Math.min(255, Math.max(0, this.grayScale * d));
+    public void multiply(Double d, Double cRed, Double cGreen, Double cBlue) {
+        this.grayScale = (int) (cRed * Math.log(1 + this.grayScale));
     }
 
     @Override

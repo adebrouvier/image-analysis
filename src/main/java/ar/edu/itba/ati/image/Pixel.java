@@ -7,11 +7,11 @@ public abstract class Pixel {
 
     public abstract int getBlue();
 
-    public abstract void add(Pixel p);
+    public abstract Pixel add(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue);
 
-    public abstract void subtract(Pixel p);
+    public abstract Pixel subtract(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue);
 
-    public abstract void multiply(Double d);
+    public abstract void multiply(Double d, Double cRed, Double cGreen, Double cBlue);
 
     public abstract void dynamicRangeCompress(Double c);
 

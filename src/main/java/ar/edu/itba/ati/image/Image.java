@@ -24,18 +24,25 @@ public class Image {
     private int height;
     private List<Pixel> pixels;
     private Format format;
+    private ImageType type;
 
     public Image(int width, int height, List<Pixel> pixels, Format format) {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
         this.format = format;
+        if (this.format.equals(Format.PPM)){
+            this.type = ImageType.RGB;
+        } else {
+            this.type = ImageType.GRAY_SCALE;
+        }
     }
 
     public Image(BufferedImage bufferedImage, ImageType imageType) {
         this.width = bufferedImage.getWidth();
         this.height = bufferedImage.getHeight();
         this.pixels = new ArrayList<>(this.width * this.height);
+        this.type = imageType;
         for (int i = 0; i < this.height; i++){
             for (int j = 0; j < this.width; j++) {
                 Color color = new Color(bufferedImage.getRGB(j, i));
@@ -103,18 +110,12 @@ public class Image {
     }
 
     public void pasteImage(int x, int y, Image image) {
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                if (j >= this.width) {
-                    break;
-                }
+        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
                 int thisIndex = this.getIndex(x + j, y + i);
                 int imageIndex = this.getIndex(j, i);
                 this.pixels.remove(thisIndex);
                 this.pixels.add(thisIndex, this.pixels.get(imageIndex));
-            }
-            if (i >= this.height) {
-                break;
             }
         }
     }
@@ -127,69 +128,112 @@ public class Image {
         return pixels.get(0) instanceof GrayScalePixel ? ImageType.GRAY_SCALE : ImageType.RGB;
     }
 
-    public void add(Image image) {
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                if (j >= this.width) {
-                    break;
-                }
-                int imageIndex = this.getIndex(j, i);
-                Pixel myPixel = this.pixels.get(imageIndex);
+    public Image add(Image image) {
+        int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
+        Image newImage = this.copy();
+
+        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+                Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
-                myPixel.add(otherPixel);
-            }
-            if (i >= this.height) {
-                break;
+                maxRed = Math.max(maxRed, myPixel.getRed() + otherPixel.getRed());
+                maxBlue = Math.max(maxBlue, myPixel.getBlue() + otherPixel.getBlue());
+                maxGreen = Math.max(maxGreen, myPixel.getGreen() + otherPixel.getGreen());
+                minRed = Math.min(minRed, myPixel.getRed() + otherPixel.getRed());
+                minBlue = Math.min(minBlue, myPixel.getBlue() + otherPixel.getBlue());
+                minGreen = Math.min(minGreen, myPixel.getGreen() + otherPixel.getGreen());
             }
         }
-    }
 
-    public void substract(Image image) {
-        for (int i = 0; i < image.getHeight(); i++) {
-            for (int j = 0; j < image.getWidth(); j++) {
-                if (j >= this.width) {
-                    break;
-                }
-                int imageIndex = this.getIndex(j, i);
-                Pixel myPixel = this.pixels.get(imageIndex);
+        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+                Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
-                myPixel.subtract(otherPixel);
-            }
-            if (i >= this.height) {
-                break;
+
+                newImage.changePixel(j, i, myPixel.add(otherPixel, maxRed, minRed, maxGreen, minGreen, maxBlue, minBlue));
             }
         }
+        return newImage;
     }
 
-    public void multiply(Double d) {
+    public Image substract(Image image) {
+        int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
+        Image newImage = this.copy();
+
+        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+                Pixel myPixel = this.getPixel(j, i);
+                Pixel otherPixel = image.getPixel(j, i);
+                maxRed = Math.max(maxRed, myPixel.getRed() - otherPixel.getRed());
+                maxBlue = Math.max(maxBlue, myPixel.getBlue() - otherPixel.getBlue());
+                maxGreen = Math.max(maxGreen, myPixel.getGreen() - otherPixel.getGreen());
+                minRed = Math.min(minRed, myPixel.getRed() - otherPixel.getRed());
+                minBlue = Math.min(minBlue, myPixel.getBlue() - otherPixel.getBlue());
+                minGreen = Math.min(minGreen, myPixel.getGreen() - otherPixel.getGreen());
+            }
+        }
+
+        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+                Pixel myPixel = this.getPixel(j, i);
+                Pixel otherPixel = image.getPixel(j, i);
+
+                newImage.changePixel(j, i, myPixel.subtract(otherPixel, maxRed, minRed, maxGreen, minGreen, maxBlue, minBlue));
+            }
+        }
+        return newImage;
+    }
+
+    public Image multiply(Double d) {
+        Double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
+        Image newImage = this.copy();
+        for (Pixel p: newImage.pixels) {
+            maxRed = Math.max(maxRed, p.getRed() * d);
+            maxBlue = Math.max(maxBlue, p.getBlue() * d);
+            maxGreen = Math.max(maxGreen, p.getGreen() * d);
+        }
+
+        double cRed = 255.0 / Math.log(1 + maxRed);
+        double cBlue = 255.0 / Math.log(1 + maxBlue);
+        double cGreen = 255.0 / Math.log(1 + maxGreen);
+
+
         for (Pixel p: this.pixels) {
-            p.multiply(d);
+            p.multiply(d, cRed, cGreen, cBlue);
         }
+        return newImage;
     }
 
-    public void dynamicRangeCompress(Double threshold){
+    public Image dynamicRangeCompress(Double threshold){
         double c = 255.0 / Math.log(1 + threshold);
-        for (Pixel p: this.pixels) {
+        Image newImage = this.copy();
+        for (Pixel p: newImage.pixels) {
             p.dynamicRangeCompress(c);
         }
+        return newImage;
     }
 
-    public void gammaPower(Double gamma){
+    public Image gammaPower(Double gamma){
         double c = Math.pow(255.0, 1 - gamma);
-        for (Pixel p: this.pixels) {
+        Image newImage = this.copy();
+        for (Pixel p: newImage.pixels) {
             p.gammaPower(c, gamma);
         }
+        return newImage;
     }
 
-    public void threshold(Double threshold) {
-        for (Pixel p: this.pixels) {
+    public Image threshold(Double threshold) {
+        Image newImage = this.copy();
+        for (Pixel p: newImage.pixels) {
             p.threshold(threshold);
         }
+        return newImage;
     }
 
-    public void saltAndPepperNoise(Double p0, Double p1) {
+    public Image saltAndPepperNoise(Double p0, Double p1) {
         Random r = new Random();
-        for (Pixel p: this.pixels) {
+        Image image = this.copy();
+        for (Pixel p: image.pixels) {
             Double p2 = r.nextDouble();
             if (p2 <= p0) {
                 p.turnBlack();
@@ -197,5 +241,10 @@ public class Image {
                 p.turnWhite();
             }
         }
+        return image;
+    }
+
+    public Image copy() {
+        return new Image(this.width, this.height, new ArrayList<>(this.pixels), this.format);
     }
 }

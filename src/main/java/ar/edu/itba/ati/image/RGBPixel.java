@@ -25,24 +25,36 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
-    public void add(Pixel p) {
-        this.red = Math.min(255, this.red + p.getRed());
-        this.green = Math.min(255, this.green + p.getGreen());
-        this.blue = Math.min(255, this.blue + p.getBlue());
+    public Pixel add(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
+        int diffRed = maxRed - minRed;
+        int diffGreen = maxGreen - minGreen;
+        int diffBlue = maxBlue - minBlue;
+
+        int red = (255 * (this.red + p.getRed() - minRed) / diffRed);
+        int green = (255 * (this.green + p.getGreen() - minGreen) / diffGreen);
+        int blue = (255 * (this.blue + p.getBlue() - minBlue) / diffBlue);
+
+        return new RGBPixel(red, green, blue);
     }
 
     @Override
-    public void subtract(Pixel p) {
-        this.red = Math.max(0, this.red - p.getRed());
-        this.green = Math.max(0, this.green - p.getGreen());
-        this.blue = Math.max(0, this.blue - p.getBlue());
+    public Pixel subtract(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
+        int diffRed = maxRed - minRed;
+        int diffGreen = maxGreen - minGreen;
+        int diffBlue = maxBlue - minBlue;
+
+        int red = (255 * (this.red - p.getRed() - minRed) / diffRed);
+        int green = (255 * (this.green - p.getGreen() - minGreen) / diffGreen);
+        int blue = (255 * (this.blue - p.getBlue() - minBlue) / diffBlue);
+
+        return new RGBPixel(red, green, blue);
     }
 
     @Override
-    public void multiply(Double d) {
-        this.red = (int) Math.min(255, Math.max(0, this.red * d));
-        this.blue = (int) Math.min(255, Math.max(0, this.blue * d));
-        this.green = (int) Math.min(255, Math.max(0, this.green * d));
+    public void multiply(Double d, Double cRed, Double cGreen, Double cBlue) {
+        this.red = (int) (cRed * Math.log(1 + this.red));
+        this.blue = (int) (cGreen * Math.log(1 + this.blue));
+        this.green = (int) (cBlue * Math.log(1 + this.green));
     }
 
     @Override
