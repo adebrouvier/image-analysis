@@ -62,5 +62,19 @@ public class GrayScalePixel extends Pixel {
         this.grayScale = (int) (c * Math.pow(this.grayScale, gamma));
     }
 
+    @Override
+    public void threshold(Double threshold) {
+        this.grayScale = this.grayScale < threshold ? 0 : 255;
+    }
+
+    @Override
+    public void turnBlack() {
+        this.grayScale = 0;
+    }
+
+    @Override
+    public void turnWhite() {
+        this.grayScale = 255;
+    }
 
 }

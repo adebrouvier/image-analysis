@@ -16,4 +16,10 @@ public abstract class Pixel {
     public abstract void dynamicRangeCompress(Double c);
 
     public abstract void gammaPower(Double c, Double gamma);
+
+    public abstract void threshold(Double threshold);
+
+    public abstract void turnBlack();
+
+    public abstract void turnWhite();
 }

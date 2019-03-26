@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Image {
 
@@ -177,6 +178,24 @@ public class Image {
         double c = Math.pow(255.0, 1 - gamma);
         for (Pixel p: this.pixels) {
             p.gammaPower(c, gamma);
+        }
+    }
+
+    public void threshold(Double threshold) {
+        for (Pixel p: this.pixels) {
+            p.threshold(threshold);
+        }
+    }
+
+    public void saltAndPepperNoise(Double p0, Double p1) {
+        Random r = new Random();
+        for (Pixel p: this.pixels) {
+            Double p2 = r.nextDouble();
+            if (p2 <= p0) {
+                p.turnBlack();
+            } else if (p2 >= p1) {
+                p.turnWhite();
+            }
         }
     }
 }

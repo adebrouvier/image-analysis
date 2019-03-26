@@ -60,6 +60,27 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
+    public void threshold(Double threshold) {
+        this.red = this.red < threshold ? 0 : 255;
+        this.blue = this.blue < threshold ? 0 : 255;
+        this.green = this.green < threshold ? 0 : 255;
+    }
+
+    @Override
+    public void turnBlack() {
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
+    }
+
+    @Override
+    public void turnWhite() {
+        this.red = 255;
+        this.green = 255;
+        this.blue = 255;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Red: ")
