@@ -4,6 +4,7 @@ import ar.edu.itba.ati.io.*;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,6 +23,9 @@ public class OpenListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         JFileChooser fc = new JFileChooser(".");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("RAW and PNM Images",
+                "raw", "pbm", "pgm", "ppm");
+        fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this.windowContext.getImageContainer());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
