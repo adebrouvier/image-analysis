@@ -125,4 +125,58 @@ public class Image {
     public ImageType getType() {
         return pixels.get(0) instanceof GrayScalePixel ? ImageType.GRAY_SCALE : ImageType.RGB;
     }
+
+    public void add(Image image) {
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                if (j >= this.width) {
+                    break;
+                }
+                int imageIndex = this.getIndex(j, i);
+                Pixel myPixel = this.pixels.get(imageIndex);
+                Pixel otherPixel = image.getPixel(j, i);
+                myPixel.add(otherPixel);
+            }
+            if (i >= this.height) {
+                break;
+            }
+        }
+    }
+
+    public void substract(Image image) {
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                if (j >= this.width) {
+                    break;
+                }
+                int imageIndex = this.getIndex(j, i);
+                Pixel myPixel = this.pixels.get(imageIndex);
+                Pixel otherPixel = image.getPixel(j, i);
+                myPixel.subtract(otherPixel);
+            }
+            if (i >= this.height) {
+                break;
+            }
+        }
+    }
+
+    public void multiply(Double d) {
+        for (Pixel p: this.pixels) {
+            p.multiply(d);
+        }
+    }
+
+    public void dynamicRangeCompress(Double threshold){
+        double c = 255.0 / Math.log(1 + threshold);
+        for (Pixel p: this.pixels) {
+            p.dynamicRangeCompress(c);
+        }
+    }
+
+    public void gammaPower(Double gamma){
+        double c = Math.pow(255.0, 1 - gamma);
+        for (Pixel p: this.pixels) {
+            p.gammaPower(c, gamma);
+        }
+    }
 }

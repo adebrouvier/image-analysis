@@ -25,6 +25,41 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
+    public void add(Pixel p) {
+        this.red = Math.min(255, this.red + p.getRed());
+        this.green = Math.min(255, this.green + p.getGreen());
+        this.blue = Math.min(255, this.blue + p.getBlue());
+    }
+
+    @Override
+    public void subtract(Pixel p) {
+        this.red = Math.max(0, this.red - p.getRed());
+        this.green = Math.max(0, this.green - p.getGreen());
+        this.blue = Math.max(0, this.blue - p.getBlue());
+    }
+
+    @Override
+    public void multiply(Double d) {
+        this.red = (int) Math.min(255, Math.max(0, this.red * d));
+        this.blue = (int) Math.min(255, Math.max(0, this.blue * d));
+        this.green = (int) Math.min(255, Math.max(0, this.green * d));
+    }
+
+    @Override
+    public void dynamicRangeCompress(Double c) {
+        this.red = (int) (c * Math.log(1 + this.red));
+        this.blue = (int) (c * Math.log(1 + this.blue));
+        this.green = (int) (c * Math.log(1 + this.green));
+    }
+
+    @Override
+    public void gammaPower(Double c, Double gamma) {
+        this.red = (int) (c * Math.pow(this.red, gamma));
+        this.blue = (int) (c * Math.pow(this.blue, gamma));
+        this.green = (int) (c * Math.pow(this.green, gamma));
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Red: ")
