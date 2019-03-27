@@ -7,8 +7,7 @@ import ar.edu.itba.ati.ui.listeners.histogram.HistogramListener;
 import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
-import ar.edu.itba.ati.ui.listeners.transformations.ExponentialNoiseListener;
-import ar.edu.itba.ati.ui.listeners.transformations.NegativeListener;
+import ar.edu.itba.ati.ui.listeners.transformations.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -128,6 +127,10 @@ public class OptionMenu extends JMenuBar {
         JMenu noise = createNoiseSubMenu();
         transform.add(noise);
 
+        item = new JMenuItem("Contrast increase", KeyEvent.VK_C);
+        item.addActionListener(new ContrastListener(windowContext));
+        transform.add(item);
+
         add(transform);
     }
 
@@ -137,6 +140,14 @@ public class OptionMenu extends JMenuBar {
         JMenuItem item;
         item = new JMenuItem("Exponential", KeyEvent.VK_E);
         item.addActionListener(new ExponentialNoiseListener(windowContext));
+        noise.add(item);
+
+        item = new JMenuItem("Gaussian", KeyEvent.VK_G);
+        item.addActionListener(new GaussianNoiseListener(windowContext));
+        noise.add(item);
+
+        item = new JMenuItem("Rayleigh", KeyEvent.VK_R);
+        item.addActionListener(new RayleighNoiseListener(windowContext));
         noise.add(item);
 
         return noise;

@@ -1,5 +1,10 @@
 package ar.edu.itba.ati.image;
 
+import ar.edu.itba.ati.random.ExponentialGenerator;
+import ar.edu.itba.ati.random.GaussianGenerator;
+import ar.edu.itba.ati.random.RandomGenerator;
+import ar.edu.itba.ati.random.RayleighGenerator;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -246,5 +251,89 @@ public class Image {
 
     public Image copy() {
         return new Image(this.width, this.height, new ArrayList<>(this.pixels), this.format);
+    }
+
+    public int getGrayScaleMean() {
+        int total = 0;
+        for (Pixel p : pixels){
+            total += ((GrayScalePixel) p).getGrayScale();
+        }
+        return total/pixels.size();
+    }
+
+    public int getGrayScaleStDev() {
+        int mean = getGrayScaleMean();
+        int acum = 0;
+
+        for (Pixel p : pixels){
+            acum += Math.pow(((GrayScalePixel) p).getGrayScale() - mean, 2);
+        }
+
+        return (int) Math.sqrt((1.0/pixels.size())*acum);
+    }
+
+    public void increaseContrast() {
+        int mean = getGrayScaleMean();
+        int stDev = getGrayScaleStDev();
+        int r1 = mean - stDev;
+        int r2 = mean + stDev;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                GrayScalePixel p = (GrayScalePixel) getPixel(x, y);
+                int newValue = p.getGrayScale();
+                if (p.getGrayScale() <= r1){
+                    newValue = f1(newValue, r1);
+                }
+                if (p.getGrayScale() >= r2){
+                    newValue = f2(newValue, r2);
+                }
+                changePixel(x, y, new GrayScalePixel(newValue));
+            }
+        }
+    }
+
+    private final static double decreaseFactor = 0.25;
+    private final static double increaseFactor = 1 + decreaseFactor;
+
+    private int f1(int x, int r){
+        return slope(x, 0, 0, r, r*decreaseFactor);
+    }
+
+    private int f2(int x, int r){
+        return slope(x, 255, 255, r, r*increaseFactor);
+    }
+
+    private int slope(int x, double x1, double y1, double x2, double y2){
+        return (int) ((x - x1)*(y2 - y1)/(x2 - x1) + y1);
+    }
+
+    public void addExponentialNoise(double percentage, double lambda) {
+        multiplyNoise(percentage, new ExponentialGenerator(lambda));
+    }
+
+    public void addRayleighNoise(double percentage, double phi) {
+        multiplyNoise(percentage, new RayleighGenerator(phi));
+    }
+
+    public void addGaussianNoise(double percentage, double mean, double stDev) {
+        GaussianGenerator generator = new GaussianGenerator(stDev, mean);
+        for (Pixel p : pixels){
+            if (Math.random() < percentage){
+                GrayScalePixel pixel = (GrayScalePixel) p;
+                double noise = generator.getDouble();
+                pixel.add(new GrayScalePixel((int) noise));
+            }
+        }
+    }
+
+    private void multiplyNoise(double percentage, RandomGenerator generator) {
+        for (Pixel p : pixels){
+            if (Math.random() < percentage){
+                GrayScalePixel pixel = (GrayScalePixel) p;
+                double noise = generator.getDouble();
+               pixel.multiply(noise);
+            }
+        }
     }
 }
