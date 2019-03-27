@@ -319,6 +319,7 @@ public class Image {
                 pixel.add(new GrayScalePixel((int) noise));
             }
         }
+        newImage.normalize();
         return newImage;
     }
 
@@ -331,7 +332,28 @@ public class Image {
                 pixel.multiply(noise);
             }
         }
+        newImage.normalize();
         return newImage;
+    }
+
+    public void normalize() {
+        double max = 0;
+        double min = 255;
+
+        for (Pixel p : pixels){
+            GrayScalePixel pixel = (GrayScalePixel) p;
+            max = Math.max(max, pixel.getGrayScale());
+            min = Math.min(min, pixel.getGrayScale());
+        }
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++){
+                Pixel p = getPixel(x, y);
+                int newVal = (int) ((p.getRed() - min)/(max - min) * 255);
+                Pixel newPixel = new GrayScalePixel(newVal);
+                changePixel(x, y, newPixel);
+            }
+        }
     }
 
     private Image applyMask(int maskSize, MaskApplier mask) {
