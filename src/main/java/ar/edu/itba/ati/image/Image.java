@@ -332,7 +332,7 @@ public class Image {
             if (Math.random() < percentage){
                 GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
-               pixel.multiply(noise);
+                pixel.multiply(noise);
             }
         }
     }
