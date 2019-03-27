@@ -1,6 +1,7 @@
 package ar.edu.itba.ati.ui.listeners.transformations;
 
 import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.ContrastDialog;
 
@@ -26,8 +27,8 @@ public class ContrastListener implements ActionListener {
         int result = JOptionPane.showConfirmDialog(null, dialog,
                 "Please enter Contrast options", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            image.increaseContrast(r1, r2, dialog.getS1(), dialog.getS2());
-            windowContext.getImageContainer().renderImage();
+            Image newImage = image.increaseContrast(r1, r2, dialog.getS1(), dialog.getS2());
+            FrameHelper.create(newImage);
         }
     }
 }

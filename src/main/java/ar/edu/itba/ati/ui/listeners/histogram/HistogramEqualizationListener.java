@@ -1,6 +1,8 @@
 package ar.edu.itba.ati.ui.listeners.histogram;
 
 import ar.edu.itba.ati.image.Histogram;
+import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.HistogramContainer;
 import ar.edu.itba.ati.ui.WindowContext;
 import org.jfree.chart.JFreeChart;
@@ -19,9 +21,10 @@ public class HistogramEqualizationListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Histogram histogram = new Histogram(windowContext.getImageContainer().getImage());
-        histogram.equalize();
-        JFreeChart histogramChart = histogram.createChart();
+        Image newImage = histogram.equalize();
+        Histogram newHistogram = new Histogram(newImage);
+        JFreeChart histogramChart = newHistogram.createChart();
         HistogramContainer.show(histogramChart);
-        windowContext.getImageContainer().renderImage();
+        FrameHelper.create(newImage);
     }
 }

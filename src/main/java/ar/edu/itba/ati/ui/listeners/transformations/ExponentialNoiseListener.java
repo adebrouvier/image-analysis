@@ -1,6 +1,7 @@
 package ar.edu.itba.ati.ui.listeners.transformations;
 
 import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.ExponentialNoiseDialog;
 
@@ -25,8 +26,8 @@ public class ExponentialNoiseListener implements ActionListener {
                 "Please enter Exponential Noise options", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            image.addExponentialNoise(dialog.getPercentage(), dialog.getLambda());
-            windowContext.getImageContainer().renderImage();
+            Image newImage = image.addExponentialNoise(dialog.getPercentage(), dialog.getLambda());
+            FrameHelper.create(newImage);
         }
     }
 }

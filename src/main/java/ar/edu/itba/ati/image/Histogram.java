@@ -89,7 +89,7 @@ public class Histogram {
         return new XYBarDataset(new XYSeriesCollection(series), 1.0);
     }
 
-    public void equalize() {
+    public Image equalize() {
         Map<Integer, Integer> cdf = new HashMap<>();
         int acummulated = 0;
         int min = Integer.MAX_VALUE;
@@ -114,17 +114,18 @@ public class Histogram {
             equalized.put(entry.getKey(), equalizedValue);
         }
 
-        updateImage(equalized);
-        create();
+        return createImage(equalized);
     }
 
-    private void updateImage(Map<Integer, Integer> equalized) {
+    private Image createImage(Map<Integer, Integer> equalized) {
+        Image newImage = image.copy();
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++){
                 int currentPixel = image.getPixel(x, y).getRed();
                 Pixel newPixel = new GrayScalePixel(equalized.get(currentPixel));
-                image.changePixel(x, y, newPixel);
+                newImage.changePixel(x, y, newPixel);
             }
         }
+        return newImage;
     }
 }

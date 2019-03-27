@@ -1,6 +1,7 @@
 package ar.edu.itba.ati.ui.listeners.transformations;
 
 import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.dialogs.GaussianNoiseDialog;
 import ar.edu.itba.ati.ui.WindowContext;
 
@@ -25,8 +26,8 @@ public class GaussianNoiseListener implements ActionListener {
                 "Please enter Gaussian Noise options", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            image.addGaussianNoise(dialog.getPercentage(), dialog.getMean(), dialog.getStDev());
-            windowContext.getImageContainer().renderImage();
+            Image newImage = image.addGaussianNoise(dialog.getPercentage(), dialog.getMean(), dialog.getStDev());
+            FrameHelper.create(newImage);
         }
     }
 }

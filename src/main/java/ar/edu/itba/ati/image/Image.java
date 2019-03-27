@@ -271,7 +271,8 @@ public class Image {
         return (int) Math.sqrt((1.0/pixels.size())*acum);
     }
 
-    public void increaseContrast(int r1, int r2, int s1, int s2) {
+    public Image increaseContrast(int r1, int r2, int s1, int s2) {
+        Image image = copy();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 GrayScalePixel p = (GrayScalePixel) getPixel(x, y);
@@ -282,9 +283,10 @@ public class Image {
                 if (p.getGrayScale() >= r2){
                     newValue = f2(newValue, r2, s2);
                 }
-                changePixel(x, y, new GrayScalePixel(newValue));
+                image.changePixel(x, y, new GrayScalePixel(newValue));
             }
         }
+        return image;
     }
 
     private int f1(int x, int r, int s){
@@ -299,33 +301,37 @@ public class Image {
         return (int) ((x - x1)*(y2 - y1)/(x2 - x1) + y1);
     }
 
-    public void addExponentialNoise(double percentage, double lambda) {
-        multiplyNoise(percentage, new ExponentialGenerator(lambda));
+    public Image addExponentialNoise(double percentage, double lambda) {
+        return multiplyNoise(percentage, new ExponentialGenerator(lambda));
     }
 
-    public void addRayleighNoise(double percentage, double phi) {
-        multiplyNoise(percentage, new RayleighGenerator(phi));
+    public Image addRayleighNoise(double percentage, double phi) {
+        return multiplyNoise(percentage, new RayleighGenerator(phi));
     }
 
-    public void addGaussianNoise(double percentage, double mean, double stDev) {
+    public Image addGaussianNoise(double percentage, double mean, double stDev) {
         GaussianGenerator generator = new GaussianGenerator(stDev, mean);
-        for (Pixel p : pixels){
+        Image newImage = this.copy();
+        for (Pixel p : newImage.pixels){
             if (Math.random() < percentage){
                 GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
                 pixel.add(new GrayScalePixel((int) noise));
             }
         }
+        return newImage;
     }
 
-    private void multiplyNoise(double percentage, RandomGenerator generator) {
-        for (Pixel p : pixels){
+    private Image multiplyNoise(double percentage, RandomGenerator generator) {
+        Image newImage = this.copy();
+        for (Pixel p : newImage.pixels){
             if (Math.random() < percentage){
                 GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
                 pixel.multiply(noise);
             }
         }
+        return newImage;
     }
 
     private Image applyMask(int maskSize, MaskApplier mask) {
@@ -424,5 +430,27 @@ public class Image {
         } else {
             return new GrayScalePixel(red);
         }
+    }
+
+    public Image getNegative() {
+        Image newImage = this.copy();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Pixel p = getPixel(x, y);
+                Pixel newPixel;
+                if (type.equals(Image.ImageType.RGB)) {
+                    newPixel = new RGBPixel(negative(p.getRed()), negative(p.getGreen()), negative(p.getBlue()));
+                }else {
+                    GrayScalePixel g = (GrayScalePixel) p;
+                    newPixel = new GrayScalePixel(negative(g.getGrayScale()));
+                }
+                newImage.changePixel(x, y, newPixel);
+            }
+        }
+        return newImage;
+    }
+
+    private int negative(int component){
+        return -component + 256 - 1;
     }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.ati.ui.listeners.transformations;
 
 import ar.edu.itba.ati.image.Image;
+import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.RayleighNoiseDialog;
 
@@ -25,8 +26,8 @@ public class RayleighNoiseListener implements ActionListener {
                 "Please enter Rayleigh Noise options", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            image.addRayleighNoise(dialog.getPercentage(), dialog.getPhi());
-            windowContext.getImageContainer().renderImage();
+            Image newImage = image.addRayleighNoise(dialog.getPercentage(), dialog.getPhi());
+            FrameHelper.create(newImage);
         }
     }
 }
