@@ -7,9 +7,8 @@ import ar.edu.itba.ati.random.RayleighGenerator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class Image {
 
@@ -334,6 +333,104 @@ public class Image {
                 double noise = generator.getDouble();
                 pixel.multiply(noise);
             }
+        }
+    }
+
+    private Image applyMask(int maskSize, MaskApplier mask) {
+        if (maskSize % 2 != 1){
+            throw new IllegalArgumentException("Mask size must not be divided by 2.");
+        }
+
+        Image newImage = this.copy();
+        int bound = (maskSize - 1) / 2;
+        for (int y = bound; y < height - bound; y++) {
+            for (int x = bound; x < width - bound; x++) {
+                ArrayList<Pixel> pixels = new ArrayList<>(maskSize * maskSize);
+                for (int j = y - bound; j <= y + bound; j++) {
+                    for (int i = x - bound; i <= x + bound; i++) {
+                        pixels.add(this.getPixel(i, j));
+                    }
+                }
+                Pixel pixel = mask.apply(pixels);
+                newImage.changePixel(x, y, pixel);
+            }
+        }
+
+        return newImage;
+    }
+
+    public Image meanFilter(int maskSize) {
+        return this.applyMask(maskSize, (pixels) -> {
+            int red = 0, green = 0, blue = 0;
+
+            for (Pixel p: pixels){
+                red += p.getRed();
+                blue += p.getBlue();
+                green += p.getGreen();
+            }
+            red /= pixels.size();
+            green /= pixels.size();
+            blue /= pixels.size();
+
+            if (this.type.equals(ImageType.RGB)) {
+                return new RGBPixel(red, green, blue);
+            } else {
+                return new GrayScalePixel(red);
+            }
+        });
+    }
+
+    public Image medianFilter(int maskSize) {
+        return this.applyMask(maskSize, (pixels) -> {
+            List<Integer> red = new ArrayList<>(pixels.size()),
+                    green = new ArrayList<>(pixels.size()),
+                    blue = new ArrayList<>(pixels.size());
+
+            for (Pixel p: pixels){
+                red.add(p.getRed());
+                blue.add(p.getBlue());
+                green.add(p.getGreen());
+            }
+            int index = pixels.size() / 2;
+
+            if (this.type.equals(ImageType.RGB)) {
+                return new RGBPixel(red.get(index), green.get(index), blue.get(index));
+            } else {
+                return new GrayScalePixel(red.get(index));
+            }
+        });
+    }
+
+    public Image ponderateMedianFilter() {
+        return this.applyMask(3, (pixels) -> {
+            Integer[] values = {1, 2, 1, 2, 4, 2, 1, 2, 1};
+            return this.getWeightedValue(pixels, values);
+        });
+    }
+
+    public Image highPassfilter() {
+        return this.applyMask(3, (pixels) -> {
+            Integer[] values = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
+            return this.getWeightedValue(pixels, values);
+        });
+    }
+
+    private Pixel getWeightedValue(List<Pixel> pixels, Integer[] values) {
+        int red = 0, green = 0, blue = 0, totalWeight = 0;
+        for (int j = 0; j < values.length; j++) {
+            totalWeight += values[j];
+            red += pixels.get(j).getRed() * values[j];
+            blue += pixels.get(j).getBlue() * values[j];
+            green += pixels.get(j).getGreen() * values[j];
+        }
+        red /= totalWeight;
+        blue /= totalWeight;
+        green /= totalWeight;
+
+        if (this.type.equals(ImageType.RGB)) {
+            return new RGBPixel(red, green, blue);
+        } else {
+            return new GrayScalePixel(red);
         }
     }
 }
