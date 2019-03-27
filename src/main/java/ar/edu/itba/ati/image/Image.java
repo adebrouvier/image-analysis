@@ -271,36 +271,28 @@ public class Image {
         return (int) Math.sqrt((1.0/pixels.size())*acum);
     }
 
-    public void increaseContrast() {
-        int mean = getGrayScaleMean();
-        int stDev = getGrayScaleStDev();
-        int r1 = mean - stDev;
-        int r2 = mean + stDev;
-
+    public void increaseContrast(int r1, int r2, int s1, int s2) {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 GrayScalePixel p = (GrayScalePixel) getPixel(x, y);
                 int newValue = p.getGrayScale();
                 if (p.getGrayScale() <= r1){
-                    newValue = f1(newValue, r1);
+                    newValue = f1(newValue, r1, s1);
                 }
                 if (p.getGrayScale() >= r2){
-                    newValue = f2(newValue, r2);
+                    newValue = f2(newValue, r2, s2);
                 }
                 changePixel(x, y, new GrayScalePixel(newValue));
             }
         }
     }
 
-    private final static double decreaseFactor = 0.25;
-    private final static double increaseFactor = 1 + decreaseFactor;
-
-    private int f1(int x, int r){
-        return slope(x, 0, 0, r, r*decreaseFactor);
+    private int f1(int x, int r, int s){
+        return slope(x, 0, 0, r, s);
     }
 
-    private int f2(int x, int r){
-        return slope(x, 255, 255, r, r*increaseFactor);
+    private int f2(int x, int r, int s){
+        return slope(x, 255, 255, r, s);
     }
 
     private int slope(int x, double x1, double y1, double x2, double y2){
