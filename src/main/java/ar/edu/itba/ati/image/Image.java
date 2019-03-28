@@ -356,6 +356,33 @@ public class Image {
         }
     }
 
+    private void normalizeColor() {
+        double maxRed = 0, maxGreen = 0, maxBlue = 0;
+        double minRed = 255, minGreen = 255, minBlue = 255;
+
+        for (Pixel p : pixels){
+            RGBPixel pixel = (RGBPixel) p;
+            maxRed = Math.max(maxRed, pixel.getRed());
+            minRed = Math.min(minRed, pixel.getRed());
+            maxGreen = Math.max(maxGreen, pixel.getGreen());
+            minGreen = Math.min(minGreen, pixel.getGreen());
+            maxBlue = Math.max(maxBlue, pixel.getBlue());
+            minBlue = Math.min(minBlue, pixel.getBlue());
+        }
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++){
+                Pixel p = getPixel(x, y);
+                int newRed = (int) ((p.getRed() - minRed)/(maxRed - minRed) * 255);
+                int newGreen = (int) ((p.getGreen() - minGreen)/(maxGreen - minGreen) * 255);
+                int newBlue = (int) ((p.getBlue() - minBlue)/(maxBlue - minBlue) * 255);
+
+                Pixel newPixel = new RGBPixel(newRed, newGreen, newBlue);
+                changePixel(x, y, newPixel);
+            }
+        }
+    }
+
     private Image applyMask(int maskSize, MaskApplier mask) {
         if (maskSize % 2 != 1){
             throw new IllegalArgumentException("Mask size must not be divided by 2.");
@@ -375,7 +402,11 @@ public class Image {
                 newImage.changePixel(x, y, pixel);
             }
         }
-
+        if (newImage.type.equals(ImageType.RGB)) {
+            newImage.normalizeColor();
+        } else {
+            newImage.normalize();
+        }
         return newImage;
     }
 
@@ -423,19 +454,19 @@ public class Image {
 
     public Image ponderateMedianFilter() {
         return this.applyMask(3, (pixels) -> {
-            Integer[] values = {1, 2, 1, 2, 4, 2, 1, 2, 1};
+            Double[] values = {1.0, 2.0, 1.0, 2.0, 4.0, 2.0, 1.0, 2.0, 1.0};
             return this.getWeightedValue(pixels, values);
         });
     }
 
     public Image highPassfilter() {
         return this.applyMask(3, (pixels) -> {
-            Integer[] values = {-1, -1, -1, -1, 8, -1, -1, -1, -1};
+            Double[] values = {-1.0, -1.0, -1.0, -1.0, 8.0, -1.0, -1.0, -1.0, -1.0};
             return this.getWeightedValue(pixels, values);
         });
     }
 
-    private Pixel getWeightedValue(List<Pixel> pixels, Integer[] values) {
+    private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
         int red = 0, green = 0, blue = 0, totalWeight = 0;
         for (int j = 0; j < values.length; j++) {
             totalWeight += values[j];
@@ -443,15 +474,41 @@ public class Image {
             blue += pixels.get(j).getBlue() * values[j];
             green += pixels.get(j).getGreen() * values[j];
         }
-        red /= totalWeight;
-        blue /= totalWeight;
-        green /= totalWeight;
+        if (totalWeight != 0) {
+            red /= totalWeight;
+            blue /= totalWeight;
+            green /= totalWeight;
+        }
 
         if (this.type.equals(ImageType.RGB)) {
             return new RGBPixel(red, green, blue);
         } else {
             return new GrayScalePixel(red);
         }
+    }
+
+    public Image gaussMaskFilter(Double std, Integer maskSize) {
+        Double [] mask = getGaussianMask(maskSize, std);
+        return this.applyMask(maskSize, (pixels) ->
+            this.getWeightedValue(pixels, mask)
+        );
+    }
+
+    private Double[] getGaussianMask(Integer maskSize, Double std) {
+        Double[] mask = new Double[maskSize * maskSize];
+        for (int i = 0; i < maskSize; i++) {
+            for (int j = 0; j < maskSize; j++) {
+                int x = i - maskSize / 2;
+                int y = j - maskSize / 2;
+                mask[i + j * maskSize] = getGaussianWeight(std, x, y);
+            }
+        }
+        return mask;    }
+
+    private Double getGaussianWeight(Double std, Integer x, Integer y) {
+            Double mult = 1 / (2 * Math.PI * std * std);
+            Double exponent = -(Math.pow(x, 2) + Math.pow(y, 2)) / (2 * Math.pow(std, 2));
+            return mult * Math.exp(exponent);
     }
 
     public Image getNegative() {

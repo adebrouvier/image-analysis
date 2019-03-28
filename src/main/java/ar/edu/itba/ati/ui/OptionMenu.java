@@ -7,6 +7,7 @@ import ar.edu.itba.ati.ui.listeners.histogram.HistogramListener;
 import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
+import ar.edu.itba.ati.ui.listeners.slidingwindow.*;
 import ar.edu.itba.ati.ui.listeners.transformations.*;
 
 import javax.swing.*;
@@ -127,6 +128,9 @@ public class OptionMenu extends JMenuBar {
         JMenu noise = createNoiseSubMenu();
         transform.add(noise);
 
+        JMenu slidingWindow = createSlidingWindowMenu();
+        transform.add(slidingWindow);
+
         item = new JMenuItem("Contrast increase", KeyEvent.VK_C);
         item.addActionListener(new ContrastListener(windowContext));
         transform.add(item);
@@ -159,6 +163,34 @@ public class OptionMenu extends JMenuBar {
         noise.add(item);
 
         return noise;
+    }
+
+
+    private JMenu createSlidingWindowMenu(){
+        JMenu slidingWindow = new JMenu("Sliding Window");
+
+        JMenuItem item;
+        item = new JMenuItem("Mean", KeyEvent.VK_E);
+        item.addActionListener(new MeanListener(windowContext));
+        slidingWindow.add(item);
+
+        item = new JMenuItem("Median", KeyEvent.VK_G);
+        item.addActionListener(new MedianListener(windowContext));
+        slidingWindow.add(item);
+
+        item = new JMenuItem("Weighted Median", KeyEvent.VK_R);
+        item.addActionListener(new WeightedMedianListener(windowContext));
+        slidingWindow.add(item);
+
+        item = new JMenuItem("Gauss", KeyEvent.VK_P);
+        item.addActionListener(new GaussianListener(windowContext));
+        slidingWindow.add(item);
+
+        item = new JMenuItem("Enhancement of edges", KeyEvent.VK_P);
+        item.addActionListener(new EdgeEnhancementListener(windowContext));
+        slidingWindow.add(item);
+
+        return slidingWindow;
     }
 
     private void createHistogramMenu() {
