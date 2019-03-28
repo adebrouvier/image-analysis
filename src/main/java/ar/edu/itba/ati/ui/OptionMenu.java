@@ -4,6 +4,7 @@ import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.listeners.*;
 import ar.edu.itba.ati.ui.listeners.histogram.HistogramEqualizationListener;
 import ar.edu.itba.ati.ui.listeners.histogram.HistogramListener;
+import ar.edu.itba.ati.ui.listeners.operations.*;
 import ar.edu.itba.ati.ui.listeners.selectables.InformationSelectable;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
@@ -34,6 +35,7 @@ public class OptionMenu extends JMenuBar {
         createSelectMenu();
         createTransformMenu();
         createHistogramMenu();
+        createOperations();
     }
 
     private void createFileMenu() {
@@ -207,6 +209,33 @@ public class OptionMenu extends JMenuBar {
         histogram.add(item);
 
         add(histogram);
+    }
+
+    private void createOperations() {
+        JMenu operations = new JMenu("Operations");
+        JMenuItem item;
+
+        item = new JMenuItem("Addition");
+        item.addActionListener(new AdditionListener(windowContext));
+        operations.add(item);
+
+        item = new JMenuItem("Subtraction");
+        item.addActionListener(new SubtractListener(windowContext));
+        operations.add(item);
+
+        item = new JMenuItem("Multiply");
+        item.addActionListener(new MultiplyListener(windowContext));
+        operations.add(item);
+
+        item = new JMenuItem("Dynamic Range Compression");
+        item.addActionListener(new DynamicCompressionListener(windowContext));
+        operations.add(item);
+
+        item = new JMenuItem("Gamma Power");
+        item.addActionListener(new GammaPowerListener(windowContext));
+        operations.add(item);
+
+        add(operations);
     }
 
 }

@@ -214,6 +214,11 @@ public class Image {
         for (Pixel p: newImage.pixels) {
             p.dynamicRangeCompress(c);
         }
+        if (newImage.type.equals(ImageType.RGB)){
+            newImage.normalizeColor();
+        } else {
+            newImage.normalize();
+        }
         return newImage;
     }
 
@@ -222,6 +227,11 @@ public class Image {
         Image newImage = this.copy();
         for (Pixel p: newImage.pixels) {
             p.gammaPower(c, gamma);
+        }
+        if (newImage.type.equals(ImageType.RGB)){
+            newImage.normalizeColor();
+        } else {
+            newImage.normalize();
         }
         return newImage;
     }
