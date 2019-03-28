@@ -150,6 +150,10 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new RayleighNoiseListener(windowContext));
         noise.add(item);
 
+        item = new JMenuItem("Salt and Pepper", KeyEvent.VK_P);
+        item.addActionListener(new SaltAndPepperNoiseListener(windowContext));
+        noise.add(item);
+
         return noise;
     }
 
