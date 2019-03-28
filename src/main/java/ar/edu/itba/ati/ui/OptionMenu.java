@@ -154,6 +154,10 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new SaltAndPepperNoiseListener(windowContext));
         noise.add(item);
 
+        item = new JMenuItem("Threshold", KeyEvent.VK_P);
+        item.addActionListener(new ThresholdListener(windowContext));
+        noise.add(item);
+
         return noise;
     }
 
