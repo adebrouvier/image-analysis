@@ -191,7 +191,7 @@ public class Image {
     public Image multiply(Double d) {
         Double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
         Image newImage = this.copy();
-        for (Pixel p: newImage.pixels) {
+        /*for (Pixel p: newImage.pixels) {
             maxRed = Math.max(maxRed, p.getRed() * d);
             maxBlue = Math.max(maxBlue, p.getBlue() * d);
             maxGreen = Math.max(maxGreen, p.getGreen() * d);
@@ -204,8 +204,13 @@ public class Image {
 
         for (Pixel p: this.pixels) {
             p.multiply(d, cRed, cGreen, cBlue);
+        }*/
+
+        for (Pixel p: newImage.pixels) {
+            p.multiply(d);
         }
-        return newImage;
+
+        return newImage.dynamicRangeCompress();
     }
 
     public Image dynamicRangeCompress(){
@@ -216,14 +221,19 @@ public class Image {
             maxBlue = Math.max(maxBlue, p.getBlue());
             maxGreen = Math.max(maxGreen, p.getGreen());
         }
+
+        Double cRed = 255.0 / Math.log(1 + maxRed);
+        Double cBlue = 255.0 / Math.log(1 + maxBlue);
+        Double cGreen = 255.0 / Math.log(1 + maxGreen);
+
         for (Pixel p: newImage.pixels) {
-            p.dynamicRangeCompress(maxRed, maxGreen, maxBlue);
+            p.dynamicRangeCompress(cRed, cGreen, cBlue);
         }
-        if (newImage.type.equals(ImageType.RGB)){
+        /*if (newImage.type.equals(ImageType.RGB)){
             newImage.normalizeColor();
         } else {
             newImage.normalize();
-        }
+        }*/
         return newImage;
     }
 
@@ -347,8 +357,8 @@ public class Image {
                 pixel.multiply(noise);
             }
         }
-        newImage.normalize();
-        return newImage;
+        //newImage.normalize();
+        return newImage.dynamicRangeCompress();
     }
 
     public void normalize() {

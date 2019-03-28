@@ -11,7 +11,7 @@ public class ImageAnalyzerFrame extends JFrame {
     public ImageAnalyzerFrame(String title) {
         super(title);
         setLayout(new BorderLayout());
-        setSize(450, 450);
+        setSize(650, 450);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         setJMenuBar(windowContext.getOptionMenu());

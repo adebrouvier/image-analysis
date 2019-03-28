@@ -13,6 +13,7 @@ public class ContrastDialog extends JPanel {
     private static final int R2_MAX = 255;
 
     public ContrastDialog(int r1, int r2){
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.r1 = r1;
         this.r2 = r2;
         createSliders();

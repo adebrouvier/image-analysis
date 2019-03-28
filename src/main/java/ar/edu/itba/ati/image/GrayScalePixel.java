@@ -30,6 +30,9 @@ public class GrayScalePixel extends Pixel {
     @Override
     public Pixel add(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
         int diffGray = maxRed - minRed;
+        if (diffGray == 0) {
+            return new GrayScalePixel(maxRed);
+        }
         int grayScale = (255 * (this.grayScale + p.getRed() - minRed) / diffGray);
         return new GrayScalePixel(grayScale);
     }
@@ -42,6 +45,9 @@ public class GrayScalePixel extends Pixel {
     @Override
     public Pixel subtract(Pixel p, int maxRed, int minRed, int maxGreen, int minGreen, int maxBlue, int minBlue) {
         int diffGray = maxRed - minRed;
+        if (diffGray == 0) {
+            return new GrayScalePixel(maxRed);
+        }
         int grayScale = (255 * (this.grayScale - p.getRed() - minRed) / diffGray);
         return new GrayScalePixel(grayScale);
     }
@@ -65,8 +71,8 @@ public class GrayScalePixel extends Pixel {
     }
 
     @Override
-    public void dynamicRangeCompress(Double maxRed, Double maxGreen, Double maxBlue) {
-        this.grayScale = (int) (maxRed * Math.log(1 + this.grayScale));
+    public void dynamicRangeCompress(Double c, Double maxGreen, Double maxBlue) {
+        this.grayScale = (int) (c * Math.log(1 + this.grayScale));
     }
 
     @Override

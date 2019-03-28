@@ -3,12 +3,17 @@ package ar.edu.itba.ati.ui;
 import javax.swing.*;
 
 public class WindowContext {
-    private ImageContainer imageContainer = new ImageContainer(this);
-    private OptionMenu optionMenu = new OptionMenu(this);
-    private JLabel informationLabel = new JLabel();
-    private MouseOptions mouseOptions = new MouseOptions(this);
+    private ImageContainer imageContainer;
+    private OptionMenu optionMenu;
+    private JLabel informationLabel;
+    private MouseOptions mouseOptions;
 
-    public WindowContext() {}
+    public WindowContext() {
+        imageContainer = new ImageContainer(this);
+        optionMenu = new OptionMenu(this);
+        informationLabel = new JLabel();
+        mouseOptions = new MouseOptions(this);
+    }
 
     public ImageContainer getImageContainer() {
         return imageContainer;
