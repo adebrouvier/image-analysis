@@ -18,7 +18,7 @@ public class WeightedMedianListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Image image = windowContext.getImageContainer().getImage();
-        Image newImage = image.ponderateMedianFilter();
+        Image newImage = image.weightedMedian();
         FrameHelper.create(newImage);
     }
 }

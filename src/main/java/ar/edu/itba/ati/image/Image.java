@@ -9,6 +9,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 public class Image {
 
@@ -365,7 +367,6 @@ public class Image {
                 pixel.multiply(noise);
             }
         }
-        //newImage.normalize();
         return newImage.dynamicRangeCompress();
     }
 
@@ -489,14 +490,14 @@ public class Image {
         });
     }
 
-    public Image ponderateMedianFilter() {
+    public Image weightedMedian() {
         return this.applyMask(3, (pixels) -> {
             Double[] values = {1.0, 2.0, 1.0, 2.0, 4.0, 2.0, 1.0, 2.0, 1.0};
             return this.getWeightedValue(pixels, values);
         });
     }
 
-    public Image highPassfilter() {
+    public Image highPassFilter() {
         return this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -1.0, -1.0, -1.0, 8.0, -1.0, -1.0, -1.0, -1.0};
             return this.getWeightedValue(pixels, values);
@@ -504,23 +505,29 @@ public class Image {
     }
 
     private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
-        int red = 0, green = 0, blue = 0, totalWeight = 0;
+        List<Integer> red = new ArrayList<>(pixels.size()),
+                green = new ArrayList<>(pixels.size()),
+                blue = new ArrayList<>(pixels.size());
+
         for (int j = 0; j < values.length; j++) {
-            totalWeight += values[j];
-            red += pixels.get(j).getRed() * values[j];
-            blue += pixels.get(j).getBlue() * values[j];
-            green += pixels.get(j).getGreen() * values[j];
-        }
-        if (totalWeight != 0) {
-            red /= totalWeight;
-            blue /= totalWeight;
-            green /= totalWeight;
+            int finalJ = j;
+            IntStream.rangeClosed(1, values[j].intValue()).forEach(i -> {
+                red.add(pixels.get(finalJ).getRed());
+                blue.add(pixels.get(finalJ).getBlue());
+                green.add(pixels.get(finalJ).getGreen());
+            });
         }
 
+        int index = pixels.size() / 2;
+
+        Collections.sort(red);
+        Collections.sort(green);
+        Collections.sort(blue);
+
         if (this.type.equals(ImageType.RGB)) {
-            return new RGBPixel(red, green, blue);
+            return new RGBPixel(red.get(index), green.get(index), blue.get(index));
         } else {
-            return new GrayScalePixel(red);
+            return new GrayScalePixel(red.get(index));
         }
     }
 
