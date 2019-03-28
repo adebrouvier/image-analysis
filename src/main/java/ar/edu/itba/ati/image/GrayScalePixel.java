@@ -53,7 +53,7 @@ public class GrayScalePixel extends Pixel {
 
     @Override
     public void multiply(Double m) {
-        dynamicRangeCompress(m);
+        this.grayScale = (int) (m * this.grayScale);
     }
 
     @Override
