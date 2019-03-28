@@ -454,6 +454,10 @@ public class Image {
             }
             int index = pixels.size() / 2;
 
+            Collections.sort(red);
+            Collections.sort(green);
+            Collections.sort(blue);
+
             if (this.type.equals(ImageType.RGB)) {
                 return new RGBPixel(red.get(index), green.get(index), blue.get(index));
             } else {
