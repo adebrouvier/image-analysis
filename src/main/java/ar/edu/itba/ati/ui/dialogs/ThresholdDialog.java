@@ -12,12 +12,13 @@ public class ThresholdDialog extends JPanel {
 
     public ThresholdDialog(){
         this.threshold = 0;
-        JLabel thresholdLabel = new JLabel("Thr: 0");
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        JLabel thresholdLabel = new JLabel("Threshold: 0");
         JSlider thresholdSlider = new JSlider(JSlider.HORIZONTAL,
                 0, 255, 0);
         thresholdSlider.addChangeListener((e) -> {
             int value = ((JSlider) e.getSource()).getValue();
-            thresholdLabel.setText("Thr: " + value);
+            thresholdLabel.setText("Threshold: " + value);
             this.threshold = value;
         });
         this.add(thresholdLabel);
