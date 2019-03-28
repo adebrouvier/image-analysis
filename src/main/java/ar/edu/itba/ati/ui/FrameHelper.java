@@ -8,7 +8,7 @@ public class FrameHelper {
 
     public static void create(Image newImage) {
         JFrame frame = new ImageAnalyzerFrame(newImage);
-        frame.setSize(newImage.getWidth(), newImage.getHeight());
+        frame.setSize(newImage.getWidth() + 300, newImage.getHeight() + 100);
         frame.setVisible(true);
     }
 }
