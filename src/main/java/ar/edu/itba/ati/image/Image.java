@@ -274,7 +274,15 @@ public class Image {
     }
 
     public Image copy() {
-        return new Image(this.width, this.height, new ArrayList<>(this.pixels), this.format);
+        ArrayList<Pixel> newPixels = new ArrayList<>(this.pixels.size());
+        for (Pixel p: this.pixels) {
+            if (this.type.equals(ImageType.RGB)){
+                newPixels.add(new RGBPixel(p.getRed(), p.getGreen(), p.getBlue()));
+            } else {
+                newPixels.add(new GrayScalePixel(p.getRed()));
+            }
+        }
+        return new Image(this.width, this.height, newPixels, this.format);
     }
 
     public int getGrayScaleMean() {
