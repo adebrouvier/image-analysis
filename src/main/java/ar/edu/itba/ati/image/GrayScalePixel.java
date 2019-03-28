@@ -65,8 +65,8 @@ public class GrayScalePixel extends Pixel {
     }
 
     @Override
-    public void dynamicRangeCompress(Double c) {
-        this.grayScale = (int) (c * Math.log(1 + this.grayScale));
+    public void dynamicRangeCompress(Double maxRed, Double maxGreen, Double maxBlue) {
+        this.grayScale = (int) (maxRed * Math.log(1 + this.grayScale));
     }
 
     @Override

@@ -136,8 +136,8 @@ public class Image {
         int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
         Image newImage = this.copy();
 
-        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
-            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
                 Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
                 maxRed = Math.max(maxRed, myPixel.getRed() + otherPixel.getRed());
@@ -149,8 +149,8 @@ public class Image {
             }
         }
 
-        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
-            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
                 Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
 
@@ -164,8 +164,8 @@ public class Image {
         int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
         Image newImage = this.copy();
 
-        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
-            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
                 Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
                 maxRed = Math.max(maxRed, myPixel.getRed() - otherPixel.getRed());
@@ -177,8 +177,8 @@ public class Image {
             }
         }
 
-        for (int i = 0; i < image.getHeight() || i < this.height; i++) {
-            for (int j = 0; j < image.getWidth() || j < this.width; j++) {
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
                 Pixel myPixel = this.getPixel(j, i);
                 Pixel otherPixel = image.getPixel(j, i);
 
@@ -208,11 +208,16 @@ public class Image {
         return newImage;
     }
 
-    public Image dynamicRangeCompress(Double threshold){
-        double c = 255.0 / Math.log(1 + threshold);
+    public Image dynamicRangeCompress(){
+        Double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
         Image newImage = this.copy();
         for (Pixel p: newImage.pixels) {
-            p.dynamicRangeCompress(c);
+            maxRed = Math.max(maxRed, p.getRed());
+            maxBlue = Math.max(maxBlue, p.getBlue());
+            maxGreen = Math.max(maxGreen, p.getGreen());
+        }
+        for (Pixel p: newImage.pixels) {
+            p.dynamicRangeCompress(maxRed, maxGreen, maxBlue);
         }
         if (newImage.type.equals(ImageType.RGB)){
             newImage.normalizeColor();

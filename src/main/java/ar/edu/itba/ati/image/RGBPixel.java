@@ -72,10 +72,10 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
-    public void dynamicRangeCompress(Double c) {
-        this.red = (int) (c * Math.log(1 + this.red));
-        this.blue = (int) (c * Math.log(1 + this.blue));
-        this.green = (int) (c * Math.log(1 + this.green));
+    public void dynamicRangeCompress(Double maxRed, Double maxGreen, Double maxBlue) {
+        this.red = (int) (maxRed * Math.log(1 + this.red));
+        this.blue = (int) (maxBlue * Math.log(1 + this.blue));
+        this.green = (int) (maxGreen * Math.log(1 + this.green));
     }
 
     @Override
