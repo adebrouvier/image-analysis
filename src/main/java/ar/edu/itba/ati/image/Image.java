@@ -493,7 +493,7 @@ public class Image {
     public Image weightedMedian() {
         return this.applyMask(3, (pixels) -> {
             Double[] values = {1.0, 2.0, 1.0, 2.0, 4.0, 2.0, 1.0, 2.0, 1.0};
-            return this.getWeightedValue(pixels, values);
+            return this.getWeightedMedian(pixels, values);
         });
     }
 
@@ -504,7 +504,7 @@ public class Image {
         });
     }
 
-    private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
+    private Pixel getWeightedMedian(List<Pixel> pixels, Double[] values) {
         List<Integer> red = new ArrayList<>(pixels.size()),
                 green = new ArrayList<>(pixels.size()),
                 blue = new ArrayList<>(pixels.size());
@@ -528,6 +528,27 @@ public class Image {
             return new RGBPixel(red.get(index), green.get(index), blue.get(index));
         } else {
             return new GrayScalePixel(red.get(index));
+        }
+    }
+
+    private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
+        int red = 0, green = 0, blue = 0, totalWeight = 0;
+        for (int j = 0; j < values.length; j++) {
+            totalWeight += values[j];
+            red += pixels.get(j).getRed() * values[j];
+            blue += pixels.get(j).getBlue() * values[j];
+            green += pixels.get(j).getGreen() * values[j];
+        }
+        if (totalWeight != 0) {
+            red /= totalWeight;
+            blue /= totalWeight;
+            green /= totalWeight;
+        }
+
+        if (this.type.equals(ImageType.RGB)) {
+            return new RGBPixel(red, green, blue);
+        } else {
+            return new GrayScalePixel(red);
         }
     }
 
@@ -575,5 +596,41 @@ public class Image {
 
     private int negative(int component){
         return -component + 256 - 1;
+    }
+
+    public Image prewittOperation() {
+        Image firstOperator = this.prewittFirstOperator();
+
+        Image secondOperator = this.prewittSecondOperator();
+
+        return firstOperator.substract(secondOperator);
+    }
+
+    public Image prewittFirstOperator() {
+        return this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, -1.0, -1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0};
+            return this.getWeightedValue(pixels, values);
+        });
+    }
+
+    public Image prewittSecondOperator() {
+        return this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, 0.0, 1.0, -1.0, 0.0, 1.0, -1.0, 0.0, -1.0};
+            return this.getWeightedValue(pixels, values);
+        });
+    }
+
+    public Image sobelOperation() {
+        Image firstOperator = this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
+            return this.getWeightedValue(pixels, values);
+        });
+
+        Image secondOperator = this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, -1.0};
+            return this.getWeightedValue(pixels, values);
+        });
+
+        return firstOperator.substract(secondOperator);
     }
 }

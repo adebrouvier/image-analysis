@@ -130,12 +130,14 @@ public class OptionMenu extends JMenuBar {
         JMenu noise = createNoiseSubMenu();
         transform.add(noise);
 
-        JMenu slidingWindow = createSlidingWindowMenu();
+        JMenu slidingWindow = createSlidingWindowSubMenu();
         transform.add(slidingWindow);
 
         item = new JMenuItem("Contrast increase", KeyEvent.VK_C);
         item.addActionListener(new ContrastListener(windowContext));
         transform.add(item);
+
+        transform.add(createBordersSubMenu());
 
         add(transform);
     }
@@ -168,7 +170,7 @@ public class OptionMenu extends JMenuBar {
     }
 
 
-    private JMenu createSlidingWindowMenu(){
+    private JMenu createSlidingWindowSubMenu(){
         JMenu slidingWindow = new JMenu("Sliding Window");
 
         JMenuItem item;
@@ -238,4 +240,18 @@ public class OptionMenu extends JMenuBar {
         add(operations);
     }
 
+    private JMenu createBordersSubMenu(){
+        JMenu noise = new JMenu("Borders");
+
+        JMenuItem item;
+        item = new JMenuItem("Prewitt", KeyEvent.VK_P);
+        item.addActionListener(new PrewittListener(windowContext));
+        noise.add(item);
+
+        item = new JMenuItem("Sobel", KeyEvent.VK_S);
+        item.addActionListener(new SobelListener(windowContext));
+        noise.add(item);
+
+        return noise;
+    }
 }
