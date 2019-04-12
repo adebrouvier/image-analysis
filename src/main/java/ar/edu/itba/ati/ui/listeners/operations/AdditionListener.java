@@ -3,12 +3,9 @@ package ar.edu.itba.ati.ui.listeners.operations;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
-import ar.edu.itba.ati.ui.dialogs.DoubleDialog;
 import ar.edu.itba.ati.ui.listeners.OpenDialogListener;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AdditionListener extends OpenDialogListener {
 

@@ -7,9 +7,10 @@ import ar.edu.itba.ati.random.RayleighGenerator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.IntConsumer;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Image {
@@ -191,23 +192,7 @@ public class Image {
     }
 
     public Image multiply(Double d) {
-        Double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
         Image newImage = this.copy();
-        /*for (Pixel p: newImage.pixels) {
-            maxRed = Math.max(maxRed, p.getRed() * d);
-            maxBlue = Math.max(maxBlue, p.getBlue() * d);
-            maxGreen = Math.max(maxGreen, p.getGreen() * d);
-        }
-
-        double cRed = 255.0 / Math.log(1 + maxRed);
-        double cBlue = 255.0 / Math.log(1 + maxBlue);
-        double cGreen = 255.0 / Math.log(1 + maxGreen);
-
-
-        for (Pixel p: this.pixels) {
-            p.multiply(d, cRed, cGreen, cBlue);
-        }*/
-
         for (Pixel p: newImage.pixels) {
             p.multiply(d);
         }
@@ -216,7 +201,7 @@ public class Image {
     }
 
     public Image dynamicRangeCompress(){
-        Double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
+        double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
         Image newImage = this.copy();
         for (Pixel p: newImage.pixels) {
             maxRed = Math.max(maxRed, p.getRed());
@@ -224,18 +209,13 @@ public class Image {
             maxGreen = Math.max(maxGreen, p.getGreen());
         }
 
-        Double cRed = 255.0 / Math.log(1 + maxRed);
-        Double cBlue = 255.0 / Math.log(1 + maxBlue);
-        Double cGreen = 255.0 / Math.log(1 + maxGreen);
+        double cRed = 255.0 / Math.log(1 + maxRed);
+        double cBlue = 255.0 / Math.log(1 + maxBlue);
+        double cGreen = 255.0 / Math.log(1 + maxGreen);
 
         for (Pixel p: newImage.pixels) {
             p.dynamicRangeCompress(cRed, cGreen, cBlue);
         }
-        /*if (newImage.type.equals(ImageType.RGB)){
-            newImage.normalizeColor();
-        } else {
-            newImage.normalize();
-        }*/
         return newImage;
     }
 
@@ -370,7 +350,7 @@ public class Image {
         return newImage.dynamicRangeCompress();
     }
 
-    public void normalize() {
+    private void normalize() {
         double max = 0;
         double min = 255;
 

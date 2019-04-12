@@ -2,8 +2,8 @@ package ar.edu.itba.ati.ui.listeners.transformations;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.FrameHelper;
-import ar.edu.itba.ati.ui.dialogs.GaussianNoiseDialog;
 import ar.edu.itba.ati.ui.WindowContext;
+import ar.edu.itba.ati.ui.dialogs.GaussianNoiseDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

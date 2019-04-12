@@ -3,7 +3,6 @@ package ar.edu.itba.ati.ui.listeners.transformations;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
-import ar.edu.itba.ati.ui.dialogs.SaltAndPepperNoiseDialog;
 import ar.edu.itba.ati.ui.dialogs.ThresholdDialog;
 
 import javax.swing.*;

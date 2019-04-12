@@ -3,7 +3,6 @@ package ar.edu.itba.ati.ui.listeners.slidingwindow;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.WindowContext;
-import ar.edu.itba.ati.ui.dialogs.WindowSizeDialog;
 import ar.edu.itba.ati.ui.dialogs.WindowSizeGaussDialog;
 
 import javax.swing.*;

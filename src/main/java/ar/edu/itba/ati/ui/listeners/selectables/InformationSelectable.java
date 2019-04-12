@@ -2,10 +2,8 @@ package ar.edu.itba.ati.ui.listeners.selectables;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.ImageInformation;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
 import ar.edu.itba.ati.ui.WindowContext;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 public class InformationSelectable implements Selectable {

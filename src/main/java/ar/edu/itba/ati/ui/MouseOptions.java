@@ -6,7 +6,6 @@ import ar.edu.itba.ati.ui.listeners.clickables.PaintClickable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public class MouseOptions extends JPanel {
 

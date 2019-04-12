@@ -1,8 +1,9 @@
 package ar.edu.itba.ati.ui;
 
+import ar.edu.itba.ati.image.Image;
+
 import javax.swing.*;
 import java.awt.*;
-import ar.edu.itba.ati.image.Image;
 
 public class ImageAnalyzerFrame extends JFrame {
 

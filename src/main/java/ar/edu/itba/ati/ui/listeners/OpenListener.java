@@ -46,7 +46,7 @@ public class OpenListener implements ActionListener {
                         break;
                     } catch (FileNotFoundException e) {
                         System.err.println("Could not read RAW data");
-                        System.exit(1);
+                        return;
                     }
                 }
                 case "pbm": {
@@ -71,7 +71,7 @@ public class OpenListener implements ActionListener {
                 this.windowContext.getImageContainer().setImage(imageIO.read(file));
                 this.windowContext.getImageContainer().renderImage();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Error opening file.");
             }
 
         }

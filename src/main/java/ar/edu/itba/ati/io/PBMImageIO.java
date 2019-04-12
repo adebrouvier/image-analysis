@@ -6,7 +6,9 @@ import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.Pixel;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

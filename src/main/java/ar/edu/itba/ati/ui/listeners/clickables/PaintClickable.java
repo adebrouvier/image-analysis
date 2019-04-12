@@ -11,8 +11,6 @@ import java.awt.event.MouseEvent;
 
 public class PaintClickable implements Clickable {
 
-    private int x;
-    private int y;
     private WindowContext windowContext;
 
     public PaintClickable(WindowContext windowContext) {

@@ -19,9 +19,6 @@ public class OptionMenu extends JMenuBar {
 
     private static final int BINARY_IMAGE_SIZE = 200;
     private static final int BINARY_SHAPE_SIZE = 50;
-    private JMenu file;
-    private JMenu gradient;
-    private JMenu shape;
     private Selectable selectable = null;
     private WindowContext windowContext;
 
@@ -99,19 +96,19 @@ public class OptionMenu extends JMenuBar {
     }
 
     private void createShapeMenu(){
-        this.shape = new JMenu("Shape");
-        this.shape.setMnemonic(KeyEvent.VK_S);
+        JMenu shape = new JMenu("Shape");
+        shape.setMnemonic(KeyEvent.VK_S);
 
         JMenuItem item;
         item = new JMenuItem("Binary circle", KeyEvent.VK_C);
         item.addActionListener(new CircleListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
-        this.shape.add(item);
+        shape.add(item);
 
         item = new JMenuItem("Binary square", KeyEvent.VK_Q);
         item.addActionListener(new SquareListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
-        this.shape.add(item);
+        shape.add(item);
 
-        add(this.shape);
+        add(shape);
     }
 
     public void setSelectable(Selectable selectable) {
@@ -241,17 +238,17 @@ public class OptionMenu extends JMenuBar {
     }
 
     private JMenu createBordersSubMenu(){
-        JMenu noise = new JMenu("Borders");
+        JMenu borders = new JMenu("Borders");
 
         JMenuItem item;
         item = new JMenuItem("Prewitt", KeyEvent.VK_P);
         item.addActionListener(new PrewittListener(windowContext));
-        noise.add(item);
+        borders.add(item);
 
         item = new JMenuItem("Sobel", KeyEvent.VK_S);
         item.addActionListener(new SobelListener(windowContext));
-        noise.add(item);
+        borders.add(item);
 
-        return noise;
+        return borders;
     }
 }

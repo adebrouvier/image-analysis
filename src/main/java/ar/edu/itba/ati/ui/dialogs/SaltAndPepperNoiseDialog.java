@@ -2,7 +2,6 @@ package ar.edu.itba.ati.ui.dialogs;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class SaltAndPepperNoiseDialog extends JPanel {
 

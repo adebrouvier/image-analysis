@@ -2,8 +2,6 @@ package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Constants;
 import ar.edu.itba.ati.image.GrayScalePixel;
-import ar.edu.itba.ati.image.Image;
-import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.event.ActionEvent;

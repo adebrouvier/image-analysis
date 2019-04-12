@@ -2,13 +2,13 @@ package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.io.*;
-import ar.edu.itba.ati.io.ImageIO;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class SaveListener implements ActionListener {
 

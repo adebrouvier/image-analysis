@@ -2,7 +2,6 @@ package ar.edu.itba.ati.ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Image;
 
 public class SingleImagePanel extends JPanel {
 

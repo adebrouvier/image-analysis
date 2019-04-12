@@ -39,7 +39,7 @@ public abstract class OpenDialogListener implements ActionListener {
                         break;
                     } catch (FileNotFoundException e) {
                         System.err.println("Could not read RAW data");
-                        System.exit(1);
+                        return null;
                     }
                 }
                 case "pbm": {
@@ -63,7 +63,7 @@ public abstract class OpenDialogListener implements ActionListener {
             try {
                 return imageIO.read(file);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Error reading file.");
             }
         }
         return null;

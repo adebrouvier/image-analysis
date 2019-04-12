@@ -2,12 +2,9 @@ package ar.edu.itba.ati.ui.listeners.selectables;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
-import ar.edu.itba.ati.ui.ImageContainer;
-import ar.edu.itba.ati.ui.SingleImagePanel;
 import ar.edu.itba.ati.ui.WindowContext;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class SubImageSelectable implements Selectable {
