@@ -7,10 +7,8 @@ import ar.edu.itba.ati.random.RayleighGenerator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Image {
@@ -268,7 +266,11 @@ public class Image {
     }
 
     public int getGrayScaleMean() {
-        int total = 0;
+        return (int) pixelMean(pixels);
+    }
+
+    private double pixelMean(List<Pixel> pixels) {
+        double total = 0;
         for (Pixel p : pixels){
             total += ((GrayScalePixel) p).getGrayScale();
         }
@@ -613,4 +615,69 @@ public class Image {
 
         return firstOperator.substract(secondOperator);
     }
+
+    public Image globalThreshold() {
+        double threshold = getGrayScaleMean();
+        double previousThreshold = 0;
+        Image newImage = this;
+
+        while (Math.abs(previousThreshold - threshold) > 1) {
+            newImage = threshold(threshold);
+            List<Pixel> g1 = new ArrayList<>();
+            List<Pixel> g2 = new ArrayList<>();
+
+            for (Pixel p : newImage.pixels) {
+                if (p.getRed() == Constants.WHITE) {
+                    g1.add(p);
+                } else {
+                    g2.add(p);
+                }
+            }
+            previousThreshold = threshold;
+            threshold = 0.5 * (pixelMean(g1) + pixelMean(g2));
+        }
+
+        System.out.println("Global threshold: " + threshold);
+
+        return newImage;
+    }
+
+    public Image otsuThreshold() {
+
+        Histogram histogram = new Histogram(this);
+        Map<Integer, Double> acumSum = histogram.pdf();
+        Map<Integer, Double> acumMean = histogram.accumulativeMean();
+        double globalMean = histogram.globalMean();
+
+        Map<Integer, Double> variance = sampleVariance(acumSum, acumMean, globalMean);
+        double max = 0;
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < variance.size(); i++) {
+            double v = variance.get(i);
+            if (v == max) {
+                indexes.add(i);
+            } else if (v > max) {
+                max = v;
+                indexes = new ArrayList<>();
+                indexes.add(i);
+            }
+        }
+
+        OptionalDouble threshold = indexes.stream().mapToInt(Integer::intValue).average();
+        System.out.println("Otsu threshold: " + threshold.getAsDouble());
+        return threshold(threshold.getAsDouble());
+    }
+
+    private Map<Integer, Double> sampleVariance(Map<Integer, Double> acumSum,
+                                                Map<Integer, Double> acumMean, double globalMean) {
+
+        Map<Integer, Double> variance = new HashMap<>();
+        for (int i = 0; i < acumSum.size(); i++) {
+            double p1 = acumSum.get(i);
+            double m = acumMean.get(i);
+            variance.put(i, Math.pow((globalMean*p1 - m), 2) / (p1*(1 - p1)));
+        }
+        return variance;
+    }
+
 }

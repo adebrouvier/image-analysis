@@ -135,6 +135,7 @@ public class OptionMenu extends JMenuBar {
         transform.add(item);
 
         transform.add(createBordersSubMenu());
+        transform.add(createThresholdSubMenu());
 
         add(transform);
     }
@@ -159,11 +160,26 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new SaltAndPepperNoiseListener(windowContext));
         noise.add(item);
 
-        item = new JMenuItem("Threshold", KeyEvent.VK_P);
-        item.addActionListener(new ThresholdListener(windowContext));
-        noise.add(item);
-
         return noise;
+    }
+
+    private JMenu createThresholdSubMenu() {
+        JMenu threshold = new JMenu("Threshold");
+        JMenuItem item;
+
+        item = new JMenuItem("Simple", KeyEvent.VK_S);
+        item.addActionListener(new ThresholdListener(windowContext));
+        threshold.add(item);
+
+        item = new JMenuItem("Global", KeyEvent.VK_G);
+        item.addActionListener(new GlobalThresholdListener(windowContext));
+        threshold.add(item);
+
+        item = new JMenuItem("Otsu", KeyEvent.VK_O);
+        item.addActionListener(new OtsuThresholdListener(windowContext));
+        threshold.add(item);
+
+        return threshold;
     }
 
 

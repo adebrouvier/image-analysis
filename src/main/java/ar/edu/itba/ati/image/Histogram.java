@@ -62,6 +62,44 @@ public class Histogram {
         }
     }
 
+    public Map<Integer, Double> pdf() {
+        Map<Integer, Double> pdf = new HashMap<>();
+
+        pdf.put(0, relativeFrequencies.get(0));
+
+        for (int i = 1; i < relativeFrequencies.size(); i++){
+            double probability = pdf.get(i - 1) + relativeFrequencies.get(i);
+            pdf.put(i, probability);
+        }
+
+        return pdf;
+    }
+
+    public double globalMean() {
+
+        double globalMean = 0;
+
+        for (int i = 0; i < relativeFrequencies.size(); i++){
+            globalMean += i * relativeFrequencies.get(i);
+        }
+
+        return globalMean;
+    }
+
+    public Map<Integer, Double> accumulativeMean() {
+        Map<Integer, Double> acumMean = new HashMap<>();
+
+        for (int i = 0; i < relativeFrequencies.size(); i++){
+            double acum = 0;
+            for (int j = 0; j <= i; j++){
+                acum += j * relativeFrequencies.get(j);
+            }
+            acumMean.put(i, acum);
+        }
+
+        return acumMean;
+    }
+
     public JFreeChart createChart() {
         IntervalXYDataset dataSet = createDataSet();
         JFreeChart histogram = ChartFactory.createXYBarChart("Histogram",
