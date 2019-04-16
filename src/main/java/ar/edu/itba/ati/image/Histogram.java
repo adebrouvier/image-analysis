@@ -26,11 +26,11 @@ public class Histogram {
         create();
     }
 
-    private void create(){
+    private void create() {
 
         this.absoluteFrequencies = initializeFrequencies();
 
-        for (Pixel p : image.getPixels()){
+        for (Pixel p : image.getPixels()) {
             addValue(((GrayScalePixel) p).getGrayScale());
         }
 
@@ -41,7 +41,7 @@ public class Histogram {
 
         absoluteFrequencies = new HashMap<>();
 
-        for (int i = 0; i < 256 ; i++){
+        for (int i = 0; i < 256; i++) {
             absoluteFrequencies.put(i, 0);
         }
 
@@ -55,9 +55,9 @@ public class Histogram {
 
     private void calculateRelativeFrequencies() {
         this.relativeFrequencies = new HashMap<>();
-        double pixels = image.getWidth()*image.getHeight();
+        double pixels = image.getWidth() * image.getHeight();
         for (Map.Entry<Integer, Integer> entry : absoluteFrequencies.entrySet()) {
-            double relativeFrequency = entry.getValue()/pixels;
+            double relativeFrequency = entry.getValue() / pixels;
             relativeFrequencies.put(entry.getKey(), relativeFrequency);
         }
     }
@@ -67,7 +67,7 @@ public class Histogram {
 
         pdf.put(0, relativeFrequencies.get(0));
 
-        for (int i = 1; i < relativeFrequencies.size(); i++){
+        for (int i = 1; i < relativeFrequencies.size(); i++) {
             double probability = pdf.get(i - 1) + relativeFrequencies.get(i);
             pdf.put(i, probability);
         }
@@ -79,7 +79,7 @@ public class Histogram {
 
         double globalMean = 0;
 
-        for (int i = 0; i < relativeFrequencies.size(); i++){
+        for (int i = 0; i < relativeFrequencies.size(); i++) {
             globalMean += i * relativeFrequencies.get(i);
         }
 
@@ -89,9 +89,9 @@ public class Histogram {
     public Map<Integer, Double> accumulativeMean() {
         Map<Integer, Double> acumMean = new HashMap<>();
 
-        for (int i = 0; i < relativeFrequencies.size(); i++){
+        for (int i = 0; i < relativeFrequencies.size(); i++) {
             double acum = 0;
-            for (int j = 0; j <= i; j++){
+            for (int j = 0; j <= i; j++) {
                 acum += j * relativeFrequencies.get(j);
             }
             acumMean.put(i, acum);
@@ -103,7 +103,7 @@ public class Histogram {
     public JFreeChart createChart() {
         IntervalXYDataset dataSet = createDataSet();
         JFreeChart histogram = ChartFactory.createXYBarChart("Histogram",
-                "Gray scale",false, "Relative frequency", dataSet);
+                "Gray scale", false, "Relative frequency", dataSet);
 
         histogram.removeLegend();
         XYPlot plot = (XYPlot) histogram.getPlot();
@@ -158,7 +158,7 @@ public class Histogram {
     private Image createImage(Map<Integer, Integer> equalized) {
         Image newImage = image.copy();
         for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++){
+            for (int x = 0; x < image.getWidth(); x++) {
                 int currentPixel = image.getPixel(x, y).getRed();
                 Pixel newPixel = new GrayScalePixel(equalized.get(currentPixel));
                 newImage.changePixel(x, y, newPixel);

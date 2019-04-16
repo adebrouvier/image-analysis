@@ -8,7 +8,7 @@ public abstract class ATIActionListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public ATIActionListener(WindowContext windowContext){
+    public ATIActionListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

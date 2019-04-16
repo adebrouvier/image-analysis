@@ -18,7 +18,7 @@ public class PPMImageIO extends PNMIO implements ImageIO {
 
         List<Pixel> pixels = new ArrayList<>();
 
-        for (int i = 0; i < info.getWidth() * info.getHeight(); i++){
+        for (int i = 0; i < info.getWidth() * info.getHeight(); i++) {
             int r = dis.readUnsignedByte();
             int g = dis.readUnsignedByte();
             int b = dis.readUnsignedByte();

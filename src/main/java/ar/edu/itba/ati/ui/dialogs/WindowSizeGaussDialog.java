@@ -12,7 +12,7 @@ public class WindowSizeGaussDialog extends JPanel {
     private Integer windowSize;
     private JFormattedTextField stdField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-    public WindowSizeGaussDialog(){
+    public WindowSizeGaussDialog() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.windowSize = 3;
         JLabel windowSizeLabel = new JLabel("Window size: 3x3");

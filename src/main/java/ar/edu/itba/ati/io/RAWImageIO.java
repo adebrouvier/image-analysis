@@ -19,20 +19,21 @@ public class RAWImageIO implements ImageIO {
     }
 
     public Image read(File file) throws IOException {
+        try (FileInputStream stream = new FileInputStream(file)) {
 
-        FileInputStream stream = new FileInputStream(file);
+            byte[] bytes = new byte[width * height];
 
-        byte[] bytes = new byte[width*height];
+            int read = stream.read(bytes);
+            stream.close();
 
-        int read = stream.read(bytes);
-        List<Pixel> pixels = new ArrayList<>();
+            List<Pixel> pixels = new ArrayList<>();
 
-        for (byte b : bytes){
-            pixels.add(new GrayScalePixel(b & 0xff)); // Unsigned
+            for (byte b : bytes) {
+                pixels.add(new GrayScalePixel(b & 0xff)); // Unsigned
+            }
+
+            return new Image(width, height, pixels, Image.Format.RAW);
         }
-
-        stream.close();
-        return new Image(width, height, pixels, Image.Format.RAW);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class ThresholdDialog extends JPanel {
 
     private Integer threshold;
 
-    public ThresholdDialog(){
+    public ThresholdDialog() {
         this.threshold = 0;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         JLabel thresholdLabel = new JLabel("Threshold: 0");

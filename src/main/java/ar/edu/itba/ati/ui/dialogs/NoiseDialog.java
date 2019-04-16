@@ -14,7 +14,7 @@ public abstract class NoiseDialog extends JPanel {
     }
 
     public double getPercentage() {
-        return Double.valueOf(percentageField.getText())/100.0;
+        return Double.valueOf(percentageField.getText()) / 100.0;
     }
 
 }

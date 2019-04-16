@@ -27,17 +27,17 @@ public class MouseOptions extends JPanel {
         this.createSliders();
     }
 
-    private void createButtons(){
+    private void createButtons() {
         JRadioButton button1 = new JRadioButton("Information");
         button1.setSelected(true);
         button1.addActionListener((al) -> {
-            if ( ((JRadioButton) al.getSource()).isSelected()) {
+            if (((JRadioButton) al.getSource()).isSelected()) {
                 this.clickable = new InformationClickable(windowContext);
             }
         });
         JRadioButton button2 = new JRadioButton("Paint");
         button2.addActionListener((al) -> {
-            if ( ((JRadioButton) al.getSource()).isSelected()) {
+            if (((JRadioButton) al.getSource()).isSelected()) {
                 this.clickable = new PaintClickable(windowContext);
             }
         });
@@ -98,8 +98,8 @@ public class MouseOptions extends JPanel {
         this.add(grayLabel);
         this.add(gray);
 
-        JPanel panel = new JPanel(new GridLayout(1,2));
-        panel.add(grayColor,0);
+        JPanel panel = new JPanel(new GridLayout(1, 2));
+        panel.add(grayColor, 0);
         panel.add(rgbColor, 1);
         this.add(panel);
     }
@@ -128,7 +128,7 @@ public class MouseOptions extends JPanel {
         return gray;
     }
 
-    class ColorRectangle extends JPanel{
+    class ColorRectangle extends JPanel {
 
         @Override
         protected void paintComponent(Graphics g) {
@@ -138,7 +138,7 @@ public class MouseOptions extends JPanel {
         }
     }
 
-    class GrayRectangle extends JPanel{
+    class GrayRectangle extends JPanel {
 
         @Override
         protected void paintComponent(Graphics g) {

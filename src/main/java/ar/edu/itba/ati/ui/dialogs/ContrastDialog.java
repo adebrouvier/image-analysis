@@ -12,7 +12,7 @@ public class ContrastDialog extends JPanel {
     private static final int R1_MIN = 0;
     private static final int R2_MAX = 255;
 
-    public ContrastDialog(int r1, int r2){
+    public ContrastDialog(int r1, int r2) {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.r1 = r1;
         this.r2 = r2;
@@ -24,7 +24,7 @@ public class ContrastDialog extends JPanel {
         createSlider("S2: ", r2, r2, R2_MAX, s2);
     }
 
-    private void createSlider(String label, int defaultValue, int min, int max, JSlider slider){
+    private void createSlider(String label, int defaultValue, int min, int max, JSlider slider) {
         JLabel sliderLabel = new JLabel(label + defaultValue);
         slider.setOrientation(JSlider.HORIZONTAL);
         slider.setMinimum(min);
@@ -38,7 +38,7 @@ public class ContrastDialog extends JPanel {
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(min, new JLabel(String.valueOf(min)));
         labelTable.put(max, new JLabel(String.valueOf(max)));
-        slider.setLabelTable( labelTable );
+        slider.setLabelTable(labelTable);
         slider.setPaintLabels(true);
 
         add(sliderLabel);

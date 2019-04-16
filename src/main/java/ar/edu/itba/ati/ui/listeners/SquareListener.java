@@ -18,16 +18,16 @@ public class SquareListener extends ShapeListener implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         pixels = new ArrayList<>();
 
-        for (int i = 0; i < width*height; i++){
+        for (int i = 0; i < width * height; i++) {
             pixels.add(new GrayScalePixel(Constants.BLACK));
         }
 
-        int startX = width/2 - size;
-        int startY = height/2 - size;
+        int startX = width / 2 - size;
+        int startY = height / 2 - size;
 
-        for (int y = startY; y < height/2 + size; y++){
-            for (int x = startX; x < width/2 + size; x++){
-                pixels.set(y*width + x, new GrayScalePixel(Constants.WHITE));
+        for (int y = startY; y < height / 2 + size; y++) {
+            for (int x = startX; x < width / 2 + size; x++) {
+                pixels.set(y * width + x, new GrayScalePixel(Constants.WHITE));
             }
         }
         renderShape();

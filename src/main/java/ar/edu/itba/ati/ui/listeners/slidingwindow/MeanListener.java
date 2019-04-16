@@ -13,7 +13,7 @@ public class MeanListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public MeanListener(WindowContext windowContext){
+    public MeanListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

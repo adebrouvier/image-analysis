@@ -8,7 +8,7 @@ public class GaussianNoiseDialog extends NoiseDialog {
     private JFormattedTextField meanField = new JFormattedTextField(NumberFormat.getNumberInstance());
     private JFormattedTextField stDevField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-    public GaussianNoiseDialog(){
+    public GaussianNoiseDialog() {
         add(new JLabel("Mean: "));
         meanField.setColumns(5);
         add(meanField);

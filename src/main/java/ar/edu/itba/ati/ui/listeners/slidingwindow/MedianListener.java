@@ -13,7 +13,7 @@ public class MedianListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public MedianListener(WindowContext windowContext){
+    public MedianListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

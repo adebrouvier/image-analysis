@@ -15,10 +15,10 @@ public abstract class ShapeListener implements ActionListener {
     protected List<Pixel> pixels;
     private WindowContext windowContext;
 
-    public ShapeListener(WindowContext windowContext, int width, int height, int size){
+    public ShapeListener(WindowContext windowContext, int width, int height, int size) {
         this.windowContext = windowContext;
 
-        if (size > width || size > height){
+        if (size > width || size > height) {
             throw new IllegalArgumentException("Size of shape can't be bigger than image.");
         }
 
@@ -27,7 +27,7 @@ public abstract class ShapeListener implements ActionListener {
         this.size = size;
     }
 
-    public void renderShape(){
+    public void renderShape() {
         Image image = new Image(width, height, pixels, Image.Format.PBM);
         this.windowContext.getImageContainer().setImage(image);
         this.windowContext.getImageContainer().renderImage();

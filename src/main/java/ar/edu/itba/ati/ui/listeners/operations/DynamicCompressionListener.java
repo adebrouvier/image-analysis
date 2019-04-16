@@ -24,8 +24,8 @@ public class DynamicCompressionListener implements ActionListener {
 //                "Please enter Threshold", JOptionPane.OK_CANCEL_OPTION);
 
 //        if (result == JOptionPane.OK_OPTION) {
-            Image newImage = image.dynamicRangeCompress();
-            FrameHelper.create(newImage);
+        Image newImage = image.dynamicRangeCompress();
+        FrameHelper.create(newImage);
 //        }
     }
 }

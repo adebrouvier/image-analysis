@@ -17,7 +17,7 @@ public class RGBHSVDecomposition implements ActionListener {
 
     private WindowContext windowContext;
 
-    public RGBHSVDecomposition(WindowContext windowContext){
+    public RGBHSVDecomposition(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 
@@ -38,7 +38,7 @@ public class RGBHSVDecomposition implements ActionListener {
         }
         rgbChannels.addAll(hsvChannels);
         List<java.awt.Image> scaled = rgbChannels.stream()
-                .map(i -> i.getScaledInstance(300,300, java.awt.Image.SCALE_SMOOTH))
+                .map(i -> i.getScaledInstance(300, 300, java.awt.Image.SCALE_SMOOTH))
                 .collect(Collectors.toList());
         createFrame(scaled);
     }
@@ -68,7 +68,7 @@ public class RGBHSVDecomposition implements ActionListener {
         setChannelPixel(colors, rgbChannels, x, y);
     }
 
-    private void setChannelPixel(List<Integer> colors, List<BufferedImage> rgbChannels, int x, int y){
+    private void setChannelPixel(List<Integer> colors, List<BufferedImage> rgbChannels, int x, int y) {
         List<Integer> greyScale = colors.stream()
                 .map(component -> new Color(component, component, component).getRGB())
                 .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class RGBHSVDecomposition implements ActionListener {
         }
     }
 
-    private void createFrame(List<java.awt.Image> imageList){
+    private void createFrame(List<java.awt.Image> imageList) {
         JFrame rgbFrame = new JFrame("RGB");
         rgbFrame.setLayout(new GridLayout(2, 3));
         imageList.forEach(c -> rgbFrame.add(new SingleImagePanel(c)));

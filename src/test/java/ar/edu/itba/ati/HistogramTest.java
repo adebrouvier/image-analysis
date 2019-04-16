@@ -27,7 +27,7 @@ public class HistogramTest {
     }
 
     @Test
-    public void pdf(){
+    public void pdf() {
         Histogram histogram = new Histogram(image);
         Map<Integer, Double> pdf = histogram.pdf();
         assertEquals(256, pdf.size());

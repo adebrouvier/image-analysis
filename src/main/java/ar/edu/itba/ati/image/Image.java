@@ -36,7 +36,7 @@ public class Image {
         this.height = height;
         this.pixels = pixels;
         this.format = format;
-        if (this.format.equals(Format.PPM)){
+        if (this.format.equals(Format.PPM)) {
             this.type = ImageType.RGB;
         } else {
             this.type = ImageType.GRAY_SCALE;
@@ -48,7 +48,7 @@ public class Image {
         this.height = bufferedImage.getHeight();
         this.pixels = new ArrayList<>(this.width * this.height);
         this.type = imageType;
-        for (int i = 0; i < this.height; i++){
+        for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
                 Color color = new Color(bufferedImage.getRGB(j, i));
                 Pixel pixel;
@@ -191,17 +191,17 @@ public class Image {
 
     public Image multiply(Double d) {
         Image newImage = this.copy();
-        for (Pixel p: newImage.pixels) {
+        for (Pixel p : newImage.pixels) {
             p.multiply(d);
         }
 
         return newImage.dynamicRangeCompress();
     }
 
-    public Image dynamicRangeCompress(){
+    public Image dynamicRangeCompress() {
         double maxRed = 0.0, maxGreen = 0.0, maxBlue = 0.0;
         Image newImage = this.copy();
-        for (Pixel p: newImage.pixels) {
+        for (Pixel p : newImage.pixels) {
             maxRed = Math.max(maxRed, p.getRed());
             maxBlue = Math.max(maxBlue, p.getBlue());
             maxGreen = Math.max(maxGreen, p.getGreen());
@@ -211,19 +211,19 @@ public class Image {
         double cBlue = 255.0 / Math.log(1 + maxBlue);
         double cGreen = 255.0 / Math.log(1 + maxGreen);
 
-        for (Pixel p: newImage.pixels) {
+        for (Pixel p : newImage.pixels) {
             p.dynamicRangeCompress(cRed, cGreen, cBlue);
         }
         return newImage;
     }
 
-    public Image gammaPower(Double gamma){
+    public Image gammaPower(Double gamma) {
         double c = Math.pow(255.0, 1 - gamma);
         Image newImage = this.copy();
-        for (Pixel p: newImage.pixels) {
+        for (Pixel p : newImage.pixels) {
             p.gammaPower(c, gamma);
         }
-        if (newImage.type.equals(ImageType.RGB)){
+        if (newImage.type.equals(ImageType.RGB)) {
             newImage.normalizeColor();
         } else {
             newImage.normalize();
@@ -233,7 +233,7 @@ public class Image {
 
     public Image threshold(Double threshold) {
         Image newImage = this.copy();
-        for (Pixel p: newImage.pixels) {
+        for (Pixel p : newImage.pixels) {
             p.threshold(threshold);
         }
         return newImage;
@@ -242,7 +242,7 @@ public class Image {
     public Image saltAndPepperNoise(Double p0, Double p1) {
         Random r = new Random();
         Image image = this.copy();
-        for (Pixel p: image.pixels) {
+        for (Pixel p : image.pixels) {
             Double p2 = r.nextDouble();
             if (p2 <= p0) {
                 p.turnBlack();
@@ -255,8 +255,8 @@ public class Image {
 
     public Image copy() {
         ArrayList<Pixel> newPixels = new ArrayList<>(this.pixels.size());
-        for (Pixel p: this.pixels) {
-            if (this.type.equals(ImageType.RGB)){
+        for (Pixel p : this.pixels) {
+            if (this.type.equals(ImageType.RGB)) {
                 newPixels.add(new RGBPixel(p.getRed(), p.getGreen(), p.getBlue()));
             } else {
                 newPixels.add(new GrayScalePixel(p.getRed()));
@@ -271,21 +271,21 @@ public class Image {
 
     private double pixelMean(List<Pixel> pixels) {
         double total = 0;
-        for (Pixel p : pixels){
+        for (Pixel p : pixels) {
             total += ((GrayScalePixel) p).getGrayScale();
         }
-        return total/pixels.size();
+        return total / pixels.size();
     }
 
     public int getGrayScaleStDev() {
         int mean = getGrayScaleMean();
         int acum = 0;
 
-        for (Pixel p : pixels){
+        for (Pixel p : pixels) {
             acum += Math.pow(((GrayScalePixel) p).getGrayScale() - mean, 2);
         }
 
-        return (int) Math.sqrt((1.0/pixels.size())*acum);
+        return (int) Math.sqrt((1.0 / pixels.size()) * acum);
     }
 
     public Image increaseContrast(int r1, int r2, int s1, int s2) {
@@ -294,10 +294,10 @@ public class Image {
             for (int x = 0; x < width; x++) {
                 GrayScalePixel p = (GrayScalePixel) getPixel(x, y);
                 int newValue = p.getGrayScale();
-                if (p.getGrayScale() <= r1){
+                if (p.getGrayScale() <= r1) {
                     newValue = f1(newValue, r1, s1);
                 }
-                if (p.getGrayScale() >= r2){
+                if (p.getGrayScale() >= r2) {
                     newValue = f2(newValue, r2, s2);
                 }
                 image.changePixel(x, y, new GrayScalePixel(newValue));
@@ -306,16 +306,16 @@ public class Image {
         return image;
     }
 
-    private int f1(int x, int r, int s){
+    private int f1(int x, int r, int s) {
         return slope(x, 0, 0, r, s);
     }
 
-    private int f2(int x, int r, int s){
+    private int f2(int x, int r, int s) {
         return slope(x, 255, 255, r, s);
     }
 
-    private int slope(int x, double x1, double y1, double x2, double y2){
-        return (int) ((x - x1)*(y2 - y1)/(x2 - x1) + y1);
+    private int slope(int x, double x1, double y1, double x2, double y2) {
+        return (int) ((x - x1) * (y2 - y1) / (x2 - x1) + y1);
     }
 
     public Image addExponentialNoise(double percentage, double lambda) {
@@ -329,8 +329,8 @@ public class Image {
     public Image addGaussianNoise(double percentage, double mean, double stDev) {
         GaussianGenerator generator = new GaussianGenerator(stDev, mean);
         Image newImage = this.copy();
-        for (Pixel p : newImage.pixels){
-            if (Math.random() < percentage){
+        for (Pixel p : newImage.pixels) {
+            if (Math.random() < percentage) {
                 GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
                 pixel.add(new GrayScalePixel((int) noise));
@@ -342,8 +342,8 @@ public class Image {
 
     private Image multiplyNoise(double percentage, RandomGenerator generator) {
         Image newImage = this.copy();
-        for (Pixel p : newImage.pixels){
-            if (Math.random() < percentage){
+        for (Pixel p : newImage.pixels) {
+            if (Math.random() < percentage) {
                 GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
                 pixel.multiply(noise);
@@ -356,16 +356,16 @@ public class Image {
         double max = 0;
         double min = 255;
 
-        for (Pixel p : pixels){
+        for (Pixel p : pixels) {
             GrayScalePixel pixel = (GrayScalePixel) p;
             max = Math.max(max, pixel.getGrayScale());
             min = Math.min(min, pixel.getGrayScale());
         }
 
-        for (int y = 0; y < height; y++){
-            for (int x = 0; x < width; x++){
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 Pixel p = getPixel(x, y);
-                int newVal = (int) ((p.getRed() - min)/(max - min) * 255);
+                int newVal = (int) ((p.getRed() - min) / (max - min) * 255);
                 Pixel newPixel = new GrayScalePixel(newVal);
                 changePixel(x, y, newPixel);
             }
@@ -376,7 +376,7 @@ public class Image {
         double maxRed = 0, maxGreen = 0, maxBlue = 0;
         double minRed = 255, minGreen = 255, minBlue = 255;
 
-        for (Pixel p : pixels){
+        for (Pixel p : pixels) {
             RGBPixel pixel = (RGBPixel) p;
             maxRed = Math.max(maxRed, pixel.getRed());
             minRed = Math.min(minRed, pixel.getRed());
@@ -386,12 +386,12 @@ public class Image {
             minBlue = Math.min(minBlue, pixel.getBlue());
         }
 
-        for (int y = 0; y < height; y++){
-            for (int x = 0; x < width; x++){
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 Pixel p = getPixel(x, y);
-                int newRed = (int) ((p.getRed() - minRed)/(maxRed - minRed) * 255);
-                int newGreen = (int) ((p.getGreen() - minGreen)/(maxGreen - minGreen) * 255);
-                int newBlue = (int) ((p.getBlue() - minBlue)/(maxBlue - minBlue) * 255);
+                int newRed = (int) ((p.getRed() - minRed) / (maxRed - minRed) * 255);
+                int newGreen = (int) ((p.getGreen() - minGreen) / (maxGreen - minGreen) * 255);
+                int newBlue = (int) ((p.getBlue() - minBlue) / (maxBlue - minBlue) * 255);
 
                 Pixel newPixel = new RGBPixel(newRed, newGreen, newBlue);
                 changePixel(x, y, newPixel);
@@ -400,7 +400,7 @@ public class Image {
     }
 
     private Image applyMask(int maskSize, MaskApplier mask) {
-        if (maskSize % 2 != 1){
+        if (maskSize % 2 != 1) {
             throw new IllegalArgumentException("Mask size must not be divided by 2.");
         }
 
@@ -430,7 +430,7 @@ public class Image {
         return this.applyMask(maskSize, (pixels) -> {
             int red = 0, green = 0, blue = 0;
 
-            for (Pixel p: pixels){
+            for (Pixel p : pixels) {
                 red += p.getRed();
                 blue += p.getBlue();
                 green += p.getGreen();
@@ -453,23 +453,27 @@ public class Image {
                     green = new ArrayList<>(pixels.size()),
                     blue = new ArrayList<>(pixels.size());
 
-            for (Pixel p: pixels){
+            for (Pixel p : pixels) {
                 red.add(p.getRed());
                 blue.add(p.getBlue());
                 green.add(p.getGreen());
             }
-            int index = pixels.size() / 2;
-
-            Collections.sort(red);
-            Collections.sort(green);
-            Collections.sort(blue);
-
-            if (this.type.equals(ImageType.RGB)) {
-                return new RGBPixel(red.get(index), green.get(index), blue.get(index));
-            } else {
-                return new GrayScalePixel(red.get(index));
-            }
+            return getMedian(pixels, red, green, blue);
         });
+    }
+
+    private Pixel getMedian(List<Pixel> pixels, List<Integer> red, List<Integer> green, List<Integer> blue) {
+        int index = pixels.size() / 2;
+
+        Collections.sort(red);
+        Collections.sort(green);
+        Collections.sort(blue);
+
+        if (this.type.equals(ImageType.RGB)) {
+            return new RGBPixel(red.get(index), green.get(index), blue.get(index));
+        } else {
+            return new GrayScalePixel(red.get(index));
+        }
     }
 
     public Image weightedMedian() {
@@ -500,17 +504,7 @@ public class Image {
             });
         }
 
-        int index = pixels.size() / 2;
-
-        Collections.sort(red);
-        Collections.sort(green);
-        Collections.sort(blue);
-
-        if (this.type.equals(ImageType.RGB)) {
-            return new RGBPixel(red.get(index), green.get(index), blue.get(index));
-        } else {
-            return new GrayScalePixel(red.get(index));
-        }
+        return getMedian(pixels, red, green, blue);
     }
 
     private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
@@ -535,9 +529,9 @@ public class Image {
     }
 
     public Image gaussMaskFilter(Double std, Integer maskSize) {
-        Double [] mask = getGaussianMask(maskSize, std);
+        Double[] mask = getGaussianMask(maskSize, std);
         return this.applyMask(maskSize, (pixels) ->
-            this.getWeightedValue(pixels, mask)
+                this.getWeightedValue(pixels, mask)
         );
     }
 
@@ -550,12 +544,13 @@ public class Image {
                 mask[i + j * maskSize] = getGaussianWeight(std, x, y);
             }
         }
-        return mask;    }
+        return mask;
+    }
 
     private Double getGaussianWeight(Double std, Integer x, Integer y) {
-            Double mult = 1 / (2 * Math.PI * std * std);
-            Double exponent = -(Math.pow(x, 2) + Math.pow(y, 2)) / (2 * Math.pow(std, 2));
-            return mult * Math.exp(exponent);
+        double mult = 1 / (2 * Math.PI * std * std);
+        double exponent = -(Math.pow(x, 2) + Math.pow(y, 2)) / (2 * Math.pow(std, 2));
+        return mult * Math.exp(exponent);
     }
 
     public Image getNegative() {
@@ -566,7 +561,7 @@ public class Image {
                 Pixel newPixel;
                 if (type.equals(Image.ImageType.RGB)) {
                     newPixel = new RGBPixel(negative(p.getRed()), negative(p.getGreen()), negative(p.getBlue()));
-                }else {
+                } else {
                     GrayScalePixel g = (GrayScalePixel) p;
                     newPixel = new GrayScalePixel(negative(g.getGrayScale()));
                 }
@@ -576,7 +571,7 @@ public class Image {
         return newImage;
     }
 
-    private int negative(int component){
+    private int negative(int component) {
         return -component + 256 - 1;
     }
 
@@ -675,7 +670,7 @@ public class Image {
         for (int i = 0; i < acumSum.size(); i++) {
             double p1 = acumSum.get(i);
             double m = acumMean.get(i);
-            variance.put(i, Math.pow((globalMean*p1 - m), 2) / (p1*(1 - p1)));
+            variance.put(i, Math.pow((globalMean * p1 - m), 2) / (p1 * (1 - p1)));
         }
         return variance;
     }

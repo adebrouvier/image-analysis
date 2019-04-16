@@ -9,9 +9,10 @@ public class ImageMouseListener extends MouseAdapter {
 
     private WindowContext windowContext;
 
-    public ImageMouseListener(WindowContext windowContext){
+    public ImageMouseListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         super.mouseClicked(mouseEvent);
@@ -25,7 +26,7 @@ public class ImageMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
         super.mousePressed(mouseEvent);
-        if (this.windowContext.getOptionMenu().getSelectable() != null){
+        if (this.windowContext.getOptionMenu().getSelectable() != null) {
             this.windowContext.getOptionMenu().getSelectable().onMousePressed(mouseEvent);
         }
     }
@@ -33,7 +34,7 @@ public class ImageMouseListener extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
         super.mouseReleased(mouseEvent);
-        if (this.windowContext.getOptionMenu().getSelectable() != null){
+        if (this.windowContext.getOptionMenu().getSelectable() != null) {
             this.windowContext.getOptionMenu().getSelectable().onMouseReleased(mouseEvent);
             this.windowContext.getOptionMenu().setSelectable(null);
         }

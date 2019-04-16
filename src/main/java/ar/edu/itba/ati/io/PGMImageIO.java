@@ -16,7 +16,7 @@ public class PGMImageIO extends PNMIO implements ImageIO {
 
         List<Pixel> pixels = new ArrayList<>();
 
-        for (int i = 0; i < info.getWidth()*info.getHeight(); i++){
+        for (int i = 0; i < info.getWidth() * info.getHeight(); i++) {
             int grayScale = info.getDis().readUnsignedByte();
             pixels.add(new GrayScalePixel(grayScale));
         }

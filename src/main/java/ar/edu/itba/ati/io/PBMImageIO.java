@@ -23,7 +23,7 @@ public class PBMImageIO extends PPMImageIO implements ImageIO {
 
         for (int i = 0; i < info.getHeight(); i++) {
             int rowPixels = 0;
-            for (int k = 0; k < Math.ceil(info.getWidth()/8.0); k++) {
+            for (int k = 0; k < Math.ceil(info.getWidth() / 8.0); k++) {
                 int imageByte = dis.readUnsignedByte();
                 for (int j = 0; j < 8; j++) {
                     if (rowPixels < info.getWidth()) {
@@ -31,7 +31,7 @@ public class PBMImageIO extends PPMImageIO implements ImageIO {
                         int color = bit > 0 ? Constants.BLACK : Constants.WHITE;
                         pixels.add(new GrayScalePixel(color));
                         rowPixels++;
-                    }else{
+                    } else {
                         break;
                     }
                 }

@@ -7,9 +7,10 @@ public class SingleImagePanel extends JPanel {
 
     private Image image;
 
-    public SingleImagePanel(){}
+    public SingleImagePanel() {
+    }
 
-    public SingleImagePanel(Image image){
+    public SingleImagePanel(Image image) {
         this.image = image;
     }
 

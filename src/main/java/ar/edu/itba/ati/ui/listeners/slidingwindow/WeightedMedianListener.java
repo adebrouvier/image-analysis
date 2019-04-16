@@ -11,7 +11,7 @@ public class WeightedMedianListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public WeightedMedianListener(WindowContext windowContext){
+    public WeightedMedianListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

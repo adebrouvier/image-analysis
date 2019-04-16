@@ -15,12 +15,12 @@ public abstract class PNMIO {
     public PPMInfo readHeader(File file) throws IOException {
         Scanner sc = new Scanner(new FileInputStream(file));
         MagicNumber magicNumber = MagicNumber.valueOf(sc.next());
-        int width = 0;
-        int height = 0;
+        int width;
+        int height;
         int maxColor = 0;
 
         //Skip comment if present
-        if (sc.hasNext("#")){
+        if (sc.hasNext("#")) {
             sc.nextLine(); //TODO: Doesn't work for all comments
             sc.nextLine();
         }
@@ -41,7 +41,7 @@ public abstract class PNMIO {
 
             String s;
             do {
-                char c = (char)(dis.readUnsignedByte());
+                char c = (char) (dis.readUnsignedByte());
                 s = String.valueOf(c);
             } while (!s.matches("\\s"));
             newLines--;

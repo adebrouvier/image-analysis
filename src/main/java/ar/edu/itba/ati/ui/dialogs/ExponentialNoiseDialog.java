@@ -7,7 +7,7 @@ public class ExponentialNoiseDialog extends NoiseDialog {
 
     private JFormattedTextField lambdaField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-    public ExponentialNoiseDialog(){
+    public ExponentialNoiseDialog() {
         super();
         add(new JLabel("Lambda: "));
         lambdaField.setColumns(5);

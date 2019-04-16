@@ -58,13 +58,6 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
-    public void multiply(Double d, Double cRed, Double cGreen, Double cBlue) {
-        this.red = (int) (cRed * Math.log(1 + this.red));
-        this.blue = (int) (cGreen * Math.log(1 + this.blue));
-        this.green = (int) (cBlue * Math.log(1 + this.green));
-    }
-
-    @Override
     public void multiply(Double m) {
         this.red = (int) (m * this.red);
         this.blue = (int) (m * this.blue);
@@ -110,11 +103,11 @@ public class RGBPixel extends Pixel {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Red: ")
-            .append(this.red)
-            .append("; Green: ")
-            .append(this.green)
-            .append("; Blue: ")
-            .append(this.blue);
+                .append(this.red)
+                .append("; Green: ")
+                .append(this.green)
+                .append("; Blue: ")
+                .append(this.blue);
         return sb.toString();
     }
 }

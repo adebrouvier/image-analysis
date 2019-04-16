@@ -25,7 +25,7 @@ public class PaintClickable implements Clickable {
         MouseOptions mouseOptions = this.windowContext.getMouseOptions();
         Pixel p = image.getPixel(x, y);
         Pixel newPixel;
-        if (p instanceof RGBPixel){
+        if (p instanceof RGBPixel) {
             newPixel = new RGBPixel(mouseOptions.getRed(), mouseOptions.getGreen(), mouseOptions.getBlue());
         } else {
             newPixel = new GrayScalePixel(mouseOptions.getGray());

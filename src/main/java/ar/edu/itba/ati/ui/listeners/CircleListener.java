@@ -18,11 +18,11 @@ public class CircleListener extends ShapeListener implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         pixels = new ArrayList<>();
 
-        for (int i = 0; i < width*height; i++){
+        for (int i = 0; i < width * height; i++) {
             pixels.add(new GrayScalePixel(Constants.BLACK));
         }
 
-        drawCircle(width/2, height/2, size);
+        drawCircle(width / 2, height / 2, size);
         renderShape();
     }
 
@@ -57,7 +57,7 @@ public class CircleListener extends ShapeListener implements ActionListener {
         }
     }
 
-    private void setPixel(int x, int y){
+    private void setPixel(int x, int y) {
         pixels.set(y * width + x, new GrayScalePixel(Constants.WHITE));
     }
 }

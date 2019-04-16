@@ -23,7 +23,7 @@ public class OptionMenu extends JMenuBar {
     private WindowContext windowContext;
 
 
-    public OptionMenu(WindowContext windowContext){
+    public OptionMenu(WindowContext windowContext) {
         super();
         this.windowContext = windowContext;
         createFileMenu();
@@ -61,11 +61,11 @@ public class OptionMenu extends JMenuBar {
 
         JMenuItem item;
         item = new JMenuItem("Color gradient", KeyEvent.VK_C);
-        item.addActionListener(new GradientListener(this.windowContext, new Color[] {Color.RED, Color.GREEN, Color.BLUE}, Image.ImageType.RGB));
+        item.addActionListener(new GradientListener(this.windowContext, new Color[]{Color.RED, Color.GREEN, Color.BLUE}, Image.ImageType.RGB));
         gradient.add(item);
 
         item = new JMenuItem("Grayscale gradient", KeyEvent.VK_G);
-        item.addActionListener(new GradientListener(this.windowContext, new Color[] {Color.BLACK, Color.GRAY, Color.WHITE}, Image.ImageType.GRAY_SCALE));
+        item.addActionListener(new GradientListener(this.windowContext, new Color[]{Color.BLACK, Color.GRAY, Color.WHITE}, Image.ImageType.GRAY_SCALE));
         gradient.add(item);
 
         item = new JMenuItem("RGB and HSV", KeyEvent.VK_R);
@@ -95,7 +95,7 @@ public class OptionMenu extends JMenuBar {
         return selectable;
     }
 
-    private void createShapeMenu(){
+    private void createShapeMenu() {
         JMenu shape = new JMenu("Shape");
         shape.setMnemonic(KeyEvent.VK_S);
 
@@ -140,7 +140,7 @@ public class OptionMenu extends JMenuBar {
         add(transform);
     }
 
-    private JMenu createNoiseSubMenu(){
+    private JMenu createNoiseSubMenu() {
         JMenu noise = new JMenu("Noise");
 
         JMenuItem item;
@@ -183,7 +183,7 @@ public class OptionMenu extends JMenuBar {
     }
 
 
-    private JMenu createSlidingWindowSubMenu(){
+    private JMenu createSlidingWindowSubMenu() {
         JMenu slidingWindow = new JMenu("Sliding Window");
 
         JMenuItem item;
@@ -253,7 +253,7 @@ public class OptionMenu extends JMenuBar {
         add(operations);
     }
 
-    private JMenu createBordersSubMenu(){
+    private JMenu createBordersSubMenu() {
         JMenu borders = new JMenu("Borders");
 
         JMenuItem item;

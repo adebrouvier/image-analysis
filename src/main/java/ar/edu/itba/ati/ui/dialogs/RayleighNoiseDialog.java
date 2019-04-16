@@ -7,7 +7,7 @@ public class RayleighNoiseDialog extends NoiseDialog {
 
     private JFormattedTextField phiField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-    public RayleighNoiseDialog(){
+    public RayleighNoiseDialog() {
         add(new JLabel("Phi: "));
         phiField.setColumns(5);
         add(phiField);

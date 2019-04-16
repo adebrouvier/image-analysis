@@ -10,7 +10,7 @@ public class WindowSizeDialog extends JPanel {
 
     private Integer windowSize;
 
-    public WindowSizeDialog(){
+    public WindowSizeDialog() {
         this.windowSize = 3;
         JLabel thresholdLabel = new JLabel("Window size: 3x3");
         JSlider thresholdSlider = new JSlider(JSlider.HORIZONTAL,

@@ -8,7 +8,7 @@ public class PPMInfo {
     private int width;
     private int height;
 
-    public PPMInfo(DataInputStream dis, int width, int height){
+    public PPMInfo(DataInputStream dis, int width, int height) {
         this.dis = dis;
         this.width = width;
         this.height = height;

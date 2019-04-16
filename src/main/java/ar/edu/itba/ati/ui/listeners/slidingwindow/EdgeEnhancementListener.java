@@ -11,7 +11,7 @@ public class EdgeEnhancementListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public EdgeEnhancementListener(WindowContext windowContext){
+    public EdgeEnhancementListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

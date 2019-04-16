@@ -53,11 +53,6 @@ public class GrayScalePixel extends Pixel {
     }
 
     @Override
-    public void multiply(Double d, Double cRed, Double cGreen, Double cBlue) {
-        this.grayScale = (int) (cRed * Math.log(1 + this.grayScale));
-    }
-
-    @Override
     public void multiply(Double m) {
         this.grayScale = (int) (m * this.grayScale);
     }

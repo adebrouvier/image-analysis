@@ -13,7 +13,7 @@ public class GaussianListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public GaussianListener(WindowContext windowContext){
+    public GaussianListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 

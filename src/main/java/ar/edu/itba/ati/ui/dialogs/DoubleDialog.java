@@ -11,7 +11,7 @@ public class DoubleDialog extends JPanel {
 
     private JFormattedTextField doubleValueField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
-    public DoubleDialog(String label){
+    public DoubleDialog(String label) {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel(label));
         this.add(doubleValueField);

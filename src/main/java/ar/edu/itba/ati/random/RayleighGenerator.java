@@ -4,7 +4,7 @@ public class RayleighGenerator extends RandomGenerator {
 
     private double phi;
 
-    public RayleighGenerator(double phi){
+    public RayleighGenerator(double phi) {
         this.phi = phi;
     }
 

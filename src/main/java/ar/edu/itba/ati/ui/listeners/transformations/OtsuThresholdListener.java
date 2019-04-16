@@ -6,7 +6,7 @@ import ar.edu.itba.ati.ui.WindowContext;
 
 import java.awt.event.ActionEvent;
 
-public class OtsuThresholdListener extends ATIActionListener{
+public class OtsuThresholdListener extends ATIActionListener {
 
     public OtsuThresholdListener(WindowContext windowContext) {
         super(windowContext);

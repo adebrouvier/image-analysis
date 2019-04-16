@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 public class ContrastListener implements ActionListener {
 
     private WindowContext windowContext;
+
     public ContrastListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }

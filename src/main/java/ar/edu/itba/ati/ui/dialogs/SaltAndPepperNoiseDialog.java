@@ -9,7 +9,7 @@ public class SaltAndPepperNoiseDialog extends JPanel {
     private Double maxValue;
     private static DecimalFormat df2 = new DecimalFormat(".##");
 
-    public SaltAndPepperNoiseDialog(){
+    public SaltAndPepperNoiseDialog() {
         this.minValue = 0.0;
         this.maxValue = 1.0;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

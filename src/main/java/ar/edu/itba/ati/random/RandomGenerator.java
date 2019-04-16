@@ -6,7 +6,7 @@ public abstract class RandomGenerator {
 
     private Random random;
 
-    public RandomGenerator(){
+    public RandomGenerator() {
         this.random = new Random();
     }
 

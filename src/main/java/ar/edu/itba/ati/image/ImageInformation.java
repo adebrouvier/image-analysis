@@ -16,7 +16,7 @@ public class ImageInformation {
         if (image.getWidth() == 0 || image.getHeight() == 0) {
             return;
         }
-        Pixel pixel = image.getPixel(0,0);
+        Pixel pixel = image.getPixel(0, 0);
         if (pixel instanceof RGBPixel) {
             this.imageType = Image.ImageType.RGB;
         } else {
@@ -27,7 +27,7 @@ public class ImageInformation {
 
     private void analyzeImage(Image image) {
         this.pixelAmount = image.getPixels().size();
-        if (this.imageType.equals(Image.ImageType.GRAY_SCALE)){
+        if (this.imageType.equals(Image.ImageType.GRAY_SCALE)) {
             this.analizeGrayScale(image.getPixels());
         } else {
             this.analizeRGB(image.getPixels());
@@ -35,7 +35,7 @@ public class ImageInformation {
     }
 
     private void analizeRGB(List<Pixel> pixels) {
-        for (Pixel pixel: pixels) {
+        for (Pixel pixel : pixels) {
             this.redChannelAvg += pixel.getRed();
             this.greenChannelAvg += pixel.getGreen();
             this.blueChannelAvg += pixel.getBlue();
@@ -54,7 +54,7 @@ public class ImageInformation {
 
     public String toString() {
         if (this.imageType.equals(Image.ImageType.RGB)) {
-            return new StringBuilder("")
+            return new StringBuilder()
                     .append("Pixels: ")
                     .append(this.pixelAmount)
                     .append("; Red Avg.: ")
@@ -65,7 +65,7 @@ public class ImageInformation {
                     .append(this.blueChannelAvg)
                     .toString();
         } else {
-            return new StringBuilder("")
+            return new StringBuilder()
                     .append("Pixels: ")
                     .append(this.pixelAmount)
                     .append("; Gray Avg.: ")

@@ -14,7 +14,7 @@ public class SaveListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public SaveListener(WindowContext windowContext){
+    public SaveListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 
@@ -40,7 +40,7 @@ public class SaveListener implements ActionListener {
 
         ImageIO writer;
 
-        switch (image.getFormat()){
+        switch (image.getFormat()) {
             case PBM:
                 writer = new PBMImageIO();
                 break;
