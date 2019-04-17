@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Image {
@@ -23,6 +24,11 @@ public class Image {
         PBM,
         PGM,
         PPM
+    }
+
+    public enum BorderDetectorType {
+        LECLERC,
+        LORENTZ
     }
 
     private int width;
@@ -127,10 +133,6 @@ public class Image {
 
     public Format getFormat() {
         return format;
-    }
-
-    public ImageType getType() {
-        return pixels.get(0) instanceof GrayScalePixel ? ImageType.GRAY_SCALE : ImageType.RGB;
     }
 
     public Image add(Image image) {
@@ -675,4 +677,84 @@ public class Image {
         return variance;
     }
 
+    public Image isotropicDiffusion(int time) {
+        return diffusion(time, (gradient) -> 1.0);
+    }
+
+    public Image anisotropicDiffusion(int time, double sigma, BorderDetectorType detector) {
+
+        BorderDetector borderDetector;
+
+        switch (detector) {
+            case LECLERC:
+                borderDetector = (gradient) ->
+                        Math.exp(-Math.pow(gradient, 2) / Math.pow(sigma, 2));
+                break;
+            case LORENTZ:
+                borderDetector = (gradient) ->
+                        1 / ((Math.pow(gradient, 2) / Math.pow(sigma, 2)) + 1);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid border detector");
+        }
+
+        return diffusion(time, borderDetector);
+    }
+
+    private Image diffusion(int time, BorderDetector borderDetector) {
+
+        Image currentImage = this.copy();
+        Image newImage = this.copy();
+
+        for (int t = 0; t < time; t++) {
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    final GrayScalePixel pixel = (GrayScalePixel) currentImage.getPixel(x, y);
+                    List<GrayScalePixel> neighbours = currentImage.neighbours(x, y);
+
+                    List<Integer> derivatives = neighbours
+                            .stream()
+                            .map(n -> derivative(pixel, n))
+                            .collect(Collectors.toList());
+
+                    List<Double> coefficients = derivatives
+                            .stream()
+                            .map(d -> borderDetector.apply(pixel.getGrayScale() * d)) //TODO: ask
+                            .collect(Collectors.toList());
+
+                    GrayScalePixel newPixel = new GrayScalePixel(addDerivatives(derivatives, coefficients));
+                    newImage.getPixel(x, y).add(newPixel);
+                }
+            }
+            newImage.normalize();
+            currentImage = newImage.copy();
+        }
+
+        return newImage;
+    }
+
+    private List<GrayScalePixel> neighbours(int x, int y) {
+        List<int[]> coordinates = Arrays.asList(
+                new int[]{x, y - 1}, // North
+                new int[]{x, y + 1}, // South
+                new int[]{x + 1, y}, // West
+                new int[]{x - 1, y}  // East
+        );
+
+        return coordinates.stream()
+                .map(coordinate -> (GrayScalePixel) getPixel(coordinate[0], coordinate[1]))
+                .collect(Collectors.toList());
+    }
+
+    private int derivative(GrayScalePixel p, GrayScalePixel direction) {
+        return direction.getGrayScale() - p.getGrayScale();  //TODO: ask
+    }
+
+    private int addDerivatives(List<Integer> derivatives, List<Double> coefficients) {
+        return (int) (0.25 * (
+                derivatives.get(0) * coefficients.get(0) +
+                        derivatives.get(1) * coefficients.get(1) +
+                        derivatives.get(2) * coefficients.get(2) +
+                        derivatives.get(3) * coefficients.get(3)));
+    }
 }

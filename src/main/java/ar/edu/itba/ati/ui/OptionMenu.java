@@ -13,6 +13,7 @@ import ar.edu.itba.ati.ui.listeners.transformations.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class OptionMenu extends JMenuBar {
@@ -33,6 +34,12 @@ public class OptionMenu extends JMenuBar {
         createTransformMenu();
         createHistogramMenu();
         createOperations();
+    }
+
+    private void addItem(JMenu menu, String name, int key, ActionListener listener) {
+        JMenuItem item = new JMenuItem(name, key);
+        item.addActionListener(listener);
+        menu.add(item);
     }
 
     private void createFileMenu() {
@@ -136,6 +143,7 @@ public class OptionMenu extends JMenuBar {
 
         transform.add(createBordersSubMenu());
         transform.add(createThresholdSubMenu());
+        transform.add(createFiltersSubMenu());
 
         add(transform);
     }
@@ -266,5 +274,12 @@ public class OptionMenu extends JMenuBar {
         borders.add(item);
 
         return borders;
+    }
+
+    private JMenu createFiltersSubMenu() {
+        JMenu filters = new JMenu("Filters");
+        addItem(filters, "Isotropic Diffusion", KeyEvent.VK_I, new IsotropicDiffusionListener(windowContext));
+        addItem(filters, "Anisotropic Diffusion", KeyEvent.VK_A, new AnisotropicDiffusionListener(windowContext));
+        return filters;
     }
 }

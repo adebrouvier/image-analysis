@@ -18,14 +18,7 @@ public class DynamicCompressionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Image image = windowContext.getImageContainer().getImage();
-
-//        DoubleDialog dialog = new DoubleDialog("Threshold");
-//        int result = JOptionPane.showConfirmDialog(null, dialog,
-//                "Please enter Threshold", JOptionPane.OK_CANCEL_OPTION);
-
-//        if (result == JOptionPane.OK_OPTION) {
         Image newImage = image.dynamicRangeCompress();
         FrameHelper.create(newImage);
-//        }
     }
 }
