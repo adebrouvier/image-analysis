@@ -273,6 +273,9 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new SobelListener(windowContext));
         borders.add(item);
 
+        addItem(borders, "Laplacian", KeyEvent.VK_L, new LaplacianListener(windowContext));
+        addItem(borders, "LoG", KeyEvent.VK_G, new LoGListener(windowContext));
+
         return borders;
     }
 

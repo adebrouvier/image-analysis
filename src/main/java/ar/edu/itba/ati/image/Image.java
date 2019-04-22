@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static ar.edu.itba.ati.image.Constants.BLACK;
+import static ar.edu.itba.ati.image.Constants.WHITE;
+
 public class Image {
 
     public enum ImageType {
@@ -402,6 +405,10 @@ public class Image {
     }
 
     private Image applyMask(int maskSize, MaskApplier mask) {
+        return applyMask(maskSize, mask, true);
+    }
+
+    private Image applyMask(int maskSize, MaskApplier mask, boolean normalize) {
         if (maskSize % 2 != 1) {
             throw new IllegalArgumentException("Mask size must not be divided by 2.");
         }
@@ -420,10 +427,12 @@ public class Image {
                 newImage.changePixel(x, y, pixel);
             }
         }
-        if (newImage.type.equals(ImageType.RGB)) {
-            newImage.normalizeColor();
-        } else {
-            newImage.normalize();
+        if (normalize) {
+            if (newImage.type.equals(ImageType.RGB)) {
+                newImage.normalizeColor();
+            } else {
+                newImage.normalize();
+            }
         }
         return newImage;
     }
@@ -531,28 +540,22 @@ public class Image {
     }
 
     public Image gaussMaskFilter(Double std, Integer maskSize) {
-        Double[] mask = getGaussianMask(maskSize, std);
+        Double[] mask = getGaussianMask(maskSize, std, new GaussianWeight());
         return this.applyMask(maskSize, (pixels) ->
                 this.getWeightedValue(pixels, mask)
         );
     }
 
-    private Double[] getGaussianMask(Integer maskSize, Double std) {
+    private Double[] getGaussianMask(Integer maskSize, Double std, Weight weight) {
         Double[] mask = new Double[maskSize * maskSize];
         for (int i = 0; i < maskSize; i++) {
             for (int j = 0; j < maskSize; j++) {
                 int x = i - maskSize / 2;
                 int y = j - maskSize / 2;
-                mask[i + j * maskSize] = getGaussianWeight(std, x, y);
+                mask[i + j * maskSize] = weight.get(std, x, y);
             }
         }
         return mask;
-    }
-
-    private Double getGaussianWeight(Double std, Integer x, Integer y) {
-        double mult = 1 / (2 * Math.PI * std * std);
-        double exponent = -(Math.pow(x, 2) + Math.pow(y, 2)) / (2 * Math.pow(std, 2));
-        return mult * Math.exp(exponent);
     }
 
     public Image getNegative() {
@@ -733,6 +736,13 @@ public class Image {
         return newImage;
     }
 
+    /**
+     * Returns the north, south, west and east neighbours of a pixel located on the (x, y) coordinates
+     *
+     * @param x coordinate of the pixel
+     * @param y coordinate of the pixel
+     * @return a list of neighbouring pixels
+     */
     private List<GrayScalePixel> neighbours(int x, int y) {
         List<int[]> coordinates = Arrays.asList(
                 new int[]{x, y - 1}, // North
@@ -756,5 +766,60 @@ public class Image {
                         derivatives.get(1) * coefficients.get(1) +
                         derivatives.get(2) * coefficients.get(2) +
                         derivatives.get(3) * coefficients.get(3)));
+    }
+
+    public Image laplacianOperator() {
+        return this.applyMask(3, (pixels) -> {
+            Double[] values = {0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0};
+            return this.getWeightedValue(pixels, values);
+        });
+    }
+
+    public Image logOperator(double sigma) {
+        int maskSize = 7;
+        Double[] mask = getGaussianMask(maskSize, sigma, new LoGWeight());
+        Image log = this.applyMask(maskSize, (pixels) ->
+                this.getWeightedValue(pixels, mask), false);
+
+        Image result = log.copy();
+
+        // Zero crossing
+        // Horizontal
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width - 1; x++) {
+                GrayScalePixel pixel = (GrayScalePixel) log.getPixel(x, y);
+                GrayScalePixel nextPixel = (GrayScalePixel) log.getPixel(x + 1, y);
+
+                if (nextPixel.getGrayScale() == BLACK) {
+                    nextPixel = (GrayScalePixel) log.getPixel(x + 2, y);
+                }
+
+                int color = WHITE;
+
+                if (Math.signum(pixel.getGrayScale()) != Math.signum(nextPixel.getGrayScale())) {
+                    color = BLACK;
+                }
+                result.changePixel(x, y, new GrayScalePixel(color));
+            }
+        }
+        // Vertical
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height - 1; y++) {
+                GrayScalePixel pixel = (GrayScalePixel) log.getPixel(x, y);
+                GrayScalePixel nextPixel = (GrayScalePixel) log.getPixel(x, y + 1);
+
+                if (nextPixel.getGrayScale() == BLACK) {
+                    nextPixel = (GrayScalePixel) log.getPixel(x, y + 2);
+                }
+
+                if (Math.signum(pixel.getGrayScale()) != Math.signum(nextPixel.getGrayScale())) {
+                    result.changePixel(x, y, new GrayScalePixel(BLACK));
+                }
+            }
+        }
+
+        //TODO: evaluación de la pendiente
+
+        return result;
     }
 }
