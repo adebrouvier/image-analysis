@@ -404,11 +404,11 @@ public class Image {
         }
     }
 
-    private Image applyMask(int maskSize, MaskApplier mask) {
+    public Image applyMask(int maskSize, MaskApplier mask) {
         return applyMask(maskSize, mask, true);
     }
 
-    private Image applyMask(int maskSize, MaskApplier mask, boolean normalize) {
+    public Image applyMask(int maskSize, MaskApplier mask, boolean normalize) {
         if (maskSize % 2 != 1) {
             throw new IllegalArgumentException("Mask size must not be divided by 2.");
         }
@@ -518,7 +518,7 @@ public class Image {
         return getMedian(pixels, red, green, blue);
     }
 
-    private Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
+    public Pixel getWeightedValue(List<Pixel> pixels, Double[] values) {
         int red = 0, green = 0, blue = 0, totalWeight = 0;
         for (int j = 0; j < values.length; j++) {
             totalWeight += values[j];

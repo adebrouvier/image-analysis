@@ -273,9 +273,20 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new SobelListener(windowContext));
         borders.add(item);
 
+        item = new JMenuItem("Sobel", KeyEvent.VK_S);
+        item.addActionListener(new SobelListener(windowContext));
+        borders.add(item);
+
         addItem(borders, "Laplacian", KeyEvent.VK_L, new LaplacianListener(windowContext));
         addItem(borders, "LoG", KeyEvent.VK_G, new LoGListener(windowContext));
-
+        addItem(borders, "exercise a)", KeyEvent.VK_A, new MaskListener(
+                windowContext, new Double[]{1.0, 1.0, 1.0, 1.0, -2.0, 1.0, -1.0, -1.0, -1.0}, 3));
+        addItem(borders, "Kirsch", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{5.0, 5.0, 5.0, -3.0, 0.0, -3.0, -3.0, -3.0, -3.0}, 3));
+        addItem(borders, "8 - Prewitt", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3));
+        addItem(borders, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3));
         return borders;
     }
 
