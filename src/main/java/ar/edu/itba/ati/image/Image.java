@@ -822,4 +822,40 @@ public class Image {
 
         return result;
     }
+
+    public Image bilateralFilter(int maskSize, Double spatialConst, Double colorConst) {
+        return this.applyMask(maskSize, (pixels) -> {
+            Pixel centerPixel = pixels.get(pixels.size()/2);
+            int index = 0;
+            Double totalWeight = 0.0;
+
+            Double color = 0.0;
+            for (Pixel p: pixels) {
+                int distanceX = index % maskSize - (maskSize / 2);
+                int distanceY = index / maskSize - (maskSize / 2);
+                Double firstTerm = getFirstTermBilateral(spatialConst, distanceX, distanceY);
+                Double secondTerm = getSecondTermBilateral(colorConst, centerPixel.getRed(), p.getRed());
+                Double weight = Math.exp(- firstTerm - secondTerm);
+
+                totalWeight += weight;
+                color += p.getRed() * weight;
+
+                index++;
+            }
+            if (centerPixel instanceof RGBPixel) {
+                throw new IllegalStateException("Cannot apply this to Color images.");
+            } else {
+                color /= totalWeight;
+                return new GrayScalePixel(color.intValue());
+            }
+        });
+    }
+
+    private Double getFirstTermBilateral(Double spatialConst, int distanceX, int distanceY) {
+        return (Math.pow(distanceX, 2) + Math.pow(distanceY, 2)) / (2 * Math.pow(spatialConst, 2));
+    }
+
+    private Double getSecondTermBilateral(Double colorConst, int centerColor, int currentColor) {
+        return Math.abs(currentColor - centerColor) / (2 * Math.pow(colorConst, 2));
+    }
 }

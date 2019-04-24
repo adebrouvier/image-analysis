@@ -287,6 +287,7 @@ public class OptionMenu extends JMenuBar {
                 windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3));
         addItem(borders, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
                 windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3));
+
         return borders;
     }
 
@@ -294,6 +295,7 @@ public class OptionMenu extends JMenuBar {
         JMenu filters = new JMenu("Filters");
         addItem(filters, "Isotropic Diffusion", KeyEvent.VK_I, new IsotropicDiffusionListener(windowContext));
         addItem(filters, "Anisotropic Diffusion", KeyEvent.VK_A, new AnisotropicDiffusionListener(windowContext));
+        addItem(filters, "Bilateral Filter", KeyEvent.VK_F, new BilateralFilterListener(windowContext));
         return filters;
     }
 }
