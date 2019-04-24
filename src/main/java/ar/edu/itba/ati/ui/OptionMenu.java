@@ -280,13 +280,13 @@ public class OptionMenu extends JMenuBar {
         addItem(borders, "Laplacian", KeyEvent.VK_L, new LaplacianListener(windowContext));
         addItem(borders, "LoG", KeyEvent.VK_G, new LoGListener(windowContext));
         addItem(borders, "exercise a)", KeyEvent.VK_A, new MaskListener(
-                windowContext, new Double[]{1.0, 1.0, 1.0, 1.0, -2.0, 1.0, -1.0, -1.0, -1.0}, 3));
+                windowContext, new Double[]{1.0, 1.0, 1.0, 1.0, -2.0, 1.0, -1.0, -1.0, -1.0}, 3, "exercise a)"));
         addItem(borders, "Kirsch", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{5.0, 5.0, 5.0, -3.0, 0.0, -3.0, -3.0, -3.0, -3.0}, 3));
+                windowContext, new Double[]{5.0, 5.0, 5.0, -3.0, 0.0, -3.0, -3.0, -3.0, -3.0}, 3, "Kirsch"));
         addItem(borders, "8 - Prewitt", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3));
+                windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3, "Prewitt"));
         addItem(borders, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3));
+                windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
 
         return borders;
     }
