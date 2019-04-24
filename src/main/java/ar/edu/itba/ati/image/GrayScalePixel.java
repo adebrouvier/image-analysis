@@ -1,5 +1,8 @@
 package ar.edu.itba.ati.image;
 
+import static ar.edu.itba.ati.image.Constants.BLACK;
+import static ar.edu.itba.ati.image.Constants.WHITE;
+
 public class GrayScalePixel extends Pixel {
 
     private int grayScale;
@@ -77,17 +80,17 @@ public class GrayScalePixel extends Pixel {
 
     @Override
     public void threshold(Double threshold) {
-        this.grayScale = this.grayScale < threshold ? 0 : 255;
+        this.grayScale = this.grayScale < threshold ? BLACK : WHITE;
     }
 
     @Override
     public void turnBlack() {
-        this.grayScale = 0;
+        this.grayScale = BLACK;
     }
 
     @Override
     public void turnWhite() {
-        this.grayScale = 255;
+        this.grayScale = WHITE;
     }
 
 }

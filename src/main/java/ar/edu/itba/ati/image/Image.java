@@ -626,8 +626,8 @@ public class Image {
             List<Pixel> g1 = new ArrayList<>();
             List<Pixel> g2 = new ArrayList<>();
 
-            for (Pixel p : newImage.pixels) {
-                if (p.getRed() == Constants.WHITE) {
+            for (Pixel p : pixels) {
+                if (p.getRed() <= threshold) {
                     g1.add(p);
                 } else {
                     g2.add(p);
@@ -636,9 +636,7 @@ public class Image {
             previousThreshold = threshold;
             threshold = 0.5 * (pixelMean(g1) + pixelMean(g2));
         }
-
-        System.out.println("Global threshold: " + threshold);
-
+        System.out.println("Global threshold: " + previousThreshold);
         return newImage;
     }
 
