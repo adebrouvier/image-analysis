@@ -18,9 +18,7 @@ public class PrewittListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Image image = windowContext.getImageContainer().getImage();
-//        Image newImage = image.prewittOperation();
-//        FrameHelper.create(newImage);
-        FrameHelper.create(image.prewittFirstOperator());
-        FrameHelper.create(image.prewittSecondOperator());
+        Image newImage = image.prewittOperation();
+        FrameHelper.create(newImage);
     }
 }

@@ -585,7 +585,7 @@ public class Image {
 
         Image secondOperator = this.prewittSecondOperator();
 
-        return firstOperator.substract(secondOperator);
+        return firstOperator.moduleOperation(secondOperator);
     }
 
     public Image prewittFirstOperator() {
@@ -613,7 +613,7 @@ public class Image {
             return this.getWeightedValue(pixels, values);
         });
 
-        return firstOperator.substract(secondOperator);
+        return firstOperator.moduleOperation(secondOperator);
     }
 
     public Image globalThreshold() {
@@ -857,5 +857,26 @@ public class Image {
 
     private Double getSecondTermBilateral(Double colorConst, int centerColor, int currentColor) {
         return Math.abs(currentColor - centerColor) / (2 * Math.pow(colorConst, 2));
+    }
+
+    private Image moduleOperation(Image other) {
+        Image image = this.copy();
+
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
+                Pixel myPixel = this.getPixel(j, i);
+                Pixel otherPixel = other.getPixel(j, i);
+                int red = (int) Math.sqrt(Math.pow(myPixel.getRed(), 2) + Math.pow(otherPixel.getRed(), 2));
+                int blue = (int) Math.sqrt(Math.pow(myPixel.getBlue(), 2) + Math.pow(otherPixel.getBlue(), 2));
+                int green = (int) Math.sqrt(Math.pow(myPixel.getGreen(), 2) + Math.pow(otherPixel.getGreen(), 2));
+                if (image.type.equals(ImageType.RGB)) {
+                    image.changePixel(j, i, new RGBPixel(red, blue, green));
+                } else {
+                    image.changePixel(j, i, new GrayScalePixel(red));
+                }
+            }
+        }
+        image.normalize();
+        return image;
     }
 }
