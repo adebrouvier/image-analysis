@@ -626,8 +626,8 @@ public class Image {
             List<Pixel> g1 = new ArrayList<>();
             List<Pixel> g2 = new ArrayList<>();
 
-            for (Pixel p : newImage.pixels) {
-                if (p.getRed() == Constants.WHITE) {
+            for (Pixel p : pixels) {
+                if (p.getRed() <= threshold) {
                     g1.add(p);
                 } else {
                     g2.add(p);
@@ -636,9 +636,7 @@ public class Image {
             previousThreshold = threshold;
             threshold = 0.5 * (pixelMean(g1) + pixelMean(g2));
         }
-
-        System.out.println("Global threshold: " + threshold);
-
+        System.out.println("Global threshold: " + previousThreshold);
         return newImage;
     }
 
@@ -722,7 +720,7 @@ public class Image {
 
                     List<Double> coefficients = derivatives
                             .stream()
-                            .map(d -> borderDetector.apply(pixel.getGrayScale() * d)) //TODO: ask
+                            .map(borderDetector::apply)
                             .collect(Collectors.toList());
 
                     GrayScalePixel newPixel = new GrayScalePixel(addDerivatives(derivatives, coefficients));
@@ -757,7 +755,7 @@ public class Image {
     }
 
     private int derivative(GrayScalePixel p, GrayScalePixel direction) {
-        return direction.getGrayScale() - p.getGrayScale();  //TODO: ask
+        return direction.getGrayScale() - p.getGrayScale();
     }
 
     private int addDerivatives(List<Integer> derivatives, List<Double> coefficients) {
@@ -768,36 +766,54 @@ public class Image {
                         derivatives.get(3) * coefficients.get(3)));
     }
 
-    public Image laplacianOperator() {
-        return this.applyMask(3, (pixels) -> {
+    public Image laplacianOperator(int threshold) {
+        Image masked = this.applyMask(3, (pixels) -> {
             Double[] values = {0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0};
             return this.getWeightedValue(pixels, values);
-        });
+        }, false);
+        return masked.zeroCrossing(threshold);
     }
 
-    public Image logOperator(double sigma) {
+    public Image logOperator(double sigma, int threshold) {
         int maskSize = 7;
         Double[] mask = getGaussianMask(maskSize, sigma, new LoGWeight());
         Image log = this.applyMask(maskSize, (pixels) ->
                 this.getWeightedValue(pixels, mask), false);
+        return log.zeroCrossing(threshold);
+    }
 
-        Image result = log.copy();
+    public Image zeroCrossing(int threshold) {
 
-        // Zero crossing
+        Image result = this.copy();
+
         // Horizontal
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width - 1; x++) {
-                GrayScalePixel pixel = (GrayScalePixel) log.getPixel(x, y);
-                GrayScalePixel nextPixel = (GrayScalePixel) log.getPixel(x + 1, y);
+            for (int x = 0; x < width; x++) {
+                GrayScalePixel pixel = (GrayScalePixel) getPixel(x, y);
+
+                if (x + 1 >= width) {
+                    result.changePixel(x, y, new GrayScalePixel(WHITE)); // Set border pixels
+                    continue;
+                }
+
+                GrayScalePixel nextPixel = (GrayScalePixel) getPixel(x + 1, y);
+                boolean zero = false;
 
                 if (nextPixel.getGrayScale() == BLACK) {
-                    nextPixel = (GrayScalePixel) log.getPixel(x + 2, y);
+                    result.changePixel(x, y, new GrayScalePixel(WHITE));
+                    nextPixel = (GrayScalePixel) getPixel(x + 2, y);
+                    zero = true;
                 }
 
                 int color = WHITE;
 
                 if (Math.signum(pixel.getGrayScale()) != Math.signum(nextPixel.getGrayScale())) {
-                    color = BLACK;
+                    if (slopeEvaluation(pixel, nextPixel, threshold)) {
+                        color = BLACK;
+                        if (zero) {
+                            x++;
+                        }
+                    }
                 }
                 result.changePixel(x, y, new GrayScalePixel(color));
             }
@@ -805,22 +821,31 @@ public class Image {
         // Vertical
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height - 1; y++) {
-                GrayScalePixel pixel = (GrayScalePixel) log.getPixel(x, y);
-                GrayScalePixel nextPixel = (GrayScalePixel) log.getPixel(x, y + 1);
+                GrayScalePixel pixel = (GrayScalePixel) getPixel(x, y);
+                GrayScalePixel nextPixel = (GrayScalePixel) getPixel(x, y + 1);
+                boolean zero = false;
 
                 if (nextPixel.getGrayScale() == BLACK) {
-                    nextPixel = (GrayScalePixel) log.getPixel(x, y + 2);
+                    nextPixel = (GrayScalePixel) getPixel(x, y + 2);
+                    zero = true;
                 }
 
                 if (Math.signum(pixel.getGrayScale()) != Math.signum(nextPixel.getGrayScale())) {
-                    result.changePixel(x, y, new GrayScalePixel(BLACK));
+                    if (slopeEvaluation(pixel, nextPixel, threshold)) {
+                        if (zero) {
+                            y++;
+                        }
+                        result.changePixel(x, y, new GrayScalePixel(BLACK));
+                    }
                 }
             }
         }
 
-        //TODO: evaluación de la pendiente
-
         return result;
+    }
+
+    private boolean slopeEvaluation(GrayScalePixel pixel, GrayScalePixel nextPixel, int threshold) {
+        return Math.abs(pixel.getGrayScale()) + Math.abs(nextPixel.getGrayScale()) > threshold;
     }
 
     public Image bilateralFilter(int maskSize, Double spatialConst, Double colorConst) {
