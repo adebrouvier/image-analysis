@@ -1,6 +1,7 @@
 package ar.edu.itba.ati.ui.listeners.histogram;
 
 import ar.edu.itba.ati.image.Histogram;
+import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.HistogramContainer;
 import ar.edu.itba.ati.ui.WindowContext;
 import org.jfree.chart.JFreeChart;
@@ -18,7 +19,7 @@ public class HistogramListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Histogram histogram = new Histogram(windowContext.getImageContainer().getImage());
+        Histogram histogram = new Histogram(windowContext.getImageContainer().getImage(), Image.Channel.GRAY);
         JFreeChart histogramChart = histogram.createChart();
         HistogramContainer.show(histogramChart);
     }

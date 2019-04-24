@@ -21,20 +21,31 @@ public class Histogram {
     private Map<Integer, Integer> absoluteFrequencies;
     private Map<Integer, Double> relativeFrequencies;
 
-    public Histogram(Image image) {
+    public Histogram(Image image, Image.Channel channel) {
         this.image = image;
-        create();
+        create(channel);
     }
 
-    private void create() {
+    private void create(Image.Channel channel) {
 
         this.absoluteFrequencies = initializeFrequencies();
 
         for (Pixel p : image.getPixels()) {
-            addValue(((GrayScalePixel) p).getGrayScale());
+            addValue(getChannel(p, channel));
         }
 
         calculateRelativeFrequencies();
+    }
+
+    private int getChannel(Pixel p, Image.Channel channel) {
+        switch (channel){
+            case GREEN:
+                return p.getBlue();
+            case BLUE:
+                return p.getGreen();
+            default:
+                return p.getRed();
+        }
     }
 
     private Map<Integer, Integer> initializeFrequencies() {

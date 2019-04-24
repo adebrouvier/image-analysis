@@ -85,6 +85,12 @@ public class RGBPixel extends Pixel {
         this.green = this.green < threshold ? 0 : 255;
     }
 
+    public void RGBThreshold(double red, double green, double blue){
+        this.red = this.red < red ? 0 : 255;
+        this.green = this.green < green ? 0 : 255;
+        this.blue = this.blue < blue ? 0 : 255;
+    }
+
     @Override
     public void turnBlack() {
         this.red = 0;

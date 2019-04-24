@@ -34,6 +34,13 @@ public class Image {
         LORENTZ
     }
 
+    public enum Channel {
+        RED,
+        GREEN,
+        BLUE,
+        GRAY
+    }
+
     private int width;
     private int height;
     private List<Pixel> pixels;
@@ -242,6 +249,18 @@ public class Image {
             p.threshold(threshold);
         }
         return newImage;
+    }
+
+    private Image RGBThreshold(double red, double green, double blue) {
+        if (type.equals(ImageType.RGB)) {
+            Image newImage = this.copy();
+            for (Pixel p : newImage.pixels) {
+                ((RGBPixel) p).RGBThreshold(red, green, blue);
+            }
+            return newImage;
+        } else {
+            return null;
+        }
     }
 
     public Image saltAndPepperNoise(Double p0, Double p1) {
@@ -619,10 +638,8 @@ public class Image {
     public Image globalThreshold() {
         double threshold = getGrayScaleMean();
         double previousThreshold = 0;
-        Image newImage = this;
 
         while (Math.abs(previousThreshold - threshold) > 1) {
-            newImage = threshold(threshold);
             List<Pixel> g1 = new ArrayList<>();
             List<Pixel> g2 = new ArrayList<>();
 
@@ -637,12 +654,24 @@ public class Image {
             threshold = 0.5 * (pixelMean(g1) + pixelMean(g2));
         }
         System.out.println("Global threshold: " + previousThreshold);
-        return newImage;
+        return threshold(previousThreshold);
     }
 
     public Image otsuThreshold() {
 
-        Histogram histogram = new Histogram(this);
+        if (type.equals(ImageType.GRAY_SCALE)){
+            double threshold = channelOtsu(Channel.GRAY);
+            return threshold(threshold);
+        }else {
+            double redThreshold = channelOtsu(Channel.RED);
+            double greenThreshold = channelOtsu(Channel.GREEN);
+            double blueThreshold = channelOtsu(Channel.BLUE);
+            return RGBThreshold(redThreshold, greenThreshold, blueThreshold);
+        }
+    }
+
+    private double channelOtsu(Channel channel){
+        Histogram histogram = new Histogram(this, channel);
         Map<Integer, Double> acumSum = histogram.pdf();
         Map<Integer, Double> acumMean = histogram.accumulativeMean();
         double globalMean = histogram.globalMean();
@@ -663,7 +692,7 @@ public class Image {
 
         OptionalDouble threshold = indexes.stream().mapToInt(Integer::intValue).average();
         System.out.println("Otsu threshold: " + threshold.getAsDouble());
-        return threshold(threshold.getAsDouble());
+        return threshold.getAsDouble();
     }
 
     private Map<Integer, Double> sampleVariance(Map<Integer, Double> acumSum,

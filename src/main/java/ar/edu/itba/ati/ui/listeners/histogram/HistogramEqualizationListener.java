@@ -20,9 +20,9 @@ public class HistogramEqualizationListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Histogram histogram = new Histogram(windowContext.getImageContainer().getImage());
+        Histogram histogram = new Histogram(windowContext.getImageContainer().getImage(), Image.Channel.GRAY);
         Image newImage = histogram.equalize();
-        Histogram newHistogram = new Histogram(newImage);
+        Histogram newHistogram = new Histogram(newImage, Image.Channel.GRAY);
         JFreeChart histogramChart = newHistogram.createChart();
         HistogramContainer.show(histogramChart);
         FrameHelper.create(newImage);

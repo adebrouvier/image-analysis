@@ -28,7 +28,7 @@ public class HistogramTest {
 
     @Test
     public void pdf() {
-        Histogram histogram = new Histogram(image);
+        Histogram histogram = new Histogram(image, Image.Channel.GRAY);
         Map<Integer, Double> pdf = histogram.pdf();
         assertEquals(256, pdf.size());
         assertEquals(1.0, pdf.get(255), 0.001);
