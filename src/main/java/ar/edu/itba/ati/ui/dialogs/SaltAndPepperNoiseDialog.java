@@ -2,45 +2,28 @@ package ar.edu.itba.ati.ui.dialogs;
 
 import javax.swing.*;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class SaltAndPepperNoiseDialog extends JPanel {
 
-    private Double minValue;
-    private Double maxValue;
-    private static DecimalFormat df2 = new DecimalFormat(".##");
+    private JFormattedTextField minField = new JFormattedTextField(NumberFormat.getNumberInstance());
+    private JFormattedTextField maxField = new JFormattedTextField(NumberFormat.getNumberInstance());
 
     public SaltAndPepperNoiseDialog() {
-        this.minValue = 0.0;
-        this.maxValue = 1.0;
+        minField.setValue(0.0);
+        maxField.setValue(1.0);
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        JLabel minPercentage = new JLabel("Min: 0%");
-        JSlider minSlider = new JSlider(JSlider.HORIZONTAL,
-                0, 200, 0);
-        minSlider.addChangeListener((e) -> {
-            int value = ((JSlider) e.getSource()).getValue();
-            this.minValue = value / 1000.0;
-            minPercentage.setText("Min: " + df2.format(this.minValue * 100) + "%");
-        });
-        this.add(minPercentage);
-        this.add(minSlider);
-
-        JLabel maxPercentage = new JLabel("Max: 100%");
-        JSlider maxSlider = new JSlider(JSlider.HORIZONTAL,
-                800, 1000, 1000);
-        maxSlider.addChangeListener((e) -> {
-            int value = ((JSlider) e.getSource()).getValue();
-            this.maxValue = value / 1000.0;
-            maxPercentage.setText("Max: " + df2.format(this.maxValue * 100) + "%");
-        });
-        this.add(maxPercentage);
-        this.add(maxSlider);
+        this.add(new JLabel("Min"));
+        this.add(minField);
+        this.add(new JLabel("Max"));
+        this.add(maxField);
     }
 
     public Double getMinValue() {
-        return minValue;
+        return Double.valueOf(minField.getText());
     }
 
     public Double getMaxValue() {
-        return maxValue;
+        return Double.valueOf(maxField.getText());
     }
 }
