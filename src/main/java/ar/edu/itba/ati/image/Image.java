@@ -930,7 +930,11 @@ public class Image {
                 }
             }
         }
-        image.normalize();
+        if (image.type.equals(ImageType.RGB)) {
+            image.normalizeColor();
+        } else {
+            image.normalize();
+        }
         return image;
     }
 }
