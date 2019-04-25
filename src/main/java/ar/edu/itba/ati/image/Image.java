@@ -355,12 +355,19 @@ public class Image {
         Image newImage = this.copy();
         for (Pixel p : newImage.pixels) {
             if (Math.random() < percentage) {
-                GrayScalePixel pixel = (GrayScalePixel) p;
-                double noise = generator.getDouble();
-                pixel.add(new GrayScalePixel((int) noise));
+                int noise = (int) generator.getDouble();
+                if (this.type.equals(ImageType.RGB)) {
+                    p.add(new RGBPixel(noise, noise, noise));
+                } else {
+                    p.add(new GrayScalePixel(noise));
+                }
             }
         }
-        newImage.normalize();
+        if (this.type.equals(ImageType.RGB)){
+            newImage.normalizeColor();
+        } else {
+            newImage.normalize();
+        }
         return newImage;
     }
 
@@ -368,9 +375,8 @@ public class Image {
         Image newImage = this.copy();
         for (Pixel p : newImage.pixels) {
             if (Math.random() < percentage) {
-                GrayScalePixel pixel = (GrayScalePixel) p;
                 double noise = generator.getDouble();
-                pixel.multiply(noise);
+                p.multiply(noise);
             }
         }
         return newImage.dynamicRangeCompress();
