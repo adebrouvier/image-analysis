@@ -908,7 +908,7 @@ public class Image {
                 color /= totalWeight;
                 return new GrayScalePixel(color.intValue());
             }
-        });
+        }, false);
     }
 
     private Double getFirstTermBilateral(Double spatialConst, int distanceX, int distanceY) {
@@ -916,7 +916,7 @@ public class Image {
     }
 
     private Double getSecondTermBilateral(Double colorConst, int centerColor, int currentColor) {
-        return Math.abs(currentColor - centerColor) / (2 * Math.pow(colorConst, 2));
+        return Math.pow(Math.abs(currentColor - centerColor), 2) / (2 * Math.pow(colorConst, 2));
     }
 
     private Image moduleOperation(Image other) {
