@@ -24,12 +24,12 @@ public class ZeroCrossingTest {
         Image image = new Image(3, 2, pixels, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(1, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(2, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 1).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(1, 1).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(2, 1).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(1, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(2, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 1).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(1, 1).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(2, 1).getRed());
     }
 
     @Test
@@ -40,9 +40,9 @@ public class ZeroCrossingTest {
         Image image = new Image(3, 1, pixels, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
-        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(1, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(2, 0).getRed());
+        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(1, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(2, 0).getRed());
     }
 
     @Test
@@ -53,9 +53,9 @@ public class ZeroCrossingTest {
         Image image = new Image(1, 3, pixels, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
-        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 1).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 2).getRed());
+        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 1).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 2).getRed());
     }
 
     @Test
@@ -66,9 +66,9 @@ public class ZeroCrossingTest {
         Image image = new Image(3, 1, pixels, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
-        assertEquals(Constants.BLACK, zeroCrossing.getPixel(1, 0).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(2, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
+        assertEquals(Constants.WHITE, zeroCrossing.getPixel(1, 0).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(2, 0).getRed());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class ZeroCrossingTest {
         Image image = new Image(1, 3, pixels, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
-        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 1).getRed());
-        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 2).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
+        assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 1).getRed());
+        assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 2).getRed());
     }
 }
