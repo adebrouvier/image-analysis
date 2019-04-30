@@ -827,24 +827,24 @@ public class Image {
                 GrayScalePixel pixel = (GrayScalePixel) getPixel(x, y);
 
                 if (x + 1 >= width) {
-                    result.changePixel(x, y, new GrayScalePixel(WHITE)); // Set border pixels
+                    result.changePixel(x, y, new GrayScalePixel(BLACK)); // Set border pixels
                     continue;
                 }
 
                 GrayScalePixel nextPixel = (GrayScalePixel) getPixel(x + 1, y);
                 boolean zero = false;
 
-                if (nextPixel.getGrayScale() == BLACK) {
-                    result.changePixel(x, y, new GrayScalePixel(WHITE));
+                if (nextPixel.getGrayScale() == 0) {
+                    result.changePixel(x, y, new GrayScalePixel(BLACK));
                     nextPixel = (GrayScalePixel) getPixel(x + 2, y);
                     zero = true;
                 }
 
-                int color = WHITE;
+                int color = BLACK;
 
                 if (Math.signum(pixel.getGrayScale()) != Math.signum(nextPixel.getGrayScale())) {
                     if (slopeEvaluation(pixel, nextPixel, threshold)) {
-                        color = BLACK;
+                        color = WHITE;
                         if (zero) {
                             x++;
                         }
@@ -860,7 +860,7 @@ public class Image {
                 GrayScalePixel nextPixel = (GrayScalePixel) getPixel(x, y + 1);
                 boolean zero = false;
 
-                if (nextPixel.getGrayScale() == BLACK) {
+                if (nextPixel.getGrayScale() == 0) {
                     nextPixel = (GrayScalePixel) getPixel(x, y + 2);
                     zero = true;
                 }
@@ -870,7 +870,7 @@ public class Image {
                         if (zero) {
                             y++;
                         }
-                        result.changePixel(x, y, new GrayScalePixel(BLACK));
+                        result.changePixel(x, y, new GrayScalePixel(WHITE));
                     }
                 }
             }
