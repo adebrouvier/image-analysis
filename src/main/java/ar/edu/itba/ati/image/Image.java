@@ -622,7 +622,7 @@ public class Image {
 
     public Image prewittSecondOperator() {
         return this.applyMask(3, (pixels) -> {
-            Double[] values = {-1.0, 0.0, 1.0, -1.0, 0.0, 1.0, -1.0, 0.0, -1.0};
+            Double[] values = {-1.0, 0.0, 1.0, -1.0, 0.0, 1.0, -1.0, 0.0, 1.0};
             return this.getWeightedValue(pixels, values);
         }, false);
     }
@@ -634,7 +634,7 @@ public class Image {
         }, false);
 
         Image secondOperator = this.applyMask(3, (pixels) -> {
-            Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, -1.0};
+            Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
             return this.getWeightedValue(pixels, values);
         }, false);
 
