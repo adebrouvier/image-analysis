@@ -564,6 +564,21 @@ public class Image {
         }
     }
 
+    public Pixel getUnweightedValue(List<Pixel> pixels, Double[] values) {
+        int red = 0, green = 0, blue = 0;
+        for (int j = 0; j < values.length; j++) {
+            red += pixels.get(j).getRed() * values[j];
+            blue += pixels.get(j).getBlue() * values[j];
+            green += pixels.get(j).getGreen() * values[j];
+        }
+
+        if (this.type.equals(ImageType.RGB)) {
+            return new RGBPixel(red, green, blue);
+        } else {
+            return new GrayScalePixel(red);
+        }
+    }
+
     public Image gaussMaskFilter(Double std, Integer maskSize) {
         Double[] mask = getGaussianMask(maskSize, std, new GaussianWeight());
         return this.applyMask(maskSize, (pixels) ->
