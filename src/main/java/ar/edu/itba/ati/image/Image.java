@@ -935,6 +935,10 @@ public class Image {
     }
 
     private Image moduleOperation(Image other) {
+        return this.moduleOperation(other, true);
+    }
+
+    private Image moduleOperation(Image other, boolean normalize) {
         Image image = this.copy();
 
         for (int i = 0; i < image.getHeight() && i < this.height; i++) {
@@ -951,11 +955,134 @@ public class Image {
                 }
             }
         }
+        if (!normalize) {
+            return image;
+        }
         if (image.type.equals(ImageType.RGB)) {
             image.normalizeColor();
         } else {
             image.normalize();
         }
+        return image;
+    }
+
+    public Image cannyBorderDetector() {
+        Image xOperator = this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
+            return this.getWeightedValue(pixels, values);
+        }, false);
+
+        Image yOperator = this.applyMask(3, (pixels) -> {
+            Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
+            return this.getWeightedValue(pixels, values);
+        }, false);
+
+        Image border = xOperator.moduleOperation(yOperator, false);
+        Image tangent = border.copy();
+        Image cannyBorder = border.copy();
+        for (int i = 0; i < tangent.getHeight(); i++) {
+            for (int j = 0; j < tangent.getWidth(); j++) {
+                if (i == 0 || j == 0 || i == tangent.getHeight() - 1 || j == tangent.getWidth() - 1){
+                    cannyBorder.changePixel(i, j, new GrayScalePixel(0));
+                }
+                Pixel xPixel = xOperator.getPixel(i, j);
+                Pixel yPixel = yOperator.getPixel(i, j);
+                int red = 0;
+                if (xPixel.getRed() != 0) {
+                    red = (int) (Math.atan(yPixel.getRed()/xPixel.getRed()) + Math.PI /2);
+                }
+                red = getCannyAngle(red);
+                tangent.changePixel(i, j, new GrayScalePixel(red));
+//                int blue = (int) Math.atan2(xPixel.getRed(), yPixel.getRed());
+//                int green = (int) Math.atan2(xPixel.getRed(), yPixel.getRed());
+            }
+        }
+
+        for (int i = 1; i < tangent.getHeight() - 1; i++) {
+            for (int j = 1; j < tangent.getWidth() - 1; j++) {
+                Pixel neighbor1, neighbor2;
+                Pixel currentPixel = border.getPixel(i,j);
+                if (currentPixel.getRed() == 0) {
+                    continue;
+                }
+                int angle = tangent.getPixel(i, j).getRed();
+                if (angle == 45) {
+                    neighbor1 = border.getPixel(i - 1, j - 1);
+                    neighbor2 = border.getPixel(i + 1, j + 1);
+                } else if (angle == 90) {
+                    neighbor1 = border.getPixel(i, j - 1);
+                    neighbor2 = border.getPixel(i, j + 1);
+                } else if (angle == 135) {
+                    neighbor1 = border.getPixel(i - 1, j + 1);
+                    neighbor2 = border.getPixel(i + 1, j - 1);
+                } else {
+                    neighbor1 = border.getPixel(i - 1, j);
+                    neighbor2 = border.getPixel(i + 1, j);
+                }
+                if (neighbor1.getRed() > currentPixel.getRed() ||
+                neighbor2.getRed() > currentPixel.getRed()) {
+                    cannyBorder.changePixel(i, j, new GrayScalePixel(0));
+                }
+            }
+        }
+
+        return cannyBorder;
+    }
+
+    private int getCannyAngle(int color) {
+        int firstLimit = (int) (22.5 * Math.PI / 180);
+        int secondLimit = (int) (67.5 * Math.PI / 180);
+        int thirdLimit = (int) (112.5 * Math.PI / 180);
+        int forthLimit = (int) (157.5 * Math.PI / 180);
+
+        if (color > firstLimit && color < secondLimit) {
+            return 45;
+        } else if (color > secondLimit && color < thirdLimit) {
+            return 90;
+        } else if (color > thirdLimit && color < forthLimit) {
+            return 135;
+        } else {
+            return 0;
+        }
+    }
+
+    public Image susanBorderAndCorners() {
+        Image image = this.applyMask(7, (pixels -> {
+            Double[] mask = {
+                0.0,0.0,1.1,1.1,1.1,0.0,0.0,
+                0.0,1.0,1.0,1.0,1.0,1.0,0.0,
+                1.0,1.0,1.0,1.0,1.0,1.0,1.0,
+                1.0,1.0,1.0,1.0,1.0,1.0,1.0,
+                1.0,1.0,1.0,1.0,1.0,1.0,1.0,
+                0.0,1.0,1.0,1.0,1.0,1.0,0.0,
+                0.0,0.0,1.0,1.0,1.0,0.0,0.0
+            };
+            double susanValue = 0.0;
+            final int THRESHOLD = 27;
+            Pixel middlePixel = pixels.get(pixels.size() / 2);
+            int middleGray = middlePixel.getGrayscale();
+            int index = 0;
+            for (Pixel p: pixels) {
+                int gray = (int) (p.getGrayscale() * mask[index]);
+                index++;
+                if (gray == 0) {
+                    continue;
+                }
+                int c = Math.abs(p.getGrayscale() - middleGray);
+                if (c < THRESHOLD) {
+                    susanValue += 1;
+                }
+            }
+            susanValue = 1 - susanValue / 37;
+            if (0.45 <= susanValue && susanValue <= 0.55) {
+                return new RGBPixel(0, 255, 0);
+            } else if (0.70 <= susanValue && susanValue <= 0.80) {
+                return new RGBPixel(255, 0, 0);
+            } else {
+                return new RGBPixel(middlePixel.getRed(), middlePixel.getGreen(), middlePixel.getBlue());
+            }
+        }), false);
+        image.type = ImageType.RGB;
         return image;
     }
 }

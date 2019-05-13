@@ -283,6 +283,8 @@ public class OptionMenu extends JMenuBar {
                 windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3, "Prewitt"));
         addItem(borders, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
                 windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
+        addItem(borders, "Canny", KeyEvent.VK_L, new CannyListener(windowContext));
+        addItem(borders, "SUSAN", KeyEvent.VK_L, new SusanListener(windowContext));
 
         return borders;
     }

@@ -24,4 +24,13 @@ public abstract class Pixel {
     public abstract void turnBlack();
 
     public abstract void turnWhite();
+
+    public int getGrayscale() {
+        int red = this.getRed();
+        int blue = this.getBlue();
+        int green = this.getGreen();
+        int max = Math.max(red, blue);
+        max = Math.max(max, green);
+        return max;
+    }
 }
