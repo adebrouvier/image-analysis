@@ -3,7 +3,6 @@ package ar.edu.itba.ati.ui.listeners;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.MaskRotator;
 import ar.edu.itba.ati.image.Pixel;
-import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.SingleImagePanel;
 import ar.edu.itba.ati.ui.WindowContext;
 
@@ -12,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

@@ -25,7 +25,7 @@ public class PPMImageIO extends PNMIO implements ImageIO {
             pixels.add(new RGBPixel(r, g, b));
         }
 
-        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PPM);
+        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PPM, file);
     }
 
     @Override

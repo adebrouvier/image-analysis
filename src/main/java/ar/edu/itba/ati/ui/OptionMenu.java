@@ -275,18 +275,27 @@ public class OptionMenu extends JMenuBar {
 
         addItem(borders, "Laplacian", KeyEvent.VK_L, new LaplacianListener(windowContext));
         addItem(borders, "LoG", KeyEvent.VK_G, new LoGListener(windowContext));
-        addItem(borders, "exercise a)", KeyEvent.VK_A, new MaskListener(
-                windowContext, new Double[]{1.0, 1.0, 1.0, 1.0, -2.0, 1.0, -1.0, -1.0, -1.0}, 3, "exercise a)"));
-        addItem(borders, "Kirsch", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{5.0, 5.0, 5.0, -3.0, 0.0, -3.0, -3.0, -3.0, -3.0}, 3, "Kirsch"));
-        addItem(borders, "8 - Prewitt", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3, "Prewitt"));
-        addItem(borders, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
-                windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
+
+        borders.add(createDirectionalSubMenu());
+
         addItem(borders, "Canny", KeyEvent.VK_L, new CannyListener(windowContext));
         addItem(borders, "SUSAN", KeyEvent.VK_L, new SusanListener(windowContext));
+        addItem(borders, "Active Contour", KeyEvent.VK_A, (ae) -> this.selectable = new ActiveContourListener(windowContext));
 
         return borders;
+    }
+
+    private JMenu createDirectionalSubMenu() {
+        JMenu directional = new JMenu("Directional");
+        addItem(directional, "exercise a)", KeyEvent.VK_A, new MaskListener(
+                windowContext, new Double[]{1.0, 1.0, 1.0, 1.0, -2.0, 1.0, -1.0, -1.0, -1.0}, 3, "exercise a)"));
+        addItem(directional, "Kirsch", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{5.0, 5.0, 5.0, -3.0, 0.0, -3.0, -3.0, -3.0, -3.0}, 3, "Kirsch"));
+        addItem(directional, "8 - Prewitt", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.0, -1.0}, 3, "Prewitt"));
+        addItem(directional, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
+                windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
+        return directional;
     }
 
     private JMenu createFiltersSubMenu() {

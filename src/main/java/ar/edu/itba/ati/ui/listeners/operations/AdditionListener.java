@@ -19,7 +19,7 @@ public class AdditionListener extends OpenDialogListener {
     public void actionPerformed(ActionEvent actionEvent) {
         Image image = windowContext.getImageContainer().getImage();
 
-        Image newImage = this.getImageFromFile(windowContext);
+        Image newImage = this.chooseAndOpenFile(windowContext);
 
         if (newImage != null) {
             newImage = image.add(newImage);

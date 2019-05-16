@@ -28,4 +28,8 @@ public class ImageAnalyzerFrame extends JFrame {
         windowContext.getImageContainer().setImage(image);
         windowContext.getImageContainer().renderImage();
     }
+
+    public WindowContext getWindowContext() {
+        return windowContext;
+    }
 }

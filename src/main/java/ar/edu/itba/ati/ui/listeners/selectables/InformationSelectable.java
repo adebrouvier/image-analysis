@@ -29,4 +29,8 @@ public class InformationSelectable implements Selectable {
 
         this.windowContext.getInformationLabel().setText(new ImageInformation(subImage).toString());
     }
+
+    @Override
+    public void onMouseDragged(MouseEvent mouseEvent) {
+    }
 }

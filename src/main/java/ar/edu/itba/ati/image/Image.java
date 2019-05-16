@@ -1,5 +1,6 @@
 package ar.edu.itba.ati.image;
 
+import ar.edu.itba.ati.filters.*;
 import ar.edu.itba.ati.random.ExponentialGenerator;
 import ar.edu.itba.ati.random.GaussianGenerator;
 import ar.edu.itba.ati.random.RandomGenerator;
@@ -7,6 +8,7 @@ import ar.edu.itba.ati.random.RayleighGenerator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +28,8 @@ public class Image {
         RAW,
         PBM,
         PGM,
-        PPM
+        PPM,
+        JPEG
     }
 
     public enum BorderDetectorType {
@@ -46,17 +49,23 @@ public class Image {
     private List<Pixel> pixels;
     private Format format;
     private ImageType type;
+    private File file;
 
     public Image(int width, int height, List<Pixel> pixels, Format format) {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
         this.format = format;
-        if (this.format.equals(Format.PPM)) {
+        if (this.format.equals(Format.PPM) || this.format.equals(Format.JPEG)) {
             this.type = ImageType.RGB;
         } else {
             this.type = ImageType.GRAY_SCALE;
         }
+    }
+
+    public Image(int width, int height, List<Pixel> pixels, Format format, File file) {
+        this(width, height, pixels, format);
+        this.file = file;
     }
 
     public Image(BufferedImage bufferedImage, ImageType imageType) {
@@ -76,6 +85,10 @@ public class Image {
                 pixels.add(pixel);
             }
         }
+    }
+
+    public File getFile(){
+        return file;
     }
 
     public int getWidth() {
@@ -127,7 +140,7 @@ public class Image {
                 pixels.add(this.pixels.get(currentIndex));
             }
         }
-        return new Image(width, height, pixels, format);
+        return new Image(width, height, pixels, format, file);
     }
 
     public void pasteImage(int x, int y, Image image) {
@@ -286,7 +299,7 @@ public class Image {
                 newPixels.add(new GrayScalePixel(p.getRed()));
             }
         }
-        return new Image(this.width, this.height, newPixels, this.format);
+        return new Image(this.width, this.height, newPixels, this.format, this.file);
     }
 
     public int getGrayScaleMean() {
@@ -580,22 +593,10 @@ public class Image {
     }
 
     public Image gaussMaskFilter(Double std, Integer maskSize) {
-        Double[] mask = getGaussianMask(maskSize, std, new GaussianWeight());
+        Double[] mask = new GaussianMask(maskSize, std, new GaussianWeight()).getMask();
         return this.applyMask(maskSize, (pixels) ->
                 this.getWeightedValue(pixels, mask)
         );
-    }
-
-    private Double[] getGaussianMask(Integer maskSize, Double std, Weight weight) {
-        Double[] mask = new Double[maskSize * maskSize];
-        for (int i = 0; i < maskSize; i++) {
-            for (int j = 0; j < maskSize; j++) {
-                int x = i - maskSize / 2;
-                int y = j - maskSize / 2;
-                mask[i + j * maskSize] = weight.get(std, x, y);
-            }
-        }
-        return mask;
     }
 
     public Image getNegative() {
@@ -826,7 +827,7 @@ public class Image {
 
     public Image logOperator(double sigma, int threshold) {
         int maskSize = 7;
-        Double[] mask = getGaussianMask(maskSize, sigma, new LoGWeight());
+        Double[] mask = new GaussianMask(maskSize, sigma, new LoGWeight()).getMask();
         Image log = this.applyMask(maskSize, (pixels) ->
                 this.getWeightedValue(pixels, mask), false);
         return log.zeroCrossing(threshold);

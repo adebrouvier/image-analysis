@@ -32,7 +32,7 @@ public class RAWImageIO implements ImageIO {
                 pixels.add(new GrayScalePixel(b & 0xff)); // Unsigned
             }
 
-            return new Image(width, height, pixels, Image.Format.RAW);
+            return new Image(width, height, pixels, Image.Format.RAW, file);
         }
     }
 

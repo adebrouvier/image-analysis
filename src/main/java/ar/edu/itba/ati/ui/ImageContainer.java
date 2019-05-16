@@ -23,6 +23,7 @@ public class ImageContainer extends SingleImagePanel {
         this.windowContext = windowContext;
         setOpaque(false);
         addMouseListener(new ImageMouseListener(this.windowContext));
+        addMouseMotionListener(new ImageMouseListener(this.windowContext));
     }
 
     public ImageContainer(WindowContext windowContext, Image image) {

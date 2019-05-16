@@ -21,7 +21,7 @@ public class PGMImageIO extends PNMIO implements ImageIO {
             pixels.add(new GrayScalePixel(grayScale));
         }
 
-        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PGM);
+        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PGM, file);
     }
 
     @Override
