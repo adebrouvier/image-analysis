@@ -41,10 +41,6 @@ public class ActiveContourListener implements Selectable {
 
     @Override
     public void onMouseDragged(MouseEvent mouseEvent) {
-        System.out.println(new StringBuilder().append("x:")
-        .append(x)
-        .append("; y:")
-        .append(y));
         this.windowContext.getImageContainer().setCurrentSelection(mouseEvent);
         this.windowContext.getImageContainer().repaint();
     }
@@ -52,6 +48,7 @@ public class ActiveContourListener implements Selectable {
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
         this.windowContext.getImageContainer().resetSelection();
+        this.windowContext.getImageContainer().repaint();
         ActiveContour activeContour = new ActiveContour();
         DoubleDialog dialog = new DoubleDialog("Iterations");
         int result = JOptionPane.showConfirmDialog(null, dialog,

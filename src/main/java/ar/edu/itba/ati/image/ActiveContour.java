@@ -4,6 +4,7 @@ import ar.edu.itba.ati.filters.GaussianMask;
 import ar.edu.itba.ati.utils.IntPair;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,14 @@ public class ActiveContour {
     public Image apply(Image image, int x0, int y0, int x1, int y1, int maxIterations) {
         this.image = image;
 
+        if (phi != null) {
+            fixColors(image);
+        }
         /* Initial step */
         if (phi == null) {
             initialStep(image, x0, y0, x1, y1);
         }
+
         int iteration = 0;
 
         //do {
@@ -42,12 +47,12 @@ public class ActiveContour {
             cycle(x -> fd(x) > 0, x -> fd(x) < 0);
         }
 
-        for (int i = 0; i < maxIterations2; i++) {
+//        for (int i = 0; i < maxIterations2; i++) {
             //cycle(x -> fs(x) < 0, x -> fs(x) > 0);
-        }
+//        }
         //} while (!end() && iteration < maxIterations);
 
-        System.out.println("Iterations: " + iteration);
+//        System.out.println("Iterations: " + iteration);
         return borderCurve();
     }
 
@@ -175,7 +180,7 @@ public class ActiveContour {
     }
 
     private double norm(double average, double color) {
-        return Math.pow(average - color, 2);
+        return Math.pow(average- color, 2);
     }
 
     private double fs(IntPair pair) {
@@ -205,7 +210,7 @@ public class ActiveContour {
 
     private Image phiImage() {
 
-        List<Pixel> pixels = new ArrayList<>();
+        List<Pixel> pixels = new ArrayList<>(image.getPixels().size());
 
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
@@ -218,7 +223,7 @@ public class ActiveContour {
     }
 
     private void initialStep(Image image, int x0, int y0, int x1, int y1) {
-        phi = new ArrayList<>();
+        phi = new ArrayList<>(this.image.getPixels().size());
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
 
@@ -279,4 +284,17 @@ public class ActiveContour {
         return x + (y * image.getWidth());
     }
 
+    private void fixColors(Image image) {
+        objectGreen = 0;
+        objectBlue = 0;
+        objectRed = 0;
+        final AtomicInteger index = new AtomicInteger(0);
+        image.getPixels().forEach(p -> {
+            if (phi.get(index.getAndAdd(1)).equals(OBJECT)) {
+                objectBlue += p.getBlue();
+                objectRed += p.getRed();
+                objectGreen += p.getGreen();
+            }
+        });
+    }
 }
