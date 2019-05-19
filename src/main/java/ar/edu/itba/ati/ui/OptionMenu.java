@@ -285,6 +285,8 @@ public class OptionMenu extends JMenuBar {
                 windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
         addItem(borders, "Canny", KeyEvent.VK_L, new CannyListener(windowContext));
         addItem(borders, "SUSAN", KeyEvent.VK_L, new SusanListener(windowContext));
+        addItem(borders, "Hough Linear", KeyEvent.VK_L, new HoughLinearListener(windowContext));
+        addItem(borders, "Hough Circular", KeyEvent.VK_L, new HoughCircularListener(windowContext));
 
         return borders;
     }

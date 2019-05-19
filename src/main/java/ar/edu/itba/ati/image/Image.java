@@ -4,11 +4,14 @@ import ar.edu.itba.ati.random.ExponentialGenerator;
 import ar.edu.itba.ati.random.GaussianGenerator;
 import ar.edu.itba.ati.random.RandomGenerator;
 import ar.edu.itba.ati.random.RayleighGenerator;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
+import java.util.function.DoubleBinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -966,7 +969,7 @@ public class Image {
         return image;
     }
 
-    public Image cannyBorderDetector() {
+    public Image cannyBorderDetector(Integer t1, Integer t2) {
         Image xOperator = this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
             return this.getWeightedValue(pixels, values);
@@ -1026,7 +1029,7 @@ public class Image {
             }
         }
 
-        return cannyBorder;
+        return cannyBorder.thresholdCanny(t1, t2);
     }
 
     private int getCannyAngle(int color) {
@@ -1044,6 +1047,24 @@ public class Image {
         } else {
             return 0;
         }
+    }
+
+    private Image thresholdCanny(Integer t1, Integer t2) {
+        return this.applyMask(3, (pixels) -> {
+           Pixel middlePixel = pixels.get(pixels.size()/2);
+           if (middlePixel.getRed() < t1) {
+               return new GrayScalePixel(0);
+           } else if (middlePixel.getRed() > t2) {
+               return new GrayScalePixel(255);
+           } else {
+               for(Pixel p: pixels) {
+                   if (p.getRed() > t2) {
+                       return new GrayScalePixel(255);
+                   }
+               }
+               return new GrayScalePixel(0);
+           }
+        });
     }
 
     public Image susanBorderAndCorners() {
@@ -1084,5 +1105,152 @@ public class Image {
         }), false);
         image.type = ImageType.RGB;
         return image;
+    }
+
+    public Image linearHough(double angleStep, double roStep, double epsilon, int maxLinesDraw) {
+        Image copy = this.copy();
+        List<Pair<Integer, Integer>> whitePixels = this.getWhitePixelsCoordinates();
+        HashMap<Pair<Integer, Integer>, Integer> votes = new HashMap<>();
+
+        Double maxLineDistance = Math.sqrt(2) * Math.max(this.getWidth(), this.getHeight());
+        for (Double a = -Math.PI; a < Math.PI ; a += angleStep) {
+            for (Double p = 0.0; p < maxLineDistance; p += roStep) {
+                for (Pair<Integer, Integer> coords: whitePixels) {
+                    if (Math.abs(p - coords.getLeft() * Math.cos(a) - coords.getRight() * Math.sin(a)) < epsilon) {
+                        Pair<Integer, Integer> vote = new ImmutablePair<>(p.intValue(), angle2integer(a));
+                        if (votes.containsKey(vote)) {
+                            Integer numberOfVotes = votes.get(vote);
+                            numberOfVotes += 1;
+                            votes.put(vote, numberOfVotes);
+                        } else {
+                            votes.put(vote, 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        PriorityQueue<Map.Entry<Pair<Integer, Integer>, Integer>> pq = new PriorityQueue<>(1,
+                (o1, o2) -> o2.getValue() - o1.getValue());
+        pq.addAll(votes.entrySet());
+
+        for (int i = 0; i < maxLinesDraw; i++) {
+            Pair<Integer, Integer> parameters = pq.poll().getKey();
+            Integer p = parameters.getLeft();
+            double a = integer2angle(parameters.getRight());
+            System.out.println("Angle:" + a + "; Ro:" + p);
+            if (a == 0) {
+                copy.drawRedLine(p, this.height, p, 0);
+            } else {
+                copy.drawRedLine(0, (int) (p / Math.sin(a)),
+                        this.width, (int) ((p - this.width * Math.cos(a)) / Math.sin(a)));
+            }
+        }
+        return copy;
+    }
+
+    private List<Pair<Integer, Integer>> getWhitePixelsCoordinates() {
+        List<Pair<Integer, Integer>> whitePixels = new LinkedList<>();
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                Pixel p = this.getPixel(i, j);
+                if (p.getRed() == 255) {
+                    whitePixels.add(new ImmutablePair<>(i, j));
+                }
+            }
+        }
+        return whitePixels;
+    }
+
+    private void drawRedLine(Integer x0, Integer y0, Integer x1, Integer y1) {
+        int deltaX = (x1 - x0);
+        int deltaY = (y1 - y0);
+        if (deltaY > deltaX) {
+            int deltaErr = 2 * deltaX - deltaY;
+            Integer x = x0;
+            for (Integer y = y0; y < x1; y++){
+                if (x > 0 && x < this.width && y > 0 && y < this.height) {
+                    this.changePixel(x, y, new RGBPixel(255, 0, 0));
+                }
+                if (deltaErr > 0){
+                    x = x + 1;
+                    deltaErr -= 2 * deltaY;
+                }
+                deltaErr += 2 * deltaX;
+            }
+        } else {
+            int deltaErr = 2 * deltaY - deltaX;
+            Integer y = y0;
+            for (Integer x = x0; x < x1; x++){
+                if (x > 0 && x < this.width && y > 0 && y < this.height) {
+                    this.changePixel(x, y, new RGBPixel(255, 0, 0));
+                }
+                if (deltaErr > 0){
+                    y = y + 1;
+                    deltaErr -= 2 * deltaX;
+                }
+                deltaErr += 2 * deltaY;
+            }
+        }
+    }
+
+    private void drawRedCircle(Integer x0, Integer y0, Integer radius) {
+        double step = radius / Math.pow((2* Math.PI * radius),2);
+        for (double angle = 0; angle < Math.PI * 2; angle += step) {
+            Integer x = x0 + (int) (radius * Math.cos(angle));
+            Integer y = y0 + (int) (radius * Math.sin(angle));
+            if (x > 0 && x < this.width && y > 0 && y < this.height) {
+                this.changePixel(x, y, new RGBPixel(255, 0, 0));
+            }
+        }
+    }
+
+    public Image circularHough(Integer xStep, Integer yStep, Integer radiusStep, double epsilon, int maxLinesDraw) {
+        Image copy = this.copy();
+        List<Pair<Integer, Integer>> whitePixels = this.getWhitePixelsCoordinates();
+        HashMap<Pair<Integer, Pair<Integer, Integer>>, Integer> votes = new HashMap<>();
+
+        Double maxRadius = Math.sqrt(2) * Math.max(this.getWidth(), this.getHeight()) / 2;
+        for (Integer i = 0; i < this.getWidth(); i += xStep) {
+            for (Integer j = 0; j < this.getHeight(); j += yStep) {
+                for (int r = 1; r < maxRadius; r += radiusStep) {
+                    for (Pair<Integer, Integer> coords : whitePixels) {
+                        if (Math.abs(r*r - Math.pow(coords.getLeft() - i, 2) - Math.pow(coords.getRight() - j, 2)) < epsilon) {
+                            Pair<Integer, Integer> centerVote = new ImmutablePair<>(i, j);
+                            Pair<Integer, Pair<Integer, Integer>> vote = new ImmutablePair<>(r, centerVote);
+                            if (votes.containsKey(vote)) {
+                                Integer numberOfVotes = votes.get(vote);
+                                numberOfVotes += 1;
+                                votes.put(vote, numberOfVotes);
+                            } else {
+                                votes.put(vote, 1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        PriorityQueue<Map.Entry<Pair<Integer, Pair<Integer, Integer>>, Integer>> pq = new PriorityQueue<>(1,
+                (o1, o2) -> o2.getValue() - o1.getValue());
+        pq.addAll(votes.entrySet());
+
+        for (int i = 0; i < maxLinesDraw; i++) {
+            Pair<Integer, Pair<Integer, Integer>> parameters = pq.poll().getKey();
+            Integer x0 = parameters.getRight().getLeft();
+            Integer y0 = parameters.getRight().getRight();
+            Integer radius = parameters.getLeft();
+            System.out.println("x0:" + x0 + "; y0:" + y0 + "; r:" +radius);
+            copy.drawRedCircle(x0, y0, radius);
+        }
+        return copy;
+    }
+
+    private Integer angle2integer(Double angle) {
+        return new Double(angle * 1E8).intValue();
+    }
+
+    private Double integer2angle(Integer angle) {
+        return angle / 1E8;
     }
 }
