@@ -7,4 +7,6 @@ public interface Selectable {
     void onMousePressed(MouseEvent mouseEvent);
 
     void onMouseReleased(MouseEvent mouseEvent);
+
+    void onMouseDragged(MouseEvent mouseEvent);
 }

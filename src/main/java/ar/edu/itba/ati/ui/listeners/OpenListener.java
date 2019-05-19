@@ -15,7 +15,7 @@ public class OpenListener extends OpenDialogListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Image image = getImageFromFile(windowContext);
+        Image image = chooseAndOpenFile(windowContext);
         if (image != null) {
             windowContext.getImageContainer().setImage(image);
             windowContext.getImageContainer().renderImage();

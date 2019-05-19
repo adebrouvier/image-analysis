@@ -39,22 +39,13 @@ public class ImageMouseListener extends MouseAdapter {
             this.windowContext.getOptionMenu().setSelectable(null);
         }
     }
-//
-//    @Override
-//    public void mouseMoved(MouseEvent mouseEvent) {
-//        int x = mouseEvent.getX();
-//        int y = mouseEvent.getY();
-//        int red = 0;
-//        int green = 0;
-//        int blue = 0;
-//        if (renderedImage != null) {
-//            if (x < renderedImage.getWidth() && y < renderedImage.getHeight()) {
-//                int rgb = renderedImage.getRGB(x, y);
-//                red = (rgb >> 16) & 0xFF;
-//                green = (rgb >> 8) & 0xFF;
-//                blue = rgb & 0xFF;
-//            }
-//        }
-//        pixelColor.setText("R: " + red + " G: " + green + " B: " + blue);
-//    }
+
+    @Override
+    public void mouseDragged(MouseEvent mouseEvent) {
+        super.mouseDragged(mouseEvent);
+        if (this.windowContext.getOptionMenu().getSelectable() != null) {
+            this.windowContext.getOptionMenu().getSelectable().onMouseDragged(mouseEvent);
+        }
+    }
+
 }

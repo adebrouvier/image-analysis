@@ -32,4 +32,9 @@ public class SubImageSelectable implements Selectable {
         frame.setVisible(true);
         frame.setSize(subImage.getWidth(), subImage.getHeight());
     }
+
+    @Override
+    public void onMouseDragged(MouseEvent mouseEvent) {
+
+    }
 }

@@ -37,7 +37,7 @@ public class PBMImageIO extends PPMImageIO implements ImageIO {
                 }
             }
         }
-        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PBM);
+        return new Image(info.getWidth(), info.getHeight(), pixels, Image.Format.PBM, file);
     }
 
     private static int getBit(int n, int k) {

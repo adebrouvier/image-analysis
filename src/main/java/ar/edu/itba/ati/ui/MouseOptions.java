@@ -19,12 +19,15 @@ public class MouseOptions extends JPanel {
     private ColorRectangle rgbColor = new ColorRectangle();
     private GrayRectangle grayColor = new GrayRectangle();
 
+    private JButton nextButton;
+
     public MouseOptions(WindowContext windowContext) {
         this.windowContext = windowContext;
         this.clickable = new InformationClickable(windowContext);
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.createButtons();
         this.createSliders();
+        this.createPlaybackControls();
     }
 
     private void createButtons() {
@@ -102,6 +105,16 @@ public class MouseOptions extends JPanel {
         panel.add(grayColor, 0);
         panel.add(rgbColor, 1);
         this.add(panel);
+    }
+
+    private void createPlaybackControls() {
+        this.nextButton = new JButton("Next");
+        this.nextButton.setEnabled(false);
+        this.add(nextButton);
+    }
+
+    public JButton getNextButton() {
+        return nextButton;
     }
 
     public Clickable getClickable() {
