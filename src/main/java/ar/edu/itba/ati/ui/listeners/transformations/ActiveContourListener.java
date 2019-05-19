@@ -5,12 +5,14 @@ import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.io.ImageReader;
 import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
+import ar.edu.itba.ati.ui.MouseOptions;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.DoubleDialog;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,15 +36,22 @@ public class ActiveContourListener implements Selectable {
     public void onMousePressed(MouseEvent mouseEvent) {
         this.x = mouseEvent.getX();
         this.y = mouseEvent.getY();
+        this.windowContext.getImageContainer().setStartSelection(mouseEvent);
     }
 
     @Override
     public void onMouseDragged(MouseEvent mouseEvent) {
-        windowContext.getImageContainer().drawSelection(x, y, mouseEvent.getX(), mouseEvent.getY());
+        System.out.println(new StringBuilder().append("x:")
+        .append(x)
+        .append("; y:")
+        .append(y));
+        this.windowContext.getImageContainer().setCurrentSelection(mouseEvent);
+        this.windowContext.getImageContainer().repaint();
     }
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
+        this.windowContext.getImageContainer().resetSelection();
         ActiveContour activeContour = new ActiveContour();
         DoubleDialog dialog = new DoubleDialog("Iterations");
         int result = JOptionPane.showConfirmDialog(null, dialog,
