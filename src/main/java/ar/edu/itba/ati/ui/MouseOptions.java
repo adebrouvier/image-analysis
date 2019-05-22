@@ -20,6 +20,8 @@ public class MouseOptions extends JPanel {
     private GrayRectangle grayColor = new GrayRectangle();
 
     private JButton nextButton;
+    private JButton playButton;
+    private JButton previousButton;
 
     public MouseOptions(WindowContext windowContext) {
         this.windowContext = windowContext;
@@ -108,13 +110,34 @@ public class MouseOptions extends JPanel {
     }
 
     private void createPlaybackControls() {
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+
+        this.previousButton = new JButton(("Prev"));
+        this.previousButton.setEnabled(false);
+        buttonPane.add(previousButton);
+
+        this.playButton = new JButton("Play");
+        this.playButton.setEnabled(false);
+        buttonPane.add(playButton);
+
         this.nextButton = new JButton("Next");
         this.nextButton.setEnabled(false);
-        this.add(nextButton);
+        buttonPane.add(nextButton);
+
+        this.add(buttonPane);
     }
 
     public JButton getNextButton() {
         return nextButton;
+    }
+
+    public JButton getPreviousButton() {
+        return previousButton;
+    }
+
+    public JButton getPlayButton() {
+        return playButton;
     }
 
     public Clickable getClickable() {

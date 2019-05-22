@@ -10,6 +10,7 @@ import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 import ar.edu.itba.ati.ui.listeners.selectables.SubImageSelectable;
 import ar.edu.itba.ati.ui.listeners.slidingwindow.*;
 import ar.edu.itba.ati.ui.listeners.transformations.*;
+import ar.edu.itba.ati.ui.listeners.transformations.activecontour.ActiveContourListener;
 
 import javax.swing.*;
 import java.awt.*;
