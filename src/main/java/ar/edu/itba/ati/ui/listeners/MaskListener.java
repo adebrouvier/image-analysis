@@ -2,7 +2,7 @@ package ar.edu.itba.ati.ui.listeners;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.image.MaskRotator;
-import ar.edu.itba.ati.image.Pixel;
+import ar.edu.itba.ati.image.ImageUtils;
 import ar.edu.itba.ati.ui.SingleImagePanel;
 import ar.edu.itba.ati.ui.WindowContext;
 
@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,17 +76,6 @@ public class MaskListener implements ActionListener {
     }
 
     private java.awt.Image getPrintableImage(Image image) {
-        BufferedImage img = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
-        java.util.List<Pixel> pixels = image.getPixels();
-
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixelIndex = (y * image.getWidth()) + x;
-                Pixel p = pixels.get(pixelIndex);
-                Color color = new Color(p.getRed(), p.getGreen(), p.getBlue());
-                img.setRGB(x, y, color.getRGB());
-            }
-        }
-        return img;
+        return ImageUtils.ImageToBufferedImage(image);
     }
 }

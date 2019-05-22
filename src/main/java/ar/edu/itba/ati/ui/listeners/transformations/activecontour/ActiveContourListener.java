@@ -81,6 +81,8 @@ public class ActiveContourListener implements Selectable {
                     processedImages.add(imageWithCurve);
                 }
                 System.out.println("Average processing time: " + processingTime/images.size() + "ms");
+                frame.getWindowContext().getImageContainer().setImage(processedImages.get(0));
+                frame.getWindowContext().getImageContainer().renderImage();
                 setButtons(frame, processedImages);
             } catch (IOException e) {
                 System.err.println("There was an error opening the image sequence");
