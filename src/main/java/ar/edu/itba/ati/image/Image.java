@@ -71,6 +71,13 @@ public class Image {
         this.file = file;
     }
 
+    public Image(int width, int height, List<Pixel> pixels, ImageType type) {
+        this.width = width;
+        this.height = height;
+        this.pixels = pixels;
+        this.type = type;
+    }
+
     public Image(BufferedImage bufferedImage, ImageType imageType) {
         this.width = bufferedImage.getWidth();
         this.height = bufferedImage.getHeight();
@@ -302,7 +309,15 @@ public class Image {
                 newPixels.add(new GrayScalePixel(p.getRed()));
             }
         }
-        return new Image(this.width, this.height, newPixels, this.format, this.file);
+        return new Image(this.width, this.height, newPixels, this.type);
+    }
+
+    public Image copyToGrayscale() {
+        ArrayList<Pixel> newPixels = new ArrayList<>(this.pixels.size());
+        for (Pixel p : this.pixels) {
+            newPixels.add(new GrayScalePixel(p.getGrayscale()));
+        }
+        return new Image(this.width, this.height, newPixels, ImageType.GRAY_SCALE);
     }
 
     public int getGrayScaleMean() {
@@ -971,21 +986,22 @@ public class Image {
     }
 
     public Image cannyBorderDetector(Integer t1, Integer t2) {
-        Image xOperator = this.applyMask(3, (pixels) -> {
+        Image copy = this.copyToGrayscale();
+        Image xOperator = copy.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
-            return this.getWeightedValue(pixels, values);
+            return copy.getWeightedValue(pixels, values);
         }, false);
 
-        Image yOperator = this.applyMask(3, (pixels) -> {
+        Image yOperator = copy.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
-            return this.getWeightedValue(pixels, values);
+            return copy.getWeightedValue(pixels, values);
         }, false);
 
         Image border = xOperator.moduleOperation(yOperator, false);
         Image tangent = border.copy();
         Image cannyBorder = border.copy();
-        for (int i = 0; i < tangent.getHeight(); i++) {
-            for (int j = 0; j < tangent.getWidth(); j++) {
+        for (int i = 0; i < tangent.getWidth(); i++) {
+            for (int j = 0; j < tangent.getHeight(); j++) {
                 if (i == 0 || j == 0 || i == tangent.getHeight() - 1 || j == tangent.getWidth() - 1){
                     cannyBorder.changePixel(i, j, new GrayScalePixel(0));
                 }
@@ -1002,8 +1018,8 @@ public class Image {
             }
         }
 
-        for (int i = 1; i < tangent.getHeight() - 1; i++) {
-            for (int j = 1; j < tangent.getWidth() - 1; j++) {
+        for (int i = 1; i < tangent.getWidth() - 1; i++) {
+            for (int j = 1; j < tangent.getHeight() - 1; j++) {
                 Pixel neighbor1, neighbor2;
                 Pixel currentPixel = border.getPixel(i,j);
                 if (currentPixel.getRed() == 0) {
@@ -1206,7 +1222,7 @@ public class Image {
         }
     }
 
-    public Image circularHough(Integer xStep, Integer yStep, Integer radiusStep, double epsilon, int maxLinesDraw) {
+    public Image circularHough(Integer xStep, Integer yStep, Double radiusStep, double epsilon, int maxLinesDraw) {
         Image copy = this.copy();
         List<Pair<Integer, Integer>> whitePixels = this.getWhitePixelsCoordinates();
         HashMap<Pair<Integer, Pair<Integer, Integer>>, Integer> votes = new HashMap<>();
