@@ -26,9 +26,9 @@ public class LinearHoughDialog extends JPanel {
 
     public LinearHoughDialog() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-        this.add(new JLabel("xStep"));
+        this.add(new JLabel("Angle Step"));
         this.add(angleStepField);
-        this.add(new JLabel("yStep"));
+        this.add(new JLabel("Ro Step"));
         this.add(roStepField);
         this.add(new JLabel("epsilon"));
         this.add(epsilonField);
