@@ -112,8 +112,12 @@ public class OptionMenu extends JMenuBar {
         item.addActionListener(new CircleListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
         shape.add(item);
 
-        item = new JMenuItem("Binary square", KeyEvent.VK_Q);
+        item = new JMenuItem("Binary filled square", KeyEvent.VK_Q);
         item.addActionListener(new SquareListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
+        shape.add(item);
+
+        item = new JMenuItem("Binary empty square", KeyEvent.VK_Q);
+        item.addActionListener(new EmptySquareListener(windowContext, BINARY_IMAGE_SIZE, BINARY_SHAPE_SIZE));
         shape.add(item);
 
         add(shape);

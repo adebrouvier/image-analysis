@@ -31,14 +31,19 @@ public class CircularHoughDialog extends JPanel {
     public CircularHoughDialog() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("xStep"));
+        xStepField.setValue(2);
         this.add(xStepField);
         this.add(new JLabel("yStep"));
+        yStepField.setValue(2);
         this.add(yStepField);
         this.add(new JLabel("Radius step"));
+        radiusStepField.setValue(2);
         this.add(radiusStepField);
         this.add(new JLabel("epsilon"));
+        epsilonField.setValue(2);
         this.add(epsilonField);
         this.add(new JLabel("Maximum amount of circles"));
+        maximumCircleField.setValue(15);
         this.add(maximumCircleField);
     }
 

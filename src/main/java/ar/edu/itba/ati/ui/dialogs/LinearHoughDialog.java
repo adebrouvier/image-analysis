@@ -27,11 +27,15 @@ public class LinearHoughDialog extends JPanel {
     public LinearHoughDialog() {
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("Angle Step"));
+        angleStepField.setValue(0.1);
         this.add(angleStepField);
         this.add(new JLabel("Ro Step"));
+        roStepField.setValue(1);
         this.add(roStepField);
         this.add(new JLabel("epsilon"));
+        epsilonField.setValue(1);
         this.add(epsilonField);
+        maximumLinesField.setValue(8);
         this.add(new JLabel("Maximum amount of lines"));
         this.add(maximumLinesField);
     }
