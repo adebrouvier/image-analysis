@@ -1,26 +1,24 @@
-package ar.edu.itba.ati.ui.listeners.transformations;
+package ar.edu.itba.ati.ui.listeners.transformations.activecontour;
 
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.ui.WindowContext;
+import ar.edu.itba.ati.ui.listeners.transformations.ATIActionListener;
 
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
-import java.util.List;
+import java.util.ListIterator;
 
 public class NextImageActionListener extends ATIActionListener {
 
-    private List<Image> images;
-    private Iterator<Image> imageIterator;
+    private ListIterator<Image> imageIterator;
 
-    public NextImageActionListener(WindowContext windowContext, List<Image> images) {
+    public NextImageActionListener(WindowContext windowContext, ListIterator<Image> imageIterator) {
         super(windowContext);
-        this.images = images;
-        this.imageIterator = images.iterator();
+        this.imageIterator = imageIterator;
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (imageIterator.hasNext()){
+        if (imageIterator.hasNext()) {
             getWindowContext().getImageContainer().setImage(imageIterator.next());
             getWindowContext().getImageContainer().renderImage();
         }

@@ -1,18 +1,16 @@
-package ar.edu.itba.ati.ui.listeners.transformations;
+package ar.edu.itba.ati.ui.listeners.transformations.activecontour;
 
 import ar.edu.itba.ati.image.ActiveContour;
 import ar.edu.itba.ati.image.Image;
 import ar.edu.itba.ati.io.ImageReader;
 import ar.edu.itba.ati.ui.FrameHelper;
 import ar.edu.itba.ati.ui.ImageAnalyzerFrame;
-import ar.edu.itba.ati.ui.MouseOptions;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.DoubleDialog;
 import ar.edu.itba.ati.ui.listeners.selectables.Selectable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 public class ActiveContourListener implements Selectable {
@@ -68,26 +67,39 @@ public class ActiveContourListener implements Selectable {
                                 .map(File::new).map(ImageReader::readImageFromFile).collect(Collectors.toList());
 
                 List<Image> processedImages = new ArrayList<>();
+                double processingTime = 0;
 
-                for (Image image :images) {
+                for (Image image : images) {
                     System.out.println("Analyzing image: " + image.getFile().getName());
+                    long startTime = System.currentTimeMillis();
                     Image imageWithCurve = activeContour.apply(image, x, y, mouseEvent.getX(), mouseEvent.getY(),
                             dialog.getDoubleValue().intValue());
-                    //frame.getWindowContext().getImageContainer().setImage(i);
-                    //frame.getWindowContext().getImageContainer().renderImage();
-                    //FrameHelper.create(imageWithCurve);
+                    long stopTime = System.currentTimeMillis();
+                    long elapsedTime = stopTime - startTime;
+                    System.out.println("Processing time: " + elapsedTime + "ms");
+                    processingTime += elapsedTime;
                     processedImages.add(imageWithCurve);
                 }
-                setButton(frame, processedImages);
+                System.out.println("Average processing time: " + processingTime/images.size() + "ms");
+                frame.getWindowContext().getImageContainer().setImage(processedImages.get(0));
+                frame.getWindowContext().getImageContainer().renderImage();
+                setButtons(frame, processedImages);
             } catch (IOException e) {
                 System.err.println("There was an error opening the image sequence");
             }
         }
     }
 
-    private void setButton(ImageAnalyzerFrame frame, List<Image> images) {
+    private void setButtons(ImageAnalyzerFrame frame, List<Image> images) {
+        ListIterator<Image> iterator = images.listIterator();
+        JButton playButton = frame.getWindowContext().getMouseOptions().getPlayButton();
+        playButton.setEnabled(true);
+        playButton.addActionListener(new PlayActionListener(frame.getWindowContext(), iterator));
         JButton nextButton = frame.getWindowContext().getMouseOptions().getNextButton();
         nextButton.setEnabled(true);
-        nextButton.addActionListener(new NextImageActionListener(frame.getWindowContext(), images));
+        nextButton.addActionListener(new NextImageActionListener(frame.getWindowContext(), iterator));
+        JButton previousButton = frame.getWindowContext().getMouseOptions().getPreviousButton();
+        previousButton.setEnabled(true);
+        previousButton.addActionListener(new PreviousImageActionListener(frame.getWindowContext(), iterator));
     }
 }

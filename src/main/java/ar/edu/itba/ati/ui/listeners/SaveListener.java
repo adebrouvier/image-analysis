@@ -53,9 +53,11 @@ public class SaveListener implements ActionListener {
             case RAW:
                 writer = new RAWImageIO(image.getWidth(), image.getHeight());
                 break;
+            case JPEG:
+                writer = new JPEGImageIO();
+                break;
             default:
-                System.err.println("Format not supported");
-                return;
+                throw new IOException("Format not supported");
         }
         writer.write(filename, image);
     }

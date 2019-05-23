@@ -1,6 +1,6 @@
 package ar.edu.itba.ati.image;
 
-import ar.edu.itba.ati.filters.*;
+import ar.edu.itba.ati.filters.GaussianMask;
 import ar.edu.itba.ati.random.ExponentialGenerator;
 import ar.edu.itba.ati.random.GaussianGenerator;
 import ar.edu.itba.ati.random.RandomGenerator;
@@ -11,9 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.*;
 import java.util.List;
-import java.util.function.DoubleBinaryOperator;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
