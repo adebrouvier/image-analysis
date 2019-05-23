@@ -986,6 +986,10 @@ public class Image {
 
     public Image cannyBorderDetector(Integer t1, Integer t2) {
         Image copy = this.copyToGrayscale();
+        Double[] mask = new GaussianMask(3, 2.0, new GaussianWeight()).getMask();
+        copy.applyMask(3, (pixels) ->
+                this.getWeightedValue(pixels, mask), false
+        );
         Image xOperator = copy.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
             return copy.getWeightedValue(pixels, values);
@@ -1100,9 +1104,7 @@ public class Image {
             int middleGray = middlePixel.getGrayscale();
             int index = 0;
             for (Pixel p: pixels) {
-                int gray = (int) (p.getGrayscale() * mask[index]);
-                index++;
-                if (gray == 0) {
+                if (mask[index++] == 0.0) {
                     continue;
                 }
                 int c = Math.abs(p.getGrayscale() - middleGray);
@@ -1111,9 +1113,9 @@ public class Image {
                 }
             }
             susanValue = 1 - susanValue / 37;
-            if (0.45 <= susanValue && susanValue <= 0.55) {
+            if (0.40 <= susanValue && susanValue <= 0.60) {
                 return new RGBPixel(0, 255, 0);
-            } else if (0.70 <= susanValue && susanValue <= 0.80) {
+            } else if (0.60 <= susanValue && susanValue <= 0.90) {
                 return new RGBPixel(255, 0, 0);
             } else {
                 return new RGBPixel(middlePixel.getRed(), middlePixel.getGreen(), middlePixel.getBlue());
