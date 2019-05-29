@@ -22,9 +22,9 @@ public class GaussianListener implements ActionListener {
         Image image = windowContext.getImageContainer().getImage();
         WindowSizeGaussDialog dialog = new WindowSizeGaussDialog();
         int result = JOptionPane.showConfirmDialog(null, dialog,
-                "Please enter Contrast options", JOptionPane.OK_CANCEL_OPTION);
+                "Please enter Gaussian Mask options", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            Image newImage = image.gaussMaskFilter(dialog.getStDev(), dialog.getWindowsSize());
+            Image newImage = image.gaussMaskFilter(dialog.getStDev(), dialog.getWindowsSize(), true);
             FrameHelper.create(newImage);
         }
     }

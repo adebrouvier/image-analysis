@@ -288,6 +288,7 @@ public class OptionMenu extends JMenuBar {
         addItem(borders, "Hough Linear", KeyEvent.VK_L, new HoughLinearListener(windowContext));
         addItem(borders, "Hough Circular", KeyEvent.VK_L, new HoughCircularListener(windowContext));
         addItem(borders, "Active Contour", KeyEvent.VK_A, (ae) -> this.selectable = new ActiveContourListener(windowContext));
+        addItem(borders, "Harris", KeyEvent.VK_H, new HarrisListener(windowContext));
 
         return borders;
     }

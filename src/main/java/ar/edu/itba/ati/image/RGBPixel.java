@@ -58,10 +58,23 @@ public class RGBPixel extends Pixel {
     }
 
     @Override
+    public void subtract(Pixel p) {
+        this.blue -= p.getBlue();
+        this.green -= p.getGreen();
+        this.red -= p.getRed();
+    }
+
+    @Override
     public void multiply(Double m) {
         this.red = (int) (m * this.red);
         this.blue = (int) (m * this.blue);
         this.green = (int) (m * this.green);
+    }
+
+    public void multiply(Pixel pixel) {
+        this.red *= pixel.getRed();
+        this.green *= pixel.getGreen();
+        this.blue *= pixel.getBlue();
     }
 
     @Override

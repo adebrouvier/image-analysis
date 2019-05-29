@@ -167,6 +167,10 @@ public class Image {
         return format;
     }
 
+    public ImageType getType() {
+        return type;
+    }
+
     public Image add(Image image) {
         int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
         Image newImage = this.copy();
@@ -223,13 +227,13 @@ public class Image {
         return newImage;
     }
 
-    public Image multiply(Double d) {
+    public Image multiply(Double d, boolean normalize) {
         Image newImage = this.copy();
         for (Pixel p : newImage.pixels) {
             p.multiply(d);
         }
 
-        return newImage.dynamicRangeCompress();
+        return normalize ? newImage.dynamicRangeCompress() : newImage;
     }
 
     public Image dynamicRangeCompress() {
@@ -412,7 +416,7 @@ public class Image {
         return newImage.dynamicRangeCompress();
     }
 
-    private void normalize() {
+    public void normalize() {
         double max = 0;
         double min = 255;
 
@@ -432,7 +436,7 @@ public class Image {
         }
     }
 
-    private void normalizeColor() {
+    public void normalizeColor() {
         double maxRed = 0, maxGreen = 0, maxBlue = 0;
         double minRed = 255, minGreen = 255, minBlue = 255;
 
@@ -609,10 +613,10 @@ public class Image {
         }
     }
 
-    public Image gaussMaskFilter(Double std, Integer maskSize) {
+    public Image gaussMaskFilter(Double std, Integer maskSize, boolean normalize) {
         Double[] mask = new GaussianMask(maskSize, std, new GaussianWeight()).getMask();
         return this.applyMask(maskSize, (pixels) ->
-                this.getWeightedValue(pixels, mask)
+                this.getWeightedValue(pixels, mask), normalize
         );
     }
 
@@ -1270,5 +1274,71 @@ public class Image {
 
     private Double integer2angle(Integer angle) {
         return angle / 1E8;
+    }
+
+    /**
+     * Adds this Image to another but does not normalize the result.
+     * @param image image to add.
+     * @return new Image with the result of the operation.
+     */
+    public Image denormalizedAdd(Image image) {
+
+        Image newImage = this.copy();
+
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
+                Pixel currentPixel = newImage.getPixel(j, i);
+                Pixel otherPixel = image.getPixel(j, i);
+                currentPixel.add(otherPixel);
+            }
+        }
+
+        return newImage;
+    }
+
+    /**
+     * Substracts another Image to this but does not normalize the result.
+     * @param image image to add.
+     * @return new Image with the result of the operation.
+     */
+    public Image denormalizedSubstract(Image image) {
+
+        Image newImage = this.copy();
+
+        for (int i = 0; i < image.getHeight() && i < this.height; i++) {
+            for (int j = 0; j < image.getWidth() && j < this.width; j++) {
+                Pixel currentPixel = newImage.getPixel(j, i);
+                Pixel otherPixel = image.getPixel(j, i);
+                currentPixel.subtract(otherPixel);
+            }
+        }
+
+        return newImage;
+    }
+
+
+    /**
+     * Multiplys this image to another image element by element and does not normalize.
+     * @param image image to multiply.
+     * @return new Image with the result of the operation.
+     */
+    public Image multiply(Image image) {
+
+        if (this.width != image.getWidth() || this.height != image.getHeight()) {
+            throw new IllegalArgumentException("Images must be same size.");
+        }
+
+        Image result = this.copy();
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+
+                Pixel p = result.getPixel(x, y);
+                Pixel other = image.getPixel(x, y);
+                p.multiply(other);
+            }
+        }
+
+        return result;
     }
 }

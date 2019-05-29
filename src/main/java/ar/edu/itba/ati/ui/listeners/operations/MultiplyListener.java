@@ -26,7 +26,7 @@ public class MultiplyListener implements ActionListener {
                 "Please enter value", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            Image newImage = image.multiply(dialog.getDoubleValue());
+            Image newImage = image.multiply(dialog.getDoubleValue(), true);
             FrameHelper.create(newImage);
         }
     }
