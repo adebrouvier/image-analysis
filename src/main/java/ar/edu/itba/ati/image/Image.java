@@ -171,6 +171,10 @@ public class Image {
         return type;
     }
 
+    public void setType(ImageType type) {
+        this.type = type;
+    }
+
     public Image add(Image image) {
         int maxRed = 0, maxGreen = 0, maxBlue = 0, minRed = 255, minGreen = 255, minBlue = 255;
         Image newImage = this.copy();
@@ -665,17 +669,23 @@ public class Image {
     }
 
     public Image sobelOperation() {
-        Image firstOperator = this.applyMask(3, (pixels) -> {
+        Image firstOperator = sobelFirstOperator();
+        Image secondOperator = sobelSecondOperator();
+        return firstOperator.moduleOperation(secondOperator);
+    }
+
+    public Image sobelFirstOperator() {
+        return this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
             return this.getWeightedValue(pixels, values);
         }, false);
+    }
 
-        Image secondOperator = this.applyMask(3, (pixels) -> {
+    public Image sobelSecondOperator() {
+        return this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
             return this.getWeightedValue(pixels, values);
         }, false);
-
-        return firstOperator.moduleOperation(secondOperator);
     }
 
     public Image globalThreshold() {
