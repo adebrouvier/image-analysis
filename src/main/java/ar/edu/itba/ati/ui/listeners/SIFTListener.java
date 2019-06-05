@@ -23,11 +23,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class SILFListener implements ActionListener {
+public class SIFTListener implements ActionListener {
 
     private WindowContext windowContext;
 
-    public SILFListener(WindowContext windowContext) {
+    public SIFTListener(WindowContext windowContext) {
         this.windowContext = windowContext;
     }
 
