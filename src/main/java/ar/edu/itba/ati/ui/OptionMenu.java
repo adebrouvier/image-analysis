@@ -150,6 +150,7 @@ public class OptionMenu extends JMenuBar {
         transform.add(createThresholdSubMenu());
         transform.add(createFiltersSubMenu());
 
+        addItem(transform, "SILF", KeyEvent.VK_S, new SILFListener(windowContext));
         add(transform);
     }
 
