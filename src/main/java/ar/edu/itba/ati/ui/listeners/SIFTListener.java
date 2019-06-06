@@ -58,7 +58,7 @@ public class SIFTListener implements ActionListener {
             e.printStackTrace();
         }
 
-        generateSIFTImage(query, target, dialog.getThresholdField(), new DoGSIFTEngineOptions());
+        generateSIFTImage(query, target, dialog.getThresholdField(), options);
     }
 
     private DoGSIFTEngineOptions getOptions(SIFTDialog dialog) {
