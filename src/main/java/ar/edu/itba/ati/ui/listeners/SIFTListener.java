@@ -3,8 +3,7 @@ package ar.edu.itba.ati.ui.listeners;
 import ar.edu.itba.ati.ui.WindowContext;
 import ar.edu.itba.ati.ui.dialogs.SIFTDialog;
 import org.openimaj.feature.local.list.LocalFeatureList;
-import org.openimaj.feature.local.matcher.BasicMatcher;
-import org.openimaj.feature.local.matcher.LocalFeatureMatcher;
+import org.openimaj.feature.local.matcher.BasicTwoWayMatcher;
 import org.openimaj.feature.local.matcher.MatchingUtilities;
 import org.openimaj.image.DisplayUtilities;
 import org.openimaj.image.ImageUtilities;
@@ -21,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SIFTListener implements ActionListener {
 
@@ -58,7 +56,7 @@ public class SIFTListener implements ActionListener {
             e.printStackTrace();
         }
 
-        generateSIFTImage(query, target, dialog.getThresholdField(), options);
+        generateSIFTImage(query, target, options);
     }
 
     private DoGSIFTEngineOptions getOptions(SIFTDialog dialog) {
@@ -71,11 +69,11 @@ public class SIFTListener implements ActionListener {
 //        options.setNumOriBins(dialog.getNumOriBinsField());
 //        options.setNumOriHistBins(dialog.getNumOriHistBinsField());
 //        options.setNumSpatialBins(dialog.getNumSpatialBinsField());
-        options.setPeakThreshold(dialog.getPeakThresholdField());
+//        options.setPeakThreshold(dialog.getPeakThresholdField());
         options.setSamplingSize(dialog.getSamplingSizeField());
         options.setScaling(dialog.getScalingField());
         options.setSmoothingIterations(dialog.getSmoothingIterationField());
-        options.setValueThreshold(dialog.getValueThresholdField());
+//        options.setValueThreshold(dialog.getValueThresholdField());
         return options;
     }
 
@@ -92,14 +90,14 @@ public class SIFTListener implements ActionListener {
         return null;
     }
 
-    private void generateSIFTImage(MBFImage query, MBFImage target, int threshold, DoGSIFTEngineOptions options) {
+    private void generateSIFTImage(MBFImage query, MBFImage target, DoGSIFTEngineOptions options) {
         DoGSIFTEngine engine = new DoGSIFTEngine(options);
         LocalFeatureList<Keypoint> queryKeypoints = engine.findFeatures(query.flatten());
         LocalFeatureList<Keypoint> targetKeypoints = engine.findFeatures(target.flatten());
 
-        LocalFeatureMatcher<Keypoint> matcher = new BasicMatcher<Keypoint>(threshold);
-        matcher.setModelFeatures(queryKeypoints);
-        matcher.findMatches(targetKeypoints);
+//        LocalFeatureMatcher<Keypoint> matcher = new BasicMatcher<Keypoint>(threshold);
+//        matcher.setModelFeatures(queryKeypoints);
+//        matcher.findMatches(targetKeypoints);
 //        RobustAffineTransformEstimator modelFitter = new RobustAffineTransformEstimator(100.0, 1500,
 //                new RANSAC.PercentageInliersStoppingCondition(0.5));
 //        matcher = new ConsistentLocalFeatureMatcher2d<>(
@@ -108,6 +106,9 @@ public class SIFTListener implements ActionListener {
 //        matcher.setModelFeatures(queryKeypoints);
 //        matcher.findMatches(targetKeypoints);
 
+        BasicTwoWayMatcher<Keypoint> matcher = new BasicTwoWayMatcher<>();
+        matcher.setModelFeatures(queryKeypoints);
+        matcher.findMatches(targetKeypoints);
 
         MBFImage queryMatches = KeypointVisualizer.drawPatchesInplace(query, queryKeypoints, null, RGBColour.BLUE);
         MBFImage targetMatches = KeypointVisualizer.drawPatchesInplace(target, targetKeypoints, null, RGBColour.BLUE);
@@ -119,21 +120,23 @@ public class SIFTListener implements ActionListener {
         DisplayUtilities.display(queryMatches);
         DisplayUtilities.display(targetMatches);
 
-        System.out.println("Matches image 1: " + queryKeypoints.size());
-        System.out.println("Matches image 2: " + targetKeypoints.size());
+        System.out.println("Keypoints image 1: " + queryKeypoints.size());
+        System.out.println("Keypoints image 2: " + targetKeypoints.size());
 
-        AtomicReference<Double> diff = new AtomicReference<>(0.0);
-        matcher.getMatches().forEach((pair) -> {
-            Keypoint first = pair.firstObject();
-            Keypoint second = pair.secondObject();
-            double addition = first.ori - second.ori;
-            addition = addition * addition;
-            double finalAddition = addition;
-            diff.updateAndGet(v -> new Double((v + finalAddition)));
-        });
-        diff.set(Math.sqrt(diff.get()));
+//        AtomicReference<Double> diff = new AtomicReference<>(0.0);
+//
+//        matcher.getMatches().forEach((pair) -> {
+//            Keypoint first = pair.firstObject();
+//            Keypoint second = pair.secondObject();
+//            double addition = first.ori - second.ori;
+//            addition = addition * addition;
+//            double finalAddition = addition;
+//            diff.updateAndGet(v -> (v + finalAddition));
+//        });
+//        diff.set(Math.sqrt(diff.get()));
 
-        System.out.println("Correspondence: " + diff);
+        System.out.println("Matched descriptors: " + matcher.getMatches().size());
+//        System.out.println("Correspondence: " + diff);
     }
 
 }

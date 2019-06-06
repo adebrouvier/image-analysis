@@ -90,8 +90,8 @@ public class SIFTDialog extends JPanel {
         this.add(eigenvalueRadiusField);
         this.add(new JLabel("Gaussian Sigma Field"));
         this.add(gaussianSigmaField);
-        this.add(new JLabel("Threshold"));
-        this.add(thresholdField);
+//        this.add(new JLabel("Threshold"));
+//        this.add(thresholdField);
 //        this.add(new JLabel("Magnification Factor"));
 //        this.add(magnificationFactorField);
 //        this.add(new JLabel("Magnitude Threshold"));
@@ -102,16 +102,16 @@ public class SIFTDialog extends JPanel {
 //        this.add(numOriHistBinsField);
 //        this.add(new JLabel("Number of spatial bins in each direction"));
 //        this.add(numSpatialBinsField);
-        this.add(new JLabel("Peak threshold"));
-        this.add(peakThresholdField);
+//        this.add(new JLabel("Peak threshold"));
+//        this.add(peakThresholdField);
         this.add(new JLabel("Sampling Size"));
         this.add(samplingSizeField);
         this.add(new JLabel("Scaling"));
         this.add(scalingField);
         this.add(new JLabel("Smoothing Iterations"));
         this.add(smoothingIterationField);
-        this.add(new JLabel("Value Threshold"));
-        this.add(valueThresholdField);
+//        this.add(new JLabel("Value Threshold"));
+//        this.add(valueThresholdField);
     }
 
 }
