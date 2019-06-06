@@ -46,6 +46,10 @@ public class ImageReader {
                 imageIO = new JPEGImageIO();
                 break;
             }
+            case "png": {
+                imageIO = new PNGImageIO();
+                break;
+            }
             default: {
                 System.err.println("Wrong file format.");
                 return null;
