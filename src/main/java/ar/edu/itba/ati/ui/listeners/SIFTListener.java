@@ -68,9 +68,9 @@ public class SIFTListener implements ActionListener {
         options.setGaussianSigma(dialog.getGaussianSigmaField());
 //        options.setMagnificationFactor(dialog.getMagnificationFactorField());
 //        options.setMagnitudeThreshold(dialog.getMagnitudeThresholdField());
-        options.setNumOriBins(dialog.getNumOriBinsField());
-        options.setNumOriHistBins(dialog.getNumOriHistBinsField());
-        options.setNumSpatialBins(dialog.getNumSpatialBinsField());
+//        options.setNumOriBins(dialog.getNumOriBinsField());
+//        options.setNumOriHistBins(dialog.getNumOriHistBinsField());
+//        options.setNumSpatialBins(dialog.getNumSpatialBinsField());
         options.setPeakThreshold(dialog.getPeakThresholdField());
         options.setSamplingSize(dialog.getSamplingSizeField());
         options.setScaling(dialog.getScalingField());
@@ -100,7 +100,6 @@ public class SIFTListener implements ActionListener {
         LocalFeatureMatcher<Keypoint> matcher = new BasicMatcher<Keypoint>(threshold);
         matcher.setModelFeatures(queryKeypoints);
         matcher.findMatches(targetKeypoints);
-
 //        RobustAffineTransformEstimator modelFitter = new RobustAffineTransformEstimator(100.0, 1500,
 //                new RANSAC.PercentageInliersStoppingCondition(0.5));
 //        matcher = new ConsistentLocalFeatureMatcher2d<>(
