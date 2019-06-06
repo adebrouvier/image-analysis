@@ -31,7 +31,8 @@ public class Image {
         PBM,
         PGM,
         PPM,
-        JPEG
+        JPEG,
+        PNG
     }
 
     public enum BorderDetectorType {

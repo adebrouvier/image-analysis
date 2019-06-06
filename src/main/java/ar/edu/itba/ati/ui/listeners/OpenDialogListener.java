@@ -17,7 +17,7 @@ public abstract class OpenDialogListener implements ActionListener {
     public Image chooseAndOpenFile(WindowContext windowContext) {
         JFileChooser fc = new JFileChooser(".");
         FileNameExtensionFilter filter = new FileNameExtensionFilter("RAW and PNM Images",
-                "raw", "pbm", "pgm", "ppm", "jpeg", "jpg");
+                "raw", "pbm", "pgm", "ppm", "jpeg", "jpg", "png");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(windowContext.getImageContainer());
 
