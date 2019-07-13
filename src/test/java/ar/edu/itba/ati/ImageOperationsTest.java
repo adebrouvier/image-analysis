@@ -19,8 +19,8 @@ public class ImageOperationsTest {
         final List<Integer> values = Arrays.asList(10, 10, 10, 10);
         final List<Pixel> pixels = intArrayGrayScaleToPixels(values);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
-        final Image secondImage = new Image(2, 2, new ArrayList<>(pixels), Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
+        final Image secondImage = new Image(2, 2, new ArrayList<>(pixels), Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image result = firstImage.add(secondImage);
 
         assertEquals(20, result.getPixel(0, 0).getRed());
@@ -37,8 +37,8 @@ public class ImageOperationsTest {
         final List<Integer> secondValues = Arrays.asList(255, 255, 255, 255);
         final List<Pixel> secondPixels = intArrayGrayScaleToPixels(secondValues);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
-        final Image secondImage = new Image(2, 2, secondPixels, Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
+        final Image secondImage = new Image(2, 2, secondPixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image result = firstImage.add(secondImage);
 
         assertEquals(255, result.getPixel(0, 0).getRed());
@@ -55,8 +55,8 @@ public class ImageOperationsTest {
         final List<Integer> secondValues = Arrays.asList(10, 20, 30, 40);
         final List<Pixel> secondPixels = intArrayGrayScaleToPixels(secondValues);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
-        final Image secondImage = new Image(2, 2, secondPixels, Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
+        final Image secondImage = new Image(2, 2, secondPixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image result = firstImage.denormalizedAdd(secondImage);
 
         assertEquals(265, result.getPixel(0, 0).getRed());
@@ -73,8 +73,8 @@ public class ImageOperationsTest {
         final List<Integer> secondValues = Arrays.asList(10, 20, 30, 40);
         final List<Pixel> secondPixels = intArrayGrayScaleToPixels(secondValues);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
-        final Image secondImage = new Image(2, 2, secondPixels, Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
+        final Image secondImage = new Image(2, 2, secondPixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image result = firstImage.denormalizedSubstract(secondImage);
 
         assertEquals(-10, result.getPixel(0, 0).getRed());
@@ -88,7 +88,7 @@ public class ImageOperationsTest {
         final List<Integer> firstValues = Arrays.asList(10, 20, 30, 40);
         final List<Pixel> pixels = intArrayGrayScaleToPixels(firstValues);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         final Image result = firstImage.multiply(2.0, false);
 
         assertEquals(20, result.getPixel(0, 0).getRed());
@@ -105,8 +105,8 @@ public class ImageOperationsTest {
         final List<Integer> secondValues = Arrays.asList(1, 2, 3, 4);
         final List<Pixel> secondPixels = intArrayGrayScaleToPixels(secondValues);
 
-        final Image firstImage = new Image(2, 2, pixels, Image.Format.PGM);
-        final Image secondImage = new Image(2, 2, secondPixels, Image.Format.PGM);
+        final Image firstImage = new Image(2, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
+        final Image secondImage = new Image(2, 2, secondPixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image result = firstImage.multiply(secondImage);
 
         assertEquals(10, result.getPixel(0, 0).getRed());

@@ -71,11 +71,12 @@ public class Image {
         this.file = file;
     }
 
-    public Image(int width, int height, List<Pixel> pixels, ImageType type) {
+    public Image(int width, int height, List<Pixel> pixels, ImageType type, Format format) {
         this.width = width;
         this.height = height;
         this.pixels = pixels;
         this.type = type;
+        this.format = format;
     }
 
     public Image(BufferedImage bufferedImage, ImageType imageType) {
@@ -317,7 +318,7 @@ public class Image {
                 newPixels.add(new GrayScalePixel(p.getRed()));
             }
         }
-        return new Image(this.width, this.height, newPixels, this.type);
+        return new Image(this.width, this.height, newPixels, this.type, this.format);
     }
 
     public Image copyToGrayscale() {
@@ -325,7 +326,7 @@ public class Image {
         for (Pixel p : this.pixels) {
             newPixels.add(new GrayScalePixel(p.getGrayscale()));
         }
-        return new Image(this.width, this.height, newPixels, ImageType.GRAY_SCALE);
+        return new Image(this.width, this.height, newPixels, ImageType.GRAY_SCALE, this.format);
     }
 
     public int getGrayScaleMean() {

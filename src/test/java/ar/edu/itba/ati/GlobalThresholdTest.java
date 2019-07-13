@@ -19,7 +19,7 @@ public class GlobalThresholdTest {
         List<Integer> values = Arrays.asList(128, 128, 128, 130, 130, 130);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(3, 2, pixels, Image.Format.PGM);
+        Image image = new Image(3, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image newImage = image.globalThreshold();
 
         assertEquals(Constants.BLACK, newImage.getPixel(0, 0).getRed());

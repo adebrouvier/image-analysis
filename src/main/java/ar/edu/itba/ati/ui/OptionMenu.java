@@ -35,6 +35,7 @@ public class OptionMenu extends JMenuBar {
         createTransformMenu();
         createHistogramMenu();
         createOperations();
+        createOthersMenu();
     }
 
     private void addItem(JMenu menu, String name, int key, ActionListener listener) {
@@ -135,6 +136,8 @@ public class OptionMenu extends JMenuBar {
         item = new JMenuItem("Negative", KeyEvent.VK_N);
         item.addActionListener(new NegativeListener(windowContext));
         transform.add(item);
+
+        addItem(transform, "Grayscale", KeyEvent.VK_G, new GrayscaleListener(windowContext));
 
         JMenu noise = createNoiseSubMenu();
         transform.add(noise);
@@ -305,6 +308,15 @@ public class OptionMenu extends JMenuBar {
         addItem(directional, "8 - Sobel", KeyEvent.VK_K, new MaskListener(
                 windowContext, new Double[]{1.0, 2.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.0, -1.0}, 3, "Sobel"));
         return directional;
+    }
+
+
+    private void createOthersMenu() {
+        JMenu othersMenu = new JMenu("Others");
+        othersMenu.setMnemonic(KeyEvent.VK_O);
+        addItem(othersMenu, "OCR", KeyEvent.VK_C, new OCRListener(windowContext));
+        addItem(othersMenu, "License Plate", KeyEvent.VK_L, new LicensePlateDetectorListener(windowContext));
+        add(othersMenu);
     }
 
     private JMenu createFiltersSubMenu() {

@@ -28,7 +28,7 @@ public abstract class ShapeListener implements ActionListener {
     }
 
     public void renderShape() {
-        Image image = new Image(width, height, pixels, Image.Format.PBM);
+        Image image = new Image(width, height, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PBM);
         this.windowContext.getImageContainer().setImage(image);
         this.windowContext.getImageContainer().renderImage();
     }

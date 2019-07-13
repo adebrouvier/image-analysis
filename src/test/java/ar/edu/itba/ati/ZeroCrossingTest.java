@@ -21,7 +21,7 @@ public class ZeroCrossingTest {
         List<Integer> values = Arrays.asList(-1, -1, -1, -1, -1, -1);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(3, 2, pixels, Image.Format.PGM);
+        Image image = new Image(3, 2, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
         assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
@@ -37,7 +37,7 @@ public class ZeroCrossingTest {
         List<Integer> values = Arrays.asList(1, -1, -1);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(3, 1, pixels, Image.Format.PGM);
+        Image image = new Image(3, 1, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
         assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
@@ -50,7 +50,7 @@ public class ZeroCrossingTest {
         List<Integer> values = Arrays.asList(1, -1, -1);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(1, 3, pixels, Image.Format.PGM);
+        Image image = new Image(1, 3, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
         assertEquals(Constants.WHITE, zeroCrossing.getPixel(0, 0).getRed());
@@ -63,7 +63,7 @@ public class ZeroCrossingTest {
         List<Integer> values = Arrays.asList(1, 0, -1);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(3, 1, pixels, Image.Format.PGM);
+        Image image = new Image(3, 1, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
         assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());
@@ -76,7 +76,7 @@ public class ZeroCrossingTest {
         List<Integer> values = Arrays.asList(1, 0, -1);
         List<Pixel> pixels = values.stream().map(GrayScalePixel::new).collect(Collectors.toList());
 
-        Image image = new Image(1, 3, pixels, Image.Format.PGM);
+        Image image = new Image(1, 3, pixels, Image.ImageType.GRAY_SCALE, Image.Format.PGM);
         Image zeroCrossing = image.zeroCrossing(threshold);
 
         assertEquals(Constants.BLACK, zeroCrossing.getPixel(0, 0).getRed());

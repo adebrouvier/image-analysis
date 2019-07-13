@@ -219,7 +219,7 @@ public class ActiveContour {
             }
         }
 
-        return new Image(image.getWidth(), image.getHeight(), pixels, Image.Format.JPEG);
+        return new Image(image.getWidth(), image.getHeight(), pixels, Image.ImageType.GRAY_SCALE, Image.Format.JPEG);
     }
 
     private void initialStep(Image image, int x0, int y0, int x1, int y1) {
