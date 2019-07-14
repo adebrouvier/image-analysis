@@ -502,7 +502,7 @@ public class Image {
         return newImage;
     }
 
-    public Image meanFilter(int maskSize) {
+    public Image meanFilter(int maskSize, boolean normalize) {
         return this.applyMask(maskSize, (pixels) -> {
             int red = 0, green = 0, blue = 0;
 
@@ -520,7 +520,7 @@ public class Image {
             } else {
                 return new GrayScalePixel(red);
             }
-        });
+        }, normalize);
     }
 
     public Image medianFilter(int maskSize) {
@@ -671,19 +671,19 @@ public class Image {
     }
 
     public Image sobelOperation() {
-        Image firstOperator = sobelFirstOperator();
-        Image secondOperator = sobelSecondOperator();
+        Image firstOperator = sobelYOperator();
+        Image secondOperator = sobelXOperator();
         return firstOperator.moduleOperation(secondOperator);
     }
 
-    public Image sobelFirstOperator() {
+    public Image sobelYOperator() {
         return this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, -2.0, -1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0};
             return this.getWeightedValue(pixels, values);
         }, false);
     }
 
-    public Image sobelSecondOperator() {
+    public Image sobelXOperator() {
         return this.applyMask(3, (pixels) -> {
             Double[] values = {-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0};
             return this.getWeightedValue(pixels, values);

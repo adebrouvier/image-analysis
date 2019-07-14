@@ -24,7 +24,7 @@ public class MeanListener implements ActionListener {
         int result = JOptionPane.showConfirmDialog(null, dialog,
                 "Please enter Contrast options", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            Image newImage = image.meanFilter(dialog.getWindowsSize());
+            Image newImage = image.meanFilter(dialog.getWindowsSize(), true);
             FrameHelper.create(newImage);
         }
     }

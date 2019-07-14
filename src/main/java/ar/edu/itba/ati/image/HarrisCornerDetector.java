@@ -11,11 +11,11 @@ public class HarrisCornerDetector {
 
     public Image apply(Image image, Double threshold) {
 
-        Image Ix = image.sobelFirstOperator();
+        Image Ix = image.sobelYOperator();
         Image Ix2 = Ix.multiply(Ix);
         Ix2 = Ix2.gaussMaskFilter(GAUSS_MASK_STD, GAUSS_MASK_SIZE, false);
 
-        Image Iy = image.sobelSecondOperator();
+        Image Iy = image.sobelXOperator();
         Image Iy2 = Iy.multiply(Iy);
         Iy2 = Iy2.gaussMaskFilter(GAUSS_MASK_STD, GAUSS_MASK_SIZE, false);
 
