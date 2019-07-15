@@ -12,7 +12,9 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Histogram {
@@ -112,26 +114,31 @@ public class Histogram {
     }
 
     public JFreeChart createChart() {
-        IntervalXYDataset dataSet = createDataSet();
-        JFreeChart histogram = ChartFactory.createXYBarChart("Histogram",
-                "Gray scale", false, "Relative frequency", dataSet);
+        return createChart(relativeFrequencies.entrySet(), 255, "Histogram", "Grayscale", "Relative frequency");
+    }
+
+    public static JFreeChart createChart(Collection<Map.Entry<Integer, Double>> entries, int xMax, String title,
+                                         String xAxisLabel, String yAxisLabel) {
+        IntervalXYDataset dataSet = createDataSet(entries);
+        JFreeChart histogram = ChartFactory.createXYBarChart(title,
+                xAxisLabel, false, yAxisLabel, dataSet);
 
         histogram.removeLegend();
         XYPlot plot = (XYPlot) histogram.getPlot();
         ValueAxis axis = plot.getDomainAxis();
         axis.setLowerBound(0);
-        axis.setUpperBound(255);
+        axis.setUpperBound(xMax);
         XYBarRenderer r = (XYBarRenderer) plot.getRenderer();
         r.setBarPainter(new StandardXYBarPainter());
         r.setSeriesPaint(0, Color.black);
         return histogram;
     }
 
-    private IntervalXYDataset createDataSet() {
+    private static IntervalXYDataset createDataSet(Collection<Map.Entry<Integer, Double>> entries) {
 
-        XYSeries series = new XYSeries("Grayscale level");
+        XYSeries series = new XYSeries("Serie");
 
-        for (Map.Entry<Integer, Double> entry : relativeFrequencies.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : entries) {
             series.add((double) entry.getKey(), entry.getValue());
         }
 

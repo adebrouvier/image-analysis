@@ -2,20 +2,12 @@ package ar.edu.itba.ati.image;
 
 import ar.edu.itba.ati.ui.HistogramContainer;
 import ar.edu.itba.ati.utils.Pair;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYBarPainter;
-import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.data.xy.IntervalXYDataset;
-import org.jfree.data.xy.XYBarDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
-import java.awt.*;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LicensePlateDetector {
@@ -53,8 +45,8 @@ public class LicensePlateDetector {
             mapX.put(y, difference);
         }
 
-        JFreeChart histogramChartY = createChart(mapY, image.getWidth());
-        JFreeChart histogramChartX = createChart(mapX, image.getHeight());
+        JFreeChart histogramChartY = Histogram.createChart(globalMean(mapY), image.getWidth(), "Vertical Edge Histogram", "Row Number", "Difference");
+        JFreeChart histogramChartX = Histogram.createChart(globalMean(mapX), image.getHeight(), "Horizontal Edge Histogram","Column Number", "Difference");
         HistogramContainer.show(histogramChartY);
         HistogramContainer.show(histogramChartX);
 
@@ -96,34 +88,6 @@ public class LicensePlateDetector {
         ).collect(Collectors.toList());
         entries.sort(Comparator.comparing(Map.Entry::getKey));
         return entries;
-    }
-
-    private static JFreeChart createChart(Map<Integer, Double> map, int maxX) {
-
-        IntervalXYDataset dataSet = createDataSet(map);
-        JFreeChart histogram = ChartFactory.createXYBarChart("Histogram",
-                "Number", false, "Difference", dataSet);
-
-        histogram.removeLegend();
-        XYPlot plot = (XYPlot) histogram.getPlot();
-        ValueAxis axis = plot.getDomainAxis();
-        axis.setLowerBound(0);
-        axis.setUpperBound(maxX);
-        XYBarRenderer r = (XYBarRenderer) plot.getRenderer();
-        r.setBarPainter(new StandardXYBarPainter());
-        r.setSeriesPaint(0, Color.black);
-        return histogram;
-    }
-
-    private static IntervalXYDataset createDataSet(Map<Integer, Double> map) {
-
-        XYSeries series = new XYSeries("Grayscale level");
-
-        for (Map.Entry<Integer, Double> entry : globalMean(map)) {
-            series.add((double) entry.getKey(), entry.getValue());
-        }
-
-        return new XYBarDataset(new XYSeriesCollection(series), 1.0);
     }
 
     private static Pair<Integer, Integer> calculateRegion(List<Map.Entry<Integer, Double>> differences) {
