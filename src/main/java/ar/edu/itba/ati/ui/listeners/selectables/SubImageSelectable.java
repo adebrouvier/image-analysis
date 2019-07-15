@@ -21,10 +21,14 @@ public class SubImageSelectable implements Selectable {
     public void onMousePressed(MouseEvent mouseEvent) {
         this.x = mouseEvent.getX();
         this.y = mouseEvent.getY();
+        this.windowContext.getImageContainer().setStartSelection(mouseEvent);
     }
 
     @Override
     public void onMouseReleased(MouseEvent mouseEvent) {
+        this.windowContext.getImageContainer().resetSelection();
+        this.windowContext.getImageContainer().repaint();
+
         Image image = this.windowContext.getImageContainer().getImage();
         Image subImage = image.getSubimage(this.x, this.y, mouseEvent.getX(), mouseEvent.getY());
 
@@ -35,6 +39,7 @@ public class SubImageSelectable implements Selectable {
 
     @Override
     public void onMouseDragged(MouseEvent mouseEvent) {
-
+        this.windowContext.getImageContainer().setCurrentSelection(mouseEvent);
+        this.windowContext.getImageContainer().repaint();
     }
 }

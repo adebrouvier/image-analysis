@@ -2,8 +2,6 @@ package ar.edu.itba.ati.ui;
 
 import ar.edu.itba.ati.image.Image;
 
-import javax.swing.*;
-
 public class FrameHelper {
 
     public static ImageAnalyzerFrame create(Image newImage) {
