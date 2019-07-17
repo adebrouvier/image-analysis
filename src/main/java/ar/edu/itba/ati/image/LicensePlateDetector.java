@@ -4,10 +4,9 @@ import ar.edu.itba.ati.ui.HistogramContainer;
 import ar.edu.itba.ati.utils.Pair;
 import org.jfree.chart.JFreeChart;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LicensePlateDetector {
@@ -50,14 +49,36 @@ public class LicensePlateDetector {
         HistogramContainer.show(histogramChartY);
         HistogramContainer.show(histogramChartX);
 
-        Pair<Integer, Integer> regionY = calculateRegion(globalMean(mapY));
-        Pair<Integer, Integer> regionX = calculateRegion(globalMean(mapX));
-
-        Image subImage = image.getSubimage(regionY.getX() - 3,
-                regionX.getX() - 3,
-                regionY.getY() + 3,
-                regionX.getY() + 3);
-        return subImage;
+//        Pair<Integer, Integer> regionY = calculateRegion(globalMean(mapY)).first().getX();
+//        Pair<Integer, Integer> regionX = calculateRegion(globalMean(mapX)).first().getX();
+        Image firstSubImage = null;
+        for (Pair<Pair<Integer, Integer>, Double> regionYvalue: calculateRegion(globalMean(mapY))) {
+            Pair<Integer, Integer> regionY = regionYvalue.getX();
+            for (Pair<Pair<Integer, Integer>, Double> regionXvalue: calculateRegion(globalMean(mapX))) {
+                Pair<Integer, Integer> regionX = regionXvalue.getX();
+                int x1 = Math.max(0, regionY.getX() - 3);
+                int x2 = Math.min(image.getWidth(), regionY.getY() + 3);
+                int y1 = Math.max(0, regionX.getX() - 3);
+                int y2 = Math.min(image.getHeight(), regionX.getY() + 3);
+                Image subImage = image.getSubimage(x1, y1, x2, y2);
+                Image processedSubImage = subImage.copyToGrayscale().getNegative();
+                if (firstSubImage == null) {
+                    firstSubImage = subImage;
+                }
+                String response = OCR.run(processedSubImage);
+                response = matchLicensePlate(response);
+                if (response != null) {
+                    System.out.println("STRING:" + response);
+                    return subImage;
+                }
+            }
+        }
+        return firstSubImage;
+//        Image subImage = image.getSubimage(regionY.getX() - 3,
+//                regionX.getX() - 3,
+//                regionY.getY() + 3,
+//                regionX.getY() + 3);
+//        return subImage;
     }
 
     public static List<Map.Entry<Integer, Double>> globalMean(Map<Integer, Double> map) {
@@ -90,9 +111,12 @@ public class LicensePlateDetector {
         return entries;
     }
 
-    private static Pair<Integer, Integer> calculateRegion(List<Map.Entry<Integer, Double>> differences) {
+    private static TreeSet<Pair<Pair<Integer, Integer>, Double>> calculateRegion(List<Map.Entry<Integer, Double>> differences) {
         Integer prevKey = differences.get(0).getKey();
-        Pair<Pair<Integer, Integer>, Double> maxRegion = new Pair(null, 0.0);
+        TreeSet<Pair<Pair<Integer, Integer>, Double>> regions = new TreeSet<>(
+                (a, b) -> b.getY().compareTo(a.getY())
+        );
+//        Pair<Pair<Integer, Integer>, Double> maxRegion = new Pair(null, 0.0);
         Double currentMax = differences.get(0).getValue();
         Integer fromRegion = prevKey;
         for (int i = 1 ; i < differences.size() ; i++) {
@@ -101,15 +125,36 @@ public class LicensePlateDetector {
                     currentMax = differences.get(i).getValue();
             }
             else {
-                if (currentMax > maxRegion.getY())
-                    maxRegion = new Pair(new Pair(fromRegion, prevKey), currentMax);
+//                if (currentMax > maxRegion.getY())
+//                    maxRegion = new Pair(new Pair(fromRegion, prevKey), currentMax);
+                regions.add(new Pair(new Pair(fromRegion, prevKey), currentMax));
                 currentMax = differences.get(i).getValue();
                 fromRegion = differences.get(i).getKey();
             }
             prevKey = differences.get(i).getKey();
         }
-        if (currentMax > maxRegion.getY())
-            maxRegion = new Pair(new Pair(fromRegion, prevKey), currentMax);
-        return maxRegion.getX();
+        regions.add(new Pair(new Pair(fromRegion, prevKey), currentMax));
+//        if (currentMax > maxRegion.getY())
+//            maxRegion = new Pair(new Pair(fromRegion, prevKey), currentMax);
+//        return maxRegion.getX();
+        return regions;
+    }
+
+    private static String matchLicensePlate(String str) {
+        if (str == null) {
+            return null;
+        }
+        str = str.replaceAll("\\s", "");
+        Pattern pattern = Pattern.compile("[A-Z]{3}[0-9]{3}");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        pattern = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
+        matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        return null;
     }
 }
