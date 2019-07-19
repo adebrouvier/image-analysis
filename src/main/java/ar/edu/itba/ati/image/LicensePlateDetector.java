@@ -153,7 +153,7 @@ public class LicensePlateDetector {
         if (str == null) {
             return null;
         }
-        str = str.replaceAll("\\s", "");
+        str = str.replaceAll("\\s", "").toUpperCase();
 
         Pattern pattern = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
         Matcher matcher = pattern.matcher(str);
