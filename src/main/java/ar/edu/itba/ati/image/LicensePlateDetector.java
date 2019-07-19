@@ -61,12 +61,20 @@ public class LicensePlateDetector {
                 int y1 = Math.max(0, regionX.getX() - 3);
                 int y2 = Math.min(image.getHeight(), regionX.getY() + 3);
                 Image subImage = image.getSubimage(x1, y1, x2, y2);
-                Image processedSubImage = subImage.copyToGrayscale().getNegative();
+                Image processedSubImage = subImage.copyToGrayscale();
+                Image negProcessedSubImage = subImage.copyToGrayscale().getNegative();
                 if (firstSubImage == null) {
                     firstSubImage = subImage;
                 }
                 String response = OCR.run(processedSubImage);
+                String negResponse = OCR.run(negProcessedSubImage);
                 response = matchLicensePlate(response);
+                negResponse = matchLicensePlate(negResponse);
+
+                if (negResponse != null) {
+                    System.out.println("Patente argentina encontrada: " + negResponse);
+                    return subImage;
+                }
                 if (response != null) {
                     System.out.println("Patente argentina encontrada: " + response);
                     return subImage;
@@ -146,16 +154,20 @@ public class LicensePlateDetector {
             return null;
         }
         str = str.replaceAll("\\s", "");
-        Pattern pattern = Pattern.compile("[A-Z]{3}[0-9]{3}");
+
+        Pattern pattern = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
         Matcher matcher = pattern.matcher(str);
         if (matcher.find()) {
             return matcher.group(0);
         }
-        pattern = Pattern.compile("[A-Z]{2}[0-9]{3}[A-Z]{2}");
+
+
+        pattern = Pattern.compile("[A-Z]{3}[0-9]{3}");
         matcher = pattern.matcher(str);
         if (matcher.find()) {
             return matcher.group(0);
         }
+
         return null;
     }
 }
