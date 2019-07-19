@@ -44,8 +44,8 @@ public class LicensePlateDetector {
             mapX.put(y, difference);
         }
 
-        JFreeChart histogramChartY = Histogram.createChart(globalMean(mapY), image.getWidth(), "Vertical Edge Histogram", "Row Number", "Difference");
-        JFreeChart histogramChartX = Histogram.createChart(globalMean(mapX), image.getHeight(), "Horizontal Edge Histogram","Column Number", "Difference");
+        JFreeChart histogramChartY = Histogram.createChart(globalMean(mapY), image.getWidth(), "Horizontal Edge Histogram", "Column Number", "Difference");
+        JFreeChart histogramChartX = Histogram.createChart(globalMean(mapX), image.getHeight(), "Vertical Edge Histogram","Row Number", "Difference");
         HistogramContainer.show(histogramChartY);
         HistogramContainer.show(histogramChartX);
 
@@ -68,11 +68,12 @@ public class LicensePlateDetector {
                 String response = OCR.run(processedSubImage);
                 response = matchLicensePlate(response);
                 if (response != null) {
-                    System.out.println("STRING:" + response);
+                    System.out.println("Patente argentina encontrada: " + response);
                     return subImage;
                 }
             }
         }
+        System.out.println("Texto encontrado: " + OCR.run(firstSubImage));
         return firstSubImage;
 //        Image subImage = image.getSubimage(regionY.getX() - 3,
 //                regionX.getX() - 3,

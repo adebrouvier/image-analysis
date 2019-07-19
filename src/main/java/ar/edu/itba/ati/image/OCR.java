@@ -13,13 +13,11 @@ public class OCR {
 
         File tessDataFolder = new File("tessdata");
         tesseract.setDatapath(tessDataFolder.getAbsolutePath());
-//        tesseract.setLanguage("eng");
-//        tesseract.setOcrEngineMode(0);
+        tesseract.setLanguage("eng");
+        //tesseract.setOcrEngineMode(1);
 
         try {
-            String result = tesseract.doOCR(ImageUtils.ImageToBufferedImage(image));
-            System.out.println("Result:" + result);
-            return result;
+            return tesseract.doOCR(ImageUtils.ImageToBufferedImage(image));
         } catch (TesseractException e) {
             System.err.println(e.getMessage());
         }

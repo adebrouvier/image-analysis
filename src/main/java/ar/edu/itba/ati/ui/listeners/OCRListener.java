@@ -16,6 +16,6 @@ public class OCRListener extends ATIActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Image image = getWindowContext().getImageContainer().getImage();
-        OCR.run(image);
+        System.out.println(OCR.run(image));
     }
 }

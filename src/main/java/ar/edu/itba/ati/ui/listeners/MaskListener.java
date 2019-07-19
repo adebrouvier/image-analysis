@@ -38,7 +38,6 @@ public class MaskListener implements ActionListener {
         images.add(newImage);
         Double[] newMask = mask;
         for (int i = 0; i < 7; i++) {
-            System.out.println(Arrays.toString(newMask));
             newMask = MaskRotator.rotate3x3Mask(newMask);
             Double[] finalNewMask = newMask;
             newImage = image.applyMask(this.maskSize, (pixels) -> image.getUnweightedValue(pixels, finalNewMask));
